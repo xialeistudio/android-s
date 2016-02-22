@@ -18,7 +18,7 @@ public class MainActivity extends AppCompatActivity implements NewItemFragment.O
         //UI组件
         items.add("!!!");
         //数据适配器
-        aa = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, items);
+        aa = new ArrayAdapter<>(this, R.layout.todolist_item, items);
         //获取fragment引用
         FragmentManager fragmentManager = getFragmentManager();
         ToDoListFragment toDoListFragment = (ToDoListFragment) fragmentManager.findFragmentById(R.id.TodoListFragment);
