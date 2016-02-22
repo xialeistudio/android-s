@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    tools:context="com.ddhigh.study.MainActivity">
+
+    <fragment
+        android:id="@+id/NewItemFragment"
+        android:name="com.ddhigh.study.NewItemFragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:layout="@layout/fragment_new_item" />
+
+    <fragment
+        android:id="@+id/TodoListFragment"
+        android:name="com.ddhigh.study.ToDoListFragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:layout="@android:layout/simple_list_item_1" />
+</LinearLayout>

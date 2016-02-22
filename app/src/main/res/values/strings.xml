@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Study</string>
+    <string name="open_qunyou">打开群友</string>
+    <string name="launch_listView">启动ListView</string>
+</resources>
