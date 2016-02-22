@@ -1,8 +1,10 @@
 package com.ddhigh.study;
 
 import android.app.FragmentManager;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.ArrayAdapter;
 
 import java.util.ArrayList;
@@ -29,5 +31,12 @@ public class MainActivity extends AppCompatActivity implements NewItemFragment.O
         ToDoItem doItem = new ToDoItem(newItem);
         items.add(0, doItem);
         aa.notifyDataSetChanged();
+    }
+
+    public void onClick(View view) {
+        if(view.getId() == R.id.btnRecentCall){
+            Intent intent = new Intent(this,RecentCallActivity.class);
+            startActivity(intent);
+        }
     }
 }
