@@ -8,17 +8,16 @@ import android.widget.ArrayAdapter;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements NewItemFragment.OnNewItemAddedListener {
-    ArrayList<String> items = new ArrayList<>();
-    ArrayAdapter<String> aa;
+    ArrayList<ToDoItem> items = new ArrayList<>();
+    ToDoItemAdapter aa;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         //UI组件
-        items.add("!!!");
         //数据适配器
-        aa = new ArrayAdapter<>(this, R.layout.todolist_item, items);
+        aa = new ToDoItemAdapter(this, R.layout.todolist_item, items);
         //获取fragment引用
         FragmentManager fragmentManager = getFragmentManager();
         ToDoListFragment toDoListFragment = (ToDoListFragment) fragmentManager.findFragmentById(R.id.TodoListFragment);
@@ -27,7 +26,8 @@ public class MainActivity extends AppCompatActivity implements NewItemFragment.O
 
     @Override
     public void onNewItemAdded(String newItem) {
-        items.add(newItem);
+        ToDoItem doItem = new ToDoItem(newItem);
+        items.add(0, doItem);
         aa.notifyDataSetChanged();
     }
 }
