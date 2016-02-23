@@ -63,12 +63,12 @@ public class EarthquakeListFragment extends ListFragment {
             int responseCode = httpURLConnection.getResponseCode();
 
             if (responseCode == HttpURLConnection.HTTP_OK) {
-                InputStream inputStream =new BufferedInputStream(httpURLConnection.getInputStream());
+                InputStream inputStream = new BufferedInputStream(httpURLConnection.getInputStream());
                 String result = readInStream(inputStream);
                 JSONObject jsonObject = new JSONObject(result);
                 JSONArray jsonArray = jsonObject.getJSONArray("features");
 
-                for(int i = 0;i<jsonArray.length();i++){
+                for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject item = jsonArray.getJSONObject(i);
                     Location l = new Location("dummyGPS");
                     JSONArray coordinates = item.getJSONObject("geometry").getJSONArray("coordinates");
@@ -80,7 +80,7 @@ public class EarthquakeListFragment extends ListFragment {
                             l,
                             item.getJSONObject("properties").getDouble("mag"),
                             item.getJSONObject("properties").getString("url")
-                            );
+                    );
 
                     handler.post(new Runnable() {
                         @Override
@@ -96,8 +96,11 @@ public class EarthquakeListFragment extends ListFragment {
     }
 
     private void addNewQuake(Quake quake) {
-        al.add(quake);
-        aa.notifyDataSetChanged();
+        MainActivity mainActivity = (MainActivity) getActivity();
+        if (quake.getMagnitude() > mainActivity.minimunMagnitude) {
+            al.add(quake);
+            aa.notifyDataSetChanged();
+        }
     }
 
     private String readInStream(InputStream in) {
