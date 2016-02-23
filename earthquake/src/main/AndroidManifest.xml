@@ -17,6 +17,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".PreferencesActivity" android:label="Earthquake Preferences"/>
+        <activity android:name=".FragmentPreferences"/>
     </application>
 
 </manifest>
