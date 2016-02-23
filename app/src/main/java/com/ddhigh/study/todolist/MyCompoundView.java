@@ -1,4 +1,4 @@
-package com.ddhigh.study;
+package com.ddhigh.study.todolist;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -7,6 +7,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+
+import com.ddhigh.study.R;
 
 /**
  * @project Study

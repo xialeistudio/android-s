@@ -14,7 +14,7 @@
         android:scrollbars="vertical"
         android:textColor="#F000" />
 
-    <com.ddhigh.study.ToDoListItemView
+    <com.ddhigh.study.todolist.ToDoListItemView
         android:id="@+id/row"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

@@ -1,4 +1,4 @@
-package com.ddhigh.study;
+package com.ddhigh.study.adapter;
 
 import android.app.LoaderManager;
 import android.content.CursorLoader;
@@ -10,6 +10,8 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
+
+import com.ddhigh.study.R;
 
 /**
  * @project Study

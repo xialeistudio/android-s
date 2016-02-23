@@ -1,11 +1,13 @@
-package com.ddhigh.study;
+package com.ddhigh.study.todolist;
 
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.ArrayAdapter;
+
+import com.ddhigh.study.R;
+import com.ddhigh.study.adapter.RecentCallActivity;
 
 import java.util.ArrayList;
 

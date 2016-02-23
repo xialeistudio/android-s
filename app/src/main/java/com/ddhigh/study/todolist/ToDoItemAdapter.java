@@ -1,4 +1,4 @@
-package com.ddhigh.study;
+package com.ddhigh.study.todolist;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.ddhigh.study.R;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

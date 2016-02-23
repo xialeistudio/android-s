@@ -1,4 +1,4 @@
-package com.ddhigh.study;
+package com.ddhigh.study.todolist;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -6,6 +6,8 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.widget.TextView;
+
+import com.ddhigh.study.R;
 
 /**
  * @project Study

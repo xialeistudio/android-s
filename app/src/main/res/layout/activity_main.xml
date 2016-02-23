@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp"
-    tools:context="com.ddhigh.study.MainActivity">
+    tools:context=".todolist.MainActivity">
 
     <Button
         android:id="@+id/btnRecentCall"
@@ -16,14 +16,14 @@
 
     <fragment
         android:id="@+id/NewItemFragment"
-        android:name="com.ddhigh.study.NewItemFragment"
+        android:name="com.ddhigh.study.todolist.NewItemFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:layout="@layout/fragment_new_item" />
 
     <fragment
         android:id="@+id/TodoListFragment"
-        android:name="com.ddhigh.study.ToDoListFragment"
+        android:name="com.ddhigh.study.todolist.ToDoListFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:layout="@android:layout/simple_list_item_1" />

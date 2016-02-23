@@ -1,4 +1,4 @@
-package com.ddhigh.study;
+package com.ddhigh.study.todolist;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

@@ -1,8 +1,7 @@
-package com.ddhigh.study;
+package com.ddhigh.study.todolist;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -11,6 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+
+import com.ddhigh.study.R;
 
 /**
  * @project Study

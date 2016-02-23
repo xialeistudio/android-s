@@ -1,4 +1,4 @@
-package com.ddhigh.study;
+package com.ddhigh.study.todolist;
 
 import android.app.Application;
 import android.content.res.Configuration;
