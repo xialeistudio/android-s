@@ -51,6 +51,7 @@ public class EarthquakeListFragment extends ListFragment {
     }
 
     public void refreshEarthquakes() {
+        al.clear();
         URL url;
         try {
             String quakeFeed = getString(R.string.quake_feed);

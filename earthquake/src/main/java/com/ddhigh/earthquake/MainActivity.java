@@ -56,42 +56,27 @@ public class MainActivity extends AppCompatActivity {
         Context context = getApplicationContext();
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
-        int minMagIndex = prefs.getInt(PreferencesActivity.PREF_MIN_MAG_INDEX, 0);
-        if (minMagIndex < 0)
-            minMagIndex = 0;
-
-        int freqIndex = prefs.getInt(PreferencesActivity.PREF_UPDATE_FREQ_INDEX, 0);
-        if (freqIndex < 0)
-            freqIndex = 0;
 
         autoUpdateChecked = prefs.getBoolean(PreferencesActivity.PREF_AUTO_UPDATE, false);
 
-
-        Resources resources = getResources();
-        String[] minMagValues = resources.getStringArray(R.array.magnitude);
-        String[] freqValues = resources.getStringArray(R.array.update_freq_values);
-
-        minimunMagnitude = Integer.valueOf(minMagValues[minMagIndex]);
-        updateFreq = Integer.valueOf(freqValues[freqIndex]);
+        minimunMagnitude = Integer.parseInt(prefs.getString(PreferencesActivity.PREF_MIN_MAG, "3"));
+        updateFreq = Integer.parseInt(prefs.getString(PreferencesActivity.PREF_UPDATE_FREQ, "60"));
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == SHOW_PREFERENCE) {
-            if (resultCode == RESULT_OK) {
-                updateFromPreferences();
-
-                FragmentManager fragmentManager = getFragmentManager();
-                final EarthquakeListFragment earthquakeListFragment = (EarthquakeListFragment) fragmentManager.findFragmentById(R.id.EarthquakeListFragment);
-                Thread t = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        earthquakeListFragment.refreshEarthquakes();
-                    }
-                });
-                t.start();
-            }
+            updateFromPreferences();
+            FragmentManager fragmentManager = getFragmentManager();
+            final EarthquakeListFragment earthquakeListFragment = (EarthquakeListFragment) fragmentManager.findFragmentById(R.id.EarthquakeListFragment);
+            Thread t = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    earthquakeListFragment.refreshEarthquakes();
+                }
+            });
+            t.start();
         }
     }
 }
