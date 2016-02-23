@@ -1,11 +1,18 @@
 package com.ddhigh.earthquake;
 
 import android.app.ListFragment;
+import android.app.LoaderManager;
+import android.content.ContentResolver;
+import android.content.ContentValues;
+import android.content.CursorLoader;
+import android.content.Loader;
+import android.database.Cursor;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
-import android.widget.ArrayAdapter;
+import android.widget.SimpleCursorAdapter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -17,7 +24,6 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.Scanner;
 
@@ -27,42 +33,47 @@ import java.util.Scanner;
  * @user xialeistudio
  * @date 2016/2/23 0023
  */
-public class EarthquakeListFragment extends ListFragment {
-    ArrayAdapter<Quake> aa;
-    ArrayList<Quake> al = new ArrayList<>();
+public class EarthquakeListFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor> {
     private static final String TAG = "EARTHQUAKE";
     private Handler handler = new Handler();
+    SimpleCursorAdapter simpleCursorAdapter;
+
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        int layoutID = android.R.layout.simple_list_item_1;
-        aa = new ArrayAdapter<>(getActivity(), layoutID, al);
-        setListAdapter(aa);
+        simpleCursorAdapter = new SimpleCursorAdapter(getActivity(), android.R.layout.simple_list_item_1, null, new String[]{EarthquakeProvider.KEY_SUMMARY}, new int[]{android.R.id.text1}, 0);
+        setListAdapter(simpleCursorAdapter);
 
-        Thread t = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                refreshEarthquakes();
-            }
-        });
-        t.start();
+        getLoaderManager().initLoader(0, null, this);
+
+        getLoaderManager().restartLoader(0, null, EarthquakeListFragment.this);
     }
 
     public void refreshEarthquakes() {
-        al.clear();
+
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                getLoaderManager().restartLoader(0, null, EarthquakeListFragment.this);
+            }
+        });
+
         URL url;
         try {
             String quakeFeed = getString(R.string.quake_feed);
             url = new URL(quakeFeed);
 
             URLConnection connection;
+            Log.d(TAG, "openConnection...");
             connection = url.openConnection();
 
             HttpURLConnection httpURLConnection = (HttpURLConnection) connection;
             int responseCode = httpURLConnection.getResponseCode();
 
+
+            Log.d(TAG, "completeConnection...");
             if (responseCode == HttpURLConnection.HTTP_OK) {
                 InputStream inputStream = new BufferedInputStream(httpURLConnection.getInputStream());
                 String result = readInStream(inputStream);
@@ -97,15 +108,52 @@ public class EarthquakeListFragment extends ListFragment {
     }
 
     private void addNewQuake(Quake quake) {
-        MainActivity mainActivity = (MainActivity) getActivity();
-        if (quake.getMagnitude() > mainActivity.minimunMagnitude) {
-            al.add(quake);
-            aa.notifyDataSetChanged();
+        ContentResolver cr = getActivity().getContentResolver();
+        String w = EarthquakeProvider.KEY_DATE + " = " + quake.getDate().getTime();
+        //如果不存在，则插入
+        Cursor query = cr.query(EarthquakeProvider.CONTENT_URI, null, w, null, null);
+        assert query != null;
+        if (query.getCount() == 0) {
+            ContentValues values = new ContentValues();
+
+            values.put(EarthquakeProvider.KEY_DATE, quake.getDate().getTime());
+            values.put(EarthquakeProvider.KEY_DETAILS, quake.getDefails());
+            values.put(EarthquakeProvider.KEY_SUMMARY, quake.toString());
+
+            double lat = quake.getLocation().getLatitude();
+            double lng = quake.getLocation().getLongitude();
+            values.put(EarthquakeProvider.KEY_LOCATION_LAT, lat);
+            values.put(EarthquakeProvider.KEY_LOCATION_LNG, lng);
+            values.put(EarthquakeProvider.KEY_LINK, quake.getLink());
+            values.put(EarthquakeProvider.KEY_MAGNITUDE, quake.getMagnitude());
+            cr.insert(EarthquakeProvider.CONTENT_URI, values);
         }
+        query.close();
     }
 
     private String readInStream(InputStream in) {
         Scanner scanner = new Scanner(in).useDelimiter("\\A");
         return scanner.hasNext() ? scanner.next() : "";
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        String[] projection = new String[]{
+                EarthquakeProvider.KEY_ID,
+                EarthquakeProvider.KEY_SUMMARY
+        };
+        MainActivity activity = (MainActivity) getActivity();
+        String where = EarthquakeProvider.KEY_MAGNITUDE + ">" + activity.minimunMagnitude;
+        return new CursorLoader(getActivity(), EarthquakeProvider.CONTENT_URI, projection, where, null, null);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        simpleCursorAdapter.swapCursor(data);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        simpleCursorAdapter.swapCursor(null);
     }
 }
