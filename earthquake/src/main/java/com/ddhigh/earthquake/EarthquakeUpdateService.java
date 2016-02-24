@@ -1,6 +1,7 @@
 package com.ddhigh.earthquake;
 
 import android.app.AlarmManager;
+import android.app.IntentService;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.ContentResolver;
@@ -35,11 +36,41 @@ import java.util.Scanner;
  * @user xialeistudio
  * @date 2016/2/24 0024
  */
-public class EarthquakeUpdateService extends Service {
+public class EarthquakeUpdateService extends IntentService {
+    /**
+     * Creates an IntentService.  Invoked by your subclass's constructor.
+     *
+     * @param name Used to name the worker thread, important only for debugging.
+     */
+    public EarthquakeUpdateService(String name) {
+        super(name);
+    }
+
+    public EarthquakeUpdateService() {
+        super("EarthquakeUpdateService");
+    }
+
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
         return null;
+    }
+
+    @Override
+    protected void onHandleIntent(Intent intent) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+
+        int updateFreq = Integer.parseInt(sharedPreferences.getString(PreferencesActivity.PREF_UPDATE_FREQ, "60"));
+        boolean autoUpdateChecked = sharedPreferences.getBoolean(PreferencesActivity.PREF_AUTO_UPDATE, false);
+        if (autoUpdateChecked) {
+            int alarmType = AlarmManager.ELAPSED_REALTIME_WAKEUP;
+            long timeToRefresh = SystemClock.elapsedRealtime() + updateFreq * 60 * 1000;
+            alarmManager.setInexactRepeating(alarmType, timeToRefresh, updateFreq * 60 * 1000, alarmIntent);
+        } else {
+            alarmManager.cancel(alarmIntent);
+        }
+
+        refreshEarthquakes();
     }
 
     private void addNewQuake(Quake quake) {
@@ -107,9 +138,6 @@ public class EarthquakeUpdateService extends Service {
             }
         } catch (IOException | JSONException e) {
             e.printStackTrace();
-        } finally {
-            Log.d(EarthquakeListFragment.TAG, "stopService");
-            stopSelf();
         }
     }
 
@@ -118,23 +146,6 @@ public class EarthquakeUpdateService extends Service {
         return scanner.hasNext() ? scanner.next() : "";
     }
 
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-
-        //检索SharedPreferences
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-
-        int updateFreq = Integer.parseInt(sharedPreferences.getString(PreferencesActivity.PREF_UPDATE_FREQ, "60"));
-        boolean autoUpdateChecked = sharedPreferences.getBoolean(PreferencesActivity.PREF_AUTO_UPDATE, false);
-        if (autoUpdateChecked) {
-            int alarmType = AlarmManager.ELAPSED_REALTIME_WAKEUP;
-            long timeToRefresh = SystemClock.elapsedRealtime() + updateFreq * 60 * 1000;
-            alarmManager.setInexactRepeating(alarmType, timeToRefresh, updateFreq * 60 * 1000, alarmIntent);
-        } else {
-            alarmManager.cancel(alarmIntent);
-        }
-        return Service.START_NOT_STICKY;
-    }
 
     private AlarmManager alarmManager;
     private PendingIntent alarmIntent;
