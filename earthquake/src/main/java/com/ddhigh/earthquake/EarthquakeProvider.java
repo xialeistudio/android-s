@@ -1,5 +1,6 @@
 package com.ddhigh.earthquake;
 
+import android.app.SearchManager;
 import android.content.ContentProvider;
 import android.content.ContentUris;
 import android.content.ContentValues;
@@ -14,6 +15,8 @@ import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
+
+import java.util.HashMap;
 
 /**
  * @project Study
@@ -39,14 +42,26 @@ public class EarthquakeProvider extends ContentProvider {
     //创建用来区分不同URI请求的常量
     private static final int QUAKES = 1;
     private static final int QUAKE_ID = 2;
+    private static final int SEARCH = 3;
 
     private static final UriMatcher uriMatcher;
 
+
+    private static final HashMap<String, String> SEARCH_PROJECTION_MAP;
 
     static {
         uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
         uriMatcher.addURI("com.ddhigh.earthquakeprovider", "earthquakes", QUAKES);
         uriMatcher.addURI("com.ddhigh.earthquakeprovider", "earthquakes/#", QUAKE_ID);
+        uriMatcher.addURI("com.ddhigh.earthquakeprovider", SearchManager.SUGGEST_URI_PATH_QUERY, SEARCH);
+        uriMatcher.addURI("com.ddhigh.earthquakeprovider", SearchManager.SUGGEST_URI_PATH_QUERY + "/*", SEARCH);
+        uriMatcher.addURI("com.ddhigh.earthquakeprovider", SearchManager.SUGGEST_URI_PATH_SHORTCUT, SEARCH);
+        uriMatcher.addURI("com.ddhigh.earthquakeprovider", SearchManager.SUGGEST_URI_PATH_SHORTCUT + "/*", SEARCH);
+
+
+        SEARCH_PROJECTION_MAP = new HashMap<>();
+        SEARCH_PROJECTION_MAP.put(SearchManager.SUGGEST_COLUMN_TEXT_1, KEY_SUMMARY + " As " + SearchManager.SUGGEST_COLUMN_TEXT_1);
+        SEARCH_PROJECTION_MAP.put("_id", KEY_ID + " AS " + "_id");
     }
 
     @Override
@@ -69,6 +84,10 @@ public class EarthquakeProvider extends ContentProvider {
         switch (uriMatcher.match(uri)) {
             case QUAKE_ID:
                 qb.appendWhere(KEY_ID + "=" + uri.getPathSegments().get(1));
+                break;
+            case SEARCH:
+                qb.appendWhere(KEY_SUMMARY + " LIKE \"%" + uri.getPathSegments().get(1) + "%\"");
+                qb.setProjectionMap(SEARCH_PROJECTION_MAP);
                 break;
             default:
                 break;
@@ -95,6 +114,8 @@ public class EarthquakeProvider extends ContentProvider {
                 return "vnd.android.cursor.dir/vnd.ddhigh.earthquake";
             case QUAKE_ID:
                 return "vnd.android.cursor.item/vnd.ddhigh.earthquake";
+            case SEARCH:
+                return SearchManager.SUGGEST_MIME_TYPE;
             default:
                 throw new IllegalArgumentException("Unsupported URI: " + uri);
         }
