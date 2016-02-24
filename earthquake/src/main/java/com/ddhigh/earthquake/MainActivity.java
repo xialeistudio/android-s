@@ -72,13 +72,7 @@ public class MainActivity extends AppCompatActivity {
             updateFromPreferences();
             FragmentManager fragmentManager = getFragmentManager();
             final EarthquakeListFragment earthquakeListFragment = (EarthquakeListFragment) fragmentManager.findFragmentById(R.id.EarthquakeListFragment);
-            Thread t = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    earthquakeListFragment.refreshEarthquakes();
-                }
-            });
-            t.start();
+            earthquakeListFragment.refreshEarthquakes();
         }
     }
 }
