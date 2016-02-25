@@ -1,1 +1,1 @@
-include ':app', ':earthquake', ':downloadmanager', ':testview'
+include ':app', ':earthquake', ':downloadmanager', ':testview', ':takephoto'
