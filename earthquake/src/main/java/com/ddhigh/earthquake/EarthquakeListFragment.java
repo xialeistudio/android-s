@@ -1,13 +1,21 @@
 package com.ddhigh.earthquake;
 
+import android.app.DialogFragment;
 import android.app.ListFragment;
 import android.app.LoaderManager;
+import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
+import android.location.Location;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
+
+import java.util.Date;
 
 /**
  * @project Study
@@ -57,5 +65,31 @@ public class EarthquakeListFragment extends ListFragment implements LoaderManage
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         simpleCursorAdapter.swapCursor(null);
+    }
+
+    @Override
+    public void onListItemClick(ListView l, View v, int position, long id) {
+        super.onListItemClick(l, v, position, id);
+        ContentResolver cr = getActivity().getContentResolver();
+        Cursor result = cr.query(ContentUris.withAppendedId(EarthquakeProvider.CONTENT_URI, id), null, null, null, null);
+
+        assert result != null;
+        if (result.moveToFirst()) {
+            Date date = new Date(result.getLong(result.getColumnIndex(EarthquakeProvider.KEY_DATE)));
+            String defailt = result.getString(result.getColumnIndex(EarthquakeProvider.KEY_DETAILS));
+            double magnitude = result.getDouble(result.getColumnIndex(EarthquakeProvider.KEY_MAGNITUDE));
+            String link = result.getString(result.getColumnIndex(EarthquakeProvider.KEY_LINK));
+            double lat = result.getDouble(result.getColumnIndex(EarthquakeProvider.KEY_LOCATION_LAT));
+            double lng = result.getDouble(result.getColumnIndex(EarthquakeProvider.KEY_LOCATION_LNG));
+
+            Location location = new Location("db");
+            location.setLatitude(lat);
+            location.setLongitude(lng);
+
+            Quake quake = new Quake(date, defailt, location, magnitude, link);
+
+            DialogFragment newFragment = EarthquakeDialog.newInstance(getActivity(),quake);
+            newFragment.show(getFragmentManager(),"dialog");
+        }
     }
 }

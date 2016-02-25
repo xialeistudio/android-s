@@ -2,6 +2,8 @@ package com.ddhigh.earthquake;
 
 import android.app.AlarmManager;
 import android.app.IntentService;
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.ContentResolver;
@@ -10,7 +12,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.location.Location;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.IBinder;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
@@ -37,6 +42,10 @@ import java.util.Scanner;
  * @date 2016/2/24 0024
  */
 public class EarthquakeUpdateService extends IntentService {
+
+    private Notification.Builder earthquakeNotificationBuilder;
+    public static final int NOTIFICATION_ID = 1;
+
     /**
      * Creates an IntentService.  Invoked by your subclass's constructor.
      *
@@ -92,6 +101,9 @@ public class EarthquakeUpdateService extends IntentService {
             values.put(EarthquakeProvider.KEY_LOCATION_LNG, lng);
             values.put(EarthquakeProvider.KEY_LINK, quake.getLink());
             values.put(EarthquakeProvider.KEY_MAGNITUDE, quake.getMagnitude());
+
+            broadcastNotification(quake);
+
             cr.insert(EarthquakeProvider.CONTENT_URI, values);
         }
         query.close();
@@ -158,5 +170,48 @@ public class EarthquakeUpdateService extends IntentService {
         String ALARM_ACTION = EarthquakeAlarmReceiver.ACTION_REFRESH_EARTHQUAKE_ALARM;
         Intent intentToFire = new Intent(ALARM_ACTION);
         alarmIntent = PendingIntent.getBroadcast(this, 0, intentToFire, 0);
+
+        earthquakeNotificationBuilder = new Notification.Builder(this);
+        earthquakeNotificationBuilder.setAutoCancel(true)
+                .setTicker("Earthquake detected")
+                .setSmallIcon(R.drawable.notification_template_icon_bg);
+    }
+
+    private void broadcastNotification(Quake quake) {
+        Log.d("x1x1x1", "notification");
+        Intent startActivityIntent = new Intent(this, MainActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, startActivityIntent, 0);
+
+
+        earthquakeNotificationBuilder
+                .setContentIntent(pendingIntent)
+                .setWhen(quake.getDate().getTime())
+                .setContentTitle("M: " + quake.getMagnitude())
+                .setContentText(quake.getDefails());
+
+        if (quake.getMagnitude() > 6) {
+            Uri ringUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+            earthquakeNotificationBuilder.setSound(ringUri);
+        }
+
+        //振动器
+        double vibrateLength = 100 * Math.exp(0.53 * quake.getMagnitude());
+        long[] vibrate = new long[]{100, 100, (long) vibrateLength};
+        earthquakeNotificationBuilder.setVibrate(vibrate);
+        //LED灯
+        int color;
+        if (quake.getMagnitude() < 5.4) {
+            color = Color.GREEN;
+        } else if (quake.getMagnitude() < 6) {
+            color = Color.YELLOW;
+        } else {
+            color = Color.RED;
+        }
+
+        earthquakeNotificationBuilder.setLights(color, (int) vibrateLength, (int) vibrateLength);
+
+
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.notify(NOTIFICATION_ID, earthquakeNotificationBuilder.getNotification());
     }
 }
