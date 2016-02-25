@@ -1,6 +1,8 @@
 package com.ddhigh.dodo.authorize;
 
 import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -39,5 +41,21 @@ public class LoginFragment extends Fragment {
     @Event(R.id.btnLogin)
     private void onBtnLoginClicked(final View view) {
         Log.d(MyApplication.TAG, "12341234");
+    }
+
+    @Event(R.id.btnGoRegister)
+    private void onBtnGoRegister(View view) {
+        RegisterFragment registerFragment;
+        FragmentManager fragmentManager = getFragmentManager();
+        registerFragment = (RegisterFragment) fragmentManager.findFragmentByTag("registerFragment");
+        if (registerFragment == null) {
+            registerFragment = new RegisterFragment();
+        }
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_right);
+        fragmentTransaction.replace(R.id.fragmentContainer, registerFragment, "registerFragment");
+        fragmentTransaction.commit();
+
+        getActivity().setTitle("注册");
     }
 }

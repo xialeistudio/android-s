@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/fragmentContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/img_login_bg"
@@ -9,10 +8,9 @@
     android:paddingLeft="36dp"
     android:paddingRight="36dp">
 
-    <fragment
-        android:id="@+id/fragmentLogin"
-        android:name="com.ddhigh.dodo.authorize.LoginFragment"
+    <FrameLayout
+        android:id="@+id/fragmentContainer"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:layout="@layout/fragment_login" />
+        android:layout_height="match_parent">
+    </FrameLayout>
 </RelativeLayout>

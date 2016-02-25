@@ -14,11 +14,11 @@ import com.ddhigh.dodo.R;
  */
 public class AuthorizeActivity extends AppCompatActivity {
 
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_authorize);
+        getFragmentManager().beginTransaction().add(R.id.fragmentContainer, new LoginFragment(), "loginFragment").commit();
     }
 
 }
