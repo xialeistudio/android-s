@@ -12,6 +12,7 @@
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/downloadmanager" />
             <option value="$PROJECT_DIR$/earthquake" />
+            <option value="$PROJECT_DIR$/testview" />
           </set>
         </option>
         <option name="myModules">
@@ -20,6 +21,7 @@
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/downloadmanager" />
             <option value="$PROJECT_DIR$/earthquake" />
+            <option value="$PROJECT_DIR$/testview" />
           </set>
         </option>
       </GradleProjectSettings>
