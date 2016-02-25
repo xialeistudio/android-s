@@ -29,23 +29,17 @@ public class LoginFragment extends Fragment {
     private Button btnLogin;
     @ViewInject(R.id.btnGoRegister)
     private Button btnGoRegister;
-    @ViewInject(R.id.btnGoRegister)
-    private Button btnRegister;
-    @ViewInject(R.id.btnGoLogin)
-    private Button btnGoLogin;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        x.view().inject(this, inflater, container);
+        Log.d(MyApplication.TAG, btnLogin.toString());
+        Log.d(MyApplication.TAG, btnGoRegister.toString());
         return inflater.inflate(R.layout.fragment_login, container, false);
     }
 
-    @Event(value = R.id.btnLogin)
-    private void onBtnLoginClicked(View view) {
-        Log.d(MyApplication.TAG, "onBtnLoginClicked");
-    }
-
-    @Event(value = R.id.btnGoLogin)
+    @Event(value = R.id.btnGoRegister)
     private void onBtnGoRegisterClicked(View view) {
         Log.d(MyApplication.TAG, "onBtnGoRegisterClicked");
     }
