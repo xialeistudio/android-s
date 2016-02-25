@@ -1,15 +1,17 @@
 package com.ddhigh.earthquake;
 
 import android.app.FragmentManager;
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
 import android.os.Build;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+import android.support.v7.widget.SearchView;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 
 public class MainActivity extends AppCompatActivity {
@@ -35,7 +37,13 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
 
-        menu.add(0, MENU_PREFERENCES, Menu.NONE, R.string.menu_preferences);
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.main_menu, menu);
+//
+//        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+//        MenuItem searchMenu = menu.findItem(R.id.menu_search);
+//        SearchView searchView = (SearchView) searchMenu.getActionView();
+//        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         return true;
     }
 
@@ -44,10 +52,13 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         super.onOptionsItemSelected(item);
         switch (item.getItemId()) {
-            case MENU_PREFERENCES:
+            case R.id.menu_preferences:
                 Class c = Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB ? PreferencesActivity.class : FragmentPreferences.class;
                 Intent intent = new Intent(this, c);
                 startActivityForResult(intent, SHOW_PREFERENCE);
+                return true;
+            case R.id.menu_refresh:
+                startService(new Intent(this, EarthquakeUpdateService.class));
                 return true;
         }
         return false;

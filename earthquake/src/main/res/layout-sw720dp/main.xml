@@ -4,12 +4,6 @@
     android:layout_height="match_parent"
     android:orientation="horizontal">
 
-    <SearchView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="#FFF"
-        android:iconifiedByDefault="false"/>
-
     <fragment
         android:id="@+id/EarthquakeListFragment"
         android:name="com.ddhigh.earthquake.EarthquakeListFragment"
