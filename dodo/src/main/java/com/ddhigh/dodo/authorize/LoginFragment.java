@@ -12,7 +12,6 @@ import android.widget.Button;
 import com.ddhigh.dodo.MyApplication;
 import com.ddhigh.dodo.R;
 
-import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.Event;
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
@@ -23,7 +22,6 @@ import org.xutils.x;
  * @user xialeistudio
  * @date 2016/2/25 0025
  */
-@ContentView(R.layout.fragment_login)
 public class LoginFragment extends Fragment {
     @ViewInject(R.id.btnLogin)
     private Button btnLogin;
@@ -33,14 +31,13 @@ public class LoginFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        x.view().inject(this, inflater, container);
-        Log.d(MyApplication.TAG, btnLogin.toString());
-        Log.d(MyApplication.TAG, btnGoRegister.toString());
-        return inflater.inflate(R.layout.fragment_login, container, false);
+        View v = inflater.inflate(R.layout.fragment_login, container, false);
+        x.view().inject(this, v);
+        return v;
     }
 
-    @Event(value = R.id.btnGoRegister)
-    private void onBtnGoRegisterClicked(View view) {
-        Log.d(MyApplication.TAG, "onBtnGoRegisterClicked");
+    @Event(R.id.btnLogin)
+    private void onBtnLoginClicked(final View view) {
+        Log.d(MyApplication.TAG, "12341234");
     }
 }
