@@ -10,20 +10,26 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/dodo" />
             <option value="$PROJECT_DIR$/downloadmanager" />
             <option value="$PROJECT_DIR$/earthquake" />
+            <option value="$PROJECT_DIR$/sample" />
             <option value="$PROJECT_DIR$/takephoto" />
             <option value="$PROJECT_DIR$/testview" />
+            <option value="$PROJECT_DIR$/xutils" />
           </set>
         </option>
         <option name="myModules">
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/dodo" />
             <option value="$PROJECT_DIR$/downloadmanager" />
             <option value="$PROJECT_DIR$/earthquake" />
+            <option value="$PROJECT_DIR$/sample" />
             <option value="$PROJECT_DIR$/takephoto" />
             <option value="$PROJECT_DIR$/testview" />
+            <option value="$PROJECT_DIR$/xutils" />
           </set>
         </option>
       </GradleProjectSettings>

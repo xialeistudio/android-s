@@ -4,10 +4,13 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Study.iml" filepath="$PROJECT_DIR$/Study.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/dodo/dodo.iml" filepath="$PROJECT_DIR$/dodo/dodo.iml" />
       <module fileurl="file://$PROJECT_DIR$/downloadmanager/downloadmanager.iml" filepath="$PROJECT_DIR$/downloadmanager/downloadmanager.iml" />
       <module fileurl="file://$PROJECT_DIR$/earthquake/earthquake.iml" filepath="$PROJECT_DIR$/earthquake/earthquake.iml" />
+      <module fileurl="file://$PROJECT_DIR$/sample/sample.iml" filepath="$PROJECT_DIR$/sample/sample.iml" />
       <module fileurl="file://$PROJECT_DIR$/takephoto/takephoto.iml" filepath="$PROJECT_DIR$/takephoto/takephoto.iml" />
       <module fileurl="file://$PROJECT_DIR$/testview/testview.iml" filepath="$PROJECT_DIR$/testview/testview.iml" />
+      <module fileurl="file://$PROJECT_DIR$/xutils/xutils.iml" filepath="$PROJECT_DIR$/xutils/xutils.iml" />
     </modules>
   </component>
 </project>
