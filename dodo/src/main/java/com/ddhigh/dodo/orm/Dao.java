@@ -1,5 +1,7 @@
 package com.ddhigh.dodo.orm;
 
+import org.json.JSONObject;
+
 import java.sql.Date;
 
 /**
@@ -38,5 +40,9 @@ public class Dao {
 
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public Dao(JSONObject jsonObject) throws Exception {
+        throw new Exception("子类必须重载此构造方法");
     }
 }

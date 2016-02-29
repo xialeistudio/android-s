@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.ddhigh.dodo.MyApplication;
 import com.ddhigh.dodo.R;
+import com.ddhigh.dodo.orm.User;
 import com.ddhigh.dodo.util.HttpUtil;
 import com.ddhigh.dodo.widget.IosAlertDialog;
 import com.ddhigh.dodo.widget.LoadingDialog;
@@ -78,11 +79,11 @@ public class LoginFragment extends Fragment {
             dialog.setCancelable(false);
             //发送数据
             dialog.show();
-            RequestParams params = HttpUtil.prepare("/mcm/api/user/login");
-            params.addBodyParameter("username", username);
-            params.addBodyParameter("password", password);
-            params.setAsJsonContent(true);
-            x.http().post(params, new Callback.CommonCallback<JSONObject>() {
+            final User user = new User();
+            user.setUsername(username);
+            user.setPassword(password);
+            dialog.show();
+            user.login(new Callback.CommonCallback<JSONObject>() {
                 @Override
                 public void onSuccess(JSONObject result) {
                     if (result.has("error")) {
@@ -118,7 +119,6 @@ public class LoginFragment extends Fragment {
                     dialog.dismiss();
                 }
             });
-
         }
     }
 

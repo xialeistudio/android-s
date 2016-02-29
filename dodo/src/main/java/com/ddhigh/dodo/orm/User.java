@@ -1,5 +1,17 @@
 package com.ddhigh.dodo.orm;
 
+import android.util.Log;
+import android.widget.Toast;
+
+import com.ddhigh.dodo.MyApplication;
+import com.ddhigh.dodo.util.HttpUtil;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.xutils.common.Callback;
+import org.xutils.http.RequestParams;
+import org.xutils.x;
+
 import java.sql.Date;
 
 /**
@@ -92,5 +104,25 @@ public class User extends Dao {
         public void setUserId(String userId) {
             this.userId = userId;
         }
+    }
+
+    /**
+     * 登录
+     * @param callback 回调方法
+     */
+    public void login(Callback.CommonCallback<JSONObject> callback) {
+        RequestParams params = HttpUtil.prepare("/mcm/api/user/login");
+        params.addBodyParameter("username", username);
+        params.addBodyParameter("password", password);
+        params.setAsJsonContent(true);
+        x.http().post(params, callback);
+    }
+
+    public User() {
+        super();
+    }
+
+    public User(JSONObject jsonObject) throws Exception {
+        super(jsonObject);
     }
 }

@@ -2,8 +2,6 @@ package com.ddhigh.dodo.util;
 
 import com.ddhigh.dodo.Config;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.xutils.http.RequestParams;
 
 /**
