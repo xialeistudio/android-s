@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.ddhigh.dodo.R;
+import com.ddhigh.dodo.widget.LoadingDialog;
 
 import org.xutils.view.annotation.Event;
 import org.xutils.view.annotation.ViewInject;
@@ -46,9 +47,13 @@ public class LoginFragment extends Fragment {
     private void onBtnLoginClicked(final View view) {
         String username = txtUsername.getText().toString();
         String password = txtPassword.getText().toString();
+
+        LoadingDialog loadingDialog = new LoadingDialog(getActivity());
+        loadingDialog.show();
         if (TextUtils.isEmpty(username)) {
         } else if (TextUtils.isEmpty(password)) {
         } else {
+
         }
     }
 
