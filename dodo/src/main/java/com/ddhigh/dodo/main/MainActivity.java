@@ -50,4 +50,9 @@ public class MainActivity extends AppCompatActivity {
                 super.onActivityResult(requestCode, resultCode, data);
         }
     }
+
+    private void login(String token, String userId) {
+        //读取用户数据，实例化application的user和accessToken对象
+        //fragment替换
+    }
 }

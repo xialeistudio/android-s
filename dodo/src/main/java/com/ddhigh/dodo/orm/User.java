@@ -1,5 +1,6 @@
 package com.ddhigh.dodo.orm;
 
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -34,7 +35,15 @@ public class User extends Dao {
     private String emailVerified;
     private int sex;
     private String mobile;
+    private String nickname;
 
+    public String getNickname() {
+        return TextUtils.isEmpty(nickname) ? "佚名" : nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
 
     public String getUsername() {
         return username;
@@ -107,7 +116,6 @@ public class User extends Dao {
     }
 
 
-
     public User() {
         super();
     }
@@ -118,6 +126,7 @@ public class User extends Dao {
 
     /**
      * 登录
+     *
      * @param callback 回调方法
      */
     public void login(Callback.CommonCallback<JSONObject> callback) {
@@ -130,13 +139,14 @@ public class User extends Dao {
 
     /**
      * 注册
+     *
      * @param callback
      */
-    public void register(Callback.CommonCallback<JSONObject> callback){
+    public void register(Callback.CommonCallback<JSONObject> callback) {
         RequestParams params = HttpUtil.prepare("/mcm/api/user");
         params.addBodyParameter("username", username);
         params.addBodyParameter("password", password);
-        params.addBodyParameter("email",email);
+        params.addBodyParameter("email", email);
         params.setAsJsonContent(true);
         x.http().post(params, callback);
     }

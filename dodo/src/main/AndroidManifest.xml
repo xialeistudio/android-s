@@ -20,7 +20,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:name=".authorize.AuthorizeActivity"
             android:label="@string/login" />
     </application>

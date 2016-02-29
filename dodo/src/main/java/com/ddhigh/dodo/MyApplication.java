@@ -2,6 +2,7 @@ package com.ddhigh.dodo;
 
 import android.app.Application;
 
+import com.ddhigh.dodo.orm.User;
 import com.ddhigh.dodo.util.HttpUtil;
 
 import org.xutils.x;
@@ -14,6 +15,9 @@ import org.xutils.x;
  */
 public class MyApplication extends Application {
     public final static String TAG = "dodo-1";
+
+    public User user;
+    public User.AccessToken accessToken;
 
     @Override
     public void onCreate() {
