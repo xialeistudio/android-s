@@ -1,41 +1,96 @@
 package com.ddhigh.dodo.orm;
 
 import java.sql.Date;
-import java.text.SimpleDateFormat;
-import java.util.Locale;
 
 /**
  * 用户
+ *
  * @project Study
  * @package com.ddhigh.dodo.orm
  * @user xialeistudio
  * @date 2016/2/29 0029
  */
-public class User {
-    public final static int FEMALE = 1;//男
-    public final static int MALE = 2;//女
+@SuppressWarnings("ALL")
+public class User extends Dao {
+    public final static int SEX_FEMALE = 1;//男
+    public final static int SEX_MALE = 2;//女
+    public final static int SEX_OTHER = 3;//其他
+
     private String username;
     private String password;
-    private String nickname;
-    private String phone;
     private String email;
+    private String emailVerified;
     private int sex;
-    private Date createdAt;
+    private String mobile;
 
-    public User(String username, String password, String nickname, String phone, String email, int sex, Date createdAt) {
-        this.username = username;
-        this.password = password;
-        this.nickname = nickname;
-        this.phone = phone;
-        this.email = email;
-        this.sex = sex;
-        this.createdAt = createdAt;
+
+    public String getUsername() {
+        return username;
     }
 
-    @Override
-    public String toString() {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA);
-        String dateStr = simpleDateFormat.format(createdAt);
-        return String.format("username:　%s\npassword: %s\nnickname: %s\nphone: %s\nemail: %s\nsex: %s\ncreatedAt: %s", username, password, nickname, phone, email, (sex == FEMALE ? "男" : "女"), dateStr);
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getEmailVerified() {
+        return emailVerified;
+    }
+
+    public void setEmailVerified(String emailVerified) {
+        this.emailVerified = emailVerified;
+    }
+
+    public int getSex() {
+        return sex;
+    }
+
+    public void setSex(int sex) {
+        this.sex = sex;
+    }
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
+
+
+    public static class AccessToken extends Dao {
+        private int ttl;
+        private String userId;
+
+        public int getTtl() {
+            return ttl;
+        }
+
+        public void setTtl(int ttl) {
+            this.ttl = ttl;
+        }
+
+        public String getUserId() {
+            return userId;
+        }
+
+        public void setUserId(String userId) {
+            this.userId = userId;
+        }
     }
 }

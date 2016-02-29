@@ -12,21 +12,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.ddhigh.dodo.MyApplication;
 import com.ddhigh.dodo.R;
 import com.ddhigh.dodo.util.HttpUtil;
 import com.ddhigh.dodo.widget.IosAlertDialog;
 import com.ddhigh.dodo.widget.LoadingDialog;
-import com.loopj.android.http.JsonHttpResponseHandler;
-import com.loopj.android.http.RequestParams;
 
+import org.json.JSONException;
 import org.json.JSONObject;
+import org.xutils.common.Callback;
+import org.xutils.http.RequestParams;
 import org.xutils.view.annotation.Event;
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
-
-import cz.msebera.android.httpclient.entity.mime.Header;
 
 /**
  * @project Study
@@ -77,39 +77,45 @@ public class LoginFragment extends Fragment {
             dialog.setTitle("登录中");
             dialog.setCancelable(false);
             //发送数据
-            RequestParams params = new RequestParams();
-            params.put("username", username);
-            params.put("password", params);
-            params.setUseJsonStreamer(true);
-            HttpUtil.post("/mcm/api/user/login", params, new JsonHttpResponseHandler() {
+            dialog.show();
+            RequestParams params = HttpUtil.prepare("/mcm/api/user/login");
+            params.addBodyParameter("username", username);
+            params.addBodyParameter("password", password);
+            params.setAsJsonContent(true);
+            x.http().post(params, new Callback.CommonCallback<JSONObject>() {
                 @Override
-                public void onStart() {
-                    super.onStart();
-                    dialog.show();
-                    Log.d(MyApplication.TAG,"start http request");
+                public void onSuccess(JSONObject result) {
+                    if (result.has("error")) {
+                        try {
+                            JSONObject error = result.getJSONObject("error");
+                            handleError(error.getString("message"));
+                        } catch (JSONException e) {
+                            onError(e, true);
+                        }
+                    } else {
+                        Log.d(MyApplication.TAG, "login success: " + result.toString());
+                    }
+                }
+
+                private void handleError(String msg) {
+                    Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
                 }
 
                 @Override
-                public void onFinish() {
-                    super.onFinish();
+                public void onError(Throwable ex, boolean isOnCallback) {
+                    handleError("账号、密码错误或邮箱未验证");
+                    ex.printStackTrace();
+                }
+
+
+                @Override
+                public void onCancelled(CancelledException cex) {
                     dialog.dismiss();
-                    Log.d(MyApplication.TAG,"finish http request");
                 }
 
                 @Override
-                public void onSuccess(int statusCode, cz.msebera.android.httpclient.Header[] headers, JSONObject response) {
-                    Log.d(MyApplication.TAG, "login success: " + response.toString());
-                }
-
-                @Override
-                public void onFailure(int statusCode, cz.msebera.android.httpclient.Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                    Log.d(MyApplication.TAG, "login fail: " + errorResponse.toString());
-                }
-
-                @Override
-                public void onFailure(int statusCode, cz.msebera.android.httpclient.Header[] headers, String responseString, Throwable throwable) {
-                    Log.d(MyApplication.TAG, "login fail: " + responseString);
-                    throwable.printStackTrace();
+                public void onFinished() {
+                    dialog.dismiss();
                 }
             });
 

@@ -1,55 +1,39 @@
 package com.ddhigh.dodo.util;
 
-import android.util.Log;
+import com.ddhigh.dodo.Config;
 
-import com.ddhigh.dodo.MyApplication;
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.AsyncHttpResponseHandler;
-import com.loopj.android.http.RequestParams;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.xutils.http.RequestParams;
 
 /**
- * Http工具类
- *
  * @project Study
  * @package com.ddhigh.dodo.util
  * @user xialeistudio
  * @date 2016/2/29 0029
  */
 public class HttpUtil {
-    private static AsyncHttpClient client = new AsyncHttpClient();
-    public static String api;
-
-    static {
-        client.setTimeout(2000);
-    }
+    static String api;
 
     public static void setApi(String api) {
         HttpUtil.api = api;
     }
 
-    /**
-     * Get请求
-     *
-     * @param url     请求地址
-     * @param params  请求参数
-     * @param handler 回调
-     */
-    public static void get(String url, RequestParams params, AsyncHttpResponseHandler handler) {
-        url = url.startsWith("http") ? url : (api + url);
-        client.get(url, params, handler);
-        Log.d(MyApplication.TAG, "http get: " + url);
-    }
 
     /**
-     * Post请求
+     * 准备请求参数
      *
-     * @param url     请求地址
-     * @param params  请求参数
-     * @param handler 回调
+     * @param uri
+     * @return
      */
-    public static void post(String url, RequestParams params, AsyncHttpResponseHandler handler) {
-        url = url.startsWith("http") ? url : (api + url);
-        client.post(url, params, handler);
-        Log.d(MyApplication.TAG, "http post: " + url);
+    public static RequestParams prepare(String uri) {
+        RequestParams params = new RequestParams(uri.startsWith("http") ? uri : (api + uri));
+        //请求加密
+        params.addHeader("X-APICloud-AppId", Config.ApiCloud.appid);
+        long timestamp = System.currentTimeMillis();
+        String key = EncryUtil.sha1(Config.ApiCloud.appid + "UZ" + Config.ApiCloud.appkey + "UZ" + timestamp) + "." + timestamp;
+        params.addHeader("X-APICloud-AppKey", key);
+        return params;
     }
+
 }
