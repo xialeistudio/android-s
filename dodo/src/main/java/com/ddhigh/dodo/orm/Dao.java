@@ -1,5 +1,10 @@
 package com.ddhigh.dodo.orm;
 
+import android.util.Log;
+
+import com.ddhigh.dodo.MyApplication;
+
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.sql.Date;
@@ -42,7 +47,7 @@ public class Dao {
         this.updatedAt = updatedAt;
     }
 
-    public Dao(JSONObject jsonObject) throws Exception {
-        throw new Exception("子类必须重载此构造方法");
+    public void parse(JSONObject result) throws JSONException {
+        Log.d(MyApplication.TAG, "parse " + result.toString() + " ===> " + getClass().getName());
     }
 }

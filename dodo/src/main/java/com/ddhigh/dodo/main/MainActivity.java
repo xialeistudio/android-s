@@ -18,6 +18,9 @@ import com.ddhigh.dodo.R;
 import com.ddhigh.dodo.authorize.LoginFragment;
 import com.ddhigh.dodo.orm.User;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.xutils.common.Callback;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.Event;
 import org.xutils.view.annotation.ViewInject;
@@ -41,7 +44,36 @@ public class MainActivity extends AppCompatActivity {
         x.view().inject(this);
 
         application = (MyApplication) getApplication();
+        //加载用户信息
+        if (!application.user.isGuest()) {
+            application.user.loadUser(application.accessToken.getId(), new Callback.CommonCallback<JSONObject>() {
+                @Override
+                public void onSuccess(JSONObject result) {
+                    try {
+                        application.user.parse(result);
+                    } catch (JSONException e) {
+                        onError(e, true);
+                    }
+                }
 
+                @Override
+                public void onError(Throwable ex, boolean isOnCallback) {
+                    Log.d(MyApplication.TAG, "loadUser: " + ex.getMessage());
+                    ex.printStackTrace();
+                }
+
+                @Override
+                public void onCancelled(CancelledException cex) {
+
+                }
+
+                @Override
+                public void onFinished() {
+
+                }
+            });
+        }
+        //fragment初始化
         FragmentManager fragmentManager = getFragmentManager();
         RemindListFragment fragment = new RemindListFragment();
         fragmentManager.beginTransaction()

@@ -36,10 +36,19 @@ public class User extends Dao {
     private String username;
     private String password;
     private String email;
-    private String emailVerified;
+    private boolean emailVerified;
     private int sex;
     private String mobile;
     private String nickname;
+    private String avatar;
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
 
     public String getNickname() {
         return TextUtils.isEmpty(nickname) ? "佚名" : nickname;
@@ -73,11 +82,11 @@ public class User extends Dao {
         this.email = email;
     }
 
-    public String getEmailVerified() {
+    public boolean isEmailVerified() {
         return emailVerified;
     }
 
-    public void setEmailVerified(String emailVerified) {
+    public void setEmailVerified(boolean emailVerified) {
         this.emailVerified = emailVerified;
     }
 
@@ -99,6 +108,15 @@ public class User extends Dao {
 
     public boolean isGuest() {
         return id == null || TextUtils.isEmpty(id);
+    }
+
+    /**
+     * 加载用户数据
+     */
+    public void loadUser(String token, Callback.CommonCallback<JSONObject> callback) {
+        RequestParams params = HttpUtil.prepare("/mcm/api/user/" + id);
+        params.addHeader("authorization", token);
+        x.http().get(params, callback);
     }
 
 
@@ -128,10 +146,6 @@ public class User extends Dao {
         super();
     }
 
-    public User(JSONObject jsonObject) throws Exception {
-        super(jsonObject);
-    }
-
     /**
      * 登录
      *
@@ -157,5 +171,29 @@ public class User extends Dao {
         params.addBodyParameter("email", email);
         params.setAsJsonContent(true);
         x.http().post(params, callback);
+    }
+
+    @Override
+    public void parse(JSONObject result) throws JSONException {
+        super.parse(result);
+        username = result.getString("username");
+        if (result.has("email") && !result.isNull("email")) {
+            email = result.getString("email");
+        }
+        if (result.has("emailVerified") && !result.isNull("emailVerified")) {
+            emailVerified = result.getBoolean("emailVerified");
+        }
+        if (result.has("sex") && !result.isNull("sex")) {
+            sex = result.getInt("sex");
+        }
+        if (result.has("mobile") && !result.isNull("mobile")) {
+            mobile = result.getString("mobile");
+        }
+        if (result.has("nickname") && !result.isNull("nickname")) {
+            nickname = result.getString("nickname");
+        }
+        if (result.has("avatar") && !result.isNull("avatar")) {
+            avatar = result.getString("avatar");
+        }
     }
 }
