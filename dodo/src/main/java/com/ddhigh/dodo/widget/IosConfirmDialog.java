@@ -132,7 +132,7 @@ public class IosConfirmDialog extends Dialog {
                 buttonCancel.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        okListener.onClick(dialog, DialogInterface.BUTTON_NEGATIVE);
+                        cancelListener.onClick(dialog, DialogInterface.BUTTON_NEGATIVE);
                     }
                 });
             } else {
