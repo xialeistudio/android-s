@@ -3,7 +3,6 @@ package com.ddhigh.dodo.authorize;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -16,16 +15,18 @@ import android.widget.EditText;
 
 import com.ddhigh.dodo.MyApplication;
 import com.ddhigh.dodo.R;
+import com.ddhigh.dodo.util.HttpUtil;
 import com.ddhigh.dodo.widget.IosAlertDialog;
-import com.ddhigh.dodo.widget.IosConfirmDialog;
 import com.ddhigh.dodo.widget.LoadingDialog;
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 
+import org.json.JSONObject;
 import org.xutils.view.annotation.Event;
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
-import java.util.Timer;
-import java.util.TimerTask;
+import cz.msebera.android.httpclient.entity.mime.Header;
 
 /**
  * @project Study
@@ -71,25 +72,46 @@ public class LoginFragment extends Fragment {
             dialog.setCancelable(false);
             dialog.show();
         } else {
-            IosConfirmDialog.Builder dialogBuilder = new IosConfirmDialog.Builder(getActivity());
-            dialogBuilder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                    Log.d(MyApplication.TAG, "clicked ok");
-                }
-            });
-            dialogBuilder.setNegativeButton("取消2", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                    Log.d(MyApplication.TAG, "clicked cancel");
-                }
-            });
 
-            IosConfirmDialog dialog = dialogBuilder.create();
+            final LoadingDialog dialog = new LoadingDialog(getActivity());
+            dialog.setTitle("登录中");
             dialog.setCancelable(false);
-            dialog.show();
+            //发送数据
+            RequestParams params = new RequestParams();
+            params.put("username", username);
+            params.put("password", params);
+            params.setUseJsonStreamer(true);
+            HttpUtil.post("/mcm/api/user/login", params, new JsonHttpResponseHandler() {
+                @Override
+                public void onStart() {
+                    super.onStart();
+                    dialog.show();
+                    Log.d(MyApplication.TAG,"start http request");
+                }
+
+                @Override
+                public void onFinish() {
+                    super.onFinish();
+                    dialog.dismiss();
+                    Log.d(MyApplication.TAG,"finish http request");
+                }
+
+                @Override
+                public void onSuccess(int statusCode, cz.msebera.android.httpclient.Header[] headers, JSONObject response) {
+                    Log.d(MyApplication.TAG, "login success: " + response.toString());
+                }
+
+                @Override
+                public void onFailure(int statusCode, cz.msebera.android.httpclient.Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                    Log.d(MyApplication.TAG, "login fail: " + errorResponse.toString());
+                }
+
+                @Override
+                public void onFailure(int statusCode, cz.msebera.android.httpclient.Header[] headers, String responseString, Throwable throwable) {
+                    Log.d(MyApplication.TAG, "login fail: " + responseString);
+                    throwable.printStackTrace();
+                }
+            });
 
         }
     }

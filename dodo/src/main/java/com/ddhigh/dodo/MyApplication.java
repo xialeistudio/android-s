@@ -2,6 +2,8 @@ package com.ddhigh.dodo;
 
 import android.app.Application;
 
+import com.ddhigh.dodo.util.HttpUtil;
+
 import org.xutils.x;
 
 /**
@@ -12,10 +14,12 @@ import org.xutils.x;
  */
 public class MyApplication extends Application {
     public final static String TAG = "dodo-1";
+
     @Override
     public void onCreate() {
         super.onCreate();
         x.Ext.init(this);
         x.Ext.setDebug(BuildConfig.DEBUG);
+        HttpUtil.setApi("https://d.apicloud.com");
     }
 }
