@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.ddhigh.dodo.R;
+import com.ddhigh.dodo.widget.IosAlertDialog;
 import com.ddhigh.dodo.widget.LoadingDialog;
 
 import org.xutils.view.annotation.Event;
@@ -48,12 +49,23 @@ public class LoginFragment extends Fragment {
         String username = txtUsername.getText().toString();
         String password = txtPassword.getText().toString();
 
-        LoadingDialog loadingDialog = new LoadingDialog(getActivity());
-        loadingDialog.show();
         if (TextUtils.isEmpty(username)) {
+            IosAlertDialog dialog = new IosAlertDialog.Builder(getActivity())
+                    .setTitle("提示")
+                    .setMessage("请输入账号")
+                    .create();
+            dialog.setCancelable(false);
+            dialog.show();
         } else if (TextUtils.isEmpty(password)) {
+            IosAlertDialog dialog = new IosAlertDialog.Builder(getActivity())
+                    .setTitle("提示")
+                    .setMessage("请输入密码")
+                    .create();
+            dialog.setCancelable(false);
+            dialog.show();
         } else {
-
+            LoadingDialog loadingDialog = new LoadingDialog(getActivity());
+            loadingDialog.show();
         }
     }
 
