@@ -3,22 +3,29 @@ package com.ddhigh.dodo.authorize;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.ddhigh.dodo.MyApplication;
 import com.ddhigh.dodo.R;
 import com.ddhigh.dodo.widget.IosAlertDialog;
+import com.ddhigh.dodo.widget.IosConfirmDialog;
 import com.ddhigh.dodo.widget.LoadingDialog;
 
 import org.xutils.view.annotation.Event;
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * @project Study
@@ -64,8 +71,26 @@ public class LoginFragment extends Fragment {
             dialog.setCancelable(false);
             dialog.show();
         } else {
-            LoadingDialog loadingDialog = new LoadingDialog(getActivity());
-            loadingDialog.show();
+            IosConfirmDialog.Builder dialogBuilder = new IosConfirmDialog.Builder(getActivity());
+            dialogBuilder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                    Log.d(MyApplication.TAG, "clicked ok");
+                }
+            });
+            dialogBuilder.setNegativeButton("取消2", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                    Log.d(MyApplication.TAG, "clicked cancel");
+                }
+            });
+
+            IosConfirmDialog dialog = dialogBuilder.create();
+            dialog.setCancelable(false);
+            dialog.show();
+
         }
     }
 
