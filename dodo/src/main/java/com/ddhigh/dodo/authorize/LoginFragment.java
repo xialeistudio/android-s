@@ -101,7 +101,7 @@ public class LoginFragment extends Fragment {
                         try {
                             intent.putExtra("token", result.getString("id"));
                             intent.putExtra("userId", result.getString("userId"));
-                            AuthorizeActivity activity = (AuthorizeActivity) getActivity();
+                            Activity activity = getActivity();
                             activity.setResult(Activity.RESULT_OK, intent);
                             activity.finish();
                         } catch (JSONException e) {
@@ -143,11 +143,8 @@ public class LoginFragment extends Fragment {
             registerFragment = new RegisterFragment();
         }
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_right);
         fragmentTransaction.replace(R.id.fragmentContainer, registerFragment, "registerFragment");
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
-
-        getActivity().setTitle("注册");
     }
 }

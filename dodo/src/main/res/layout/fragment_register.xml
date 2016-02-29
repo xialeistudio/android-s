@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/img_login_bg"
+    android:padding="16dp">
 
     <ImageView
         android:id="@+id/imageView"
@@ -21,8 +23,8 @@
         android:layout_marginTop="85dp"
         android:background="@drawable/bg_corner"
         android:hint="@string/username"
-        android:padding="8dp"
         android:inputType="textPersonName"
+        android:padding="8dp"
         android:textSize="16sp" />
 
     <EditText
@@ -52,6 +54,7 @@
         android:inputType="textPassword"
         android:padding="8dp"
         android:textSize="16sp" />
+
     <EditText
         android:id="@+id/txtEmail"
         android:layout_width="match_parent"

@@ -1,15 +1,12 @@
 package com.ddhigh.dodo.authorize;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +14,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.ddhigh.dodo.MyApplication;
 import com.ddhigh.dodo.R;
 import com.ddhigh.dodo.orm.User;
 import com.ddhigh.dodo.util.RegexUtil;
@@ -68,12 +64,9 @@ public class RegisterFragment extends Fragment {
             loginFragment = new LoginFragment();
         }
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
         fragmentTransaction.replace(R.id.fragmentContainer, loginFragment, "loginFragment");
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
-
-        getActivity().setTitle("登录");
     }
 
     @Event(R.id.btnRegister)
