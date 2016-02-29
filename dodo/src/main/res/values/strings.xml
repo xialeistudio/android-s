@@ -7,4 +7,6 @@
     <string name="register">注册</string>
     <string name="repeat_password">确认密码</string>
     <string name="email">邮箱地址</string>
+    <string name="square">广场</string>
+    <string name="my">我的</string>
 </resources>
