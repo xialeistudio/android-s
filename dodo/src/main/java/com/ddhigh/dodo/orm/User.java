@@ -29,6 +29,10 @@ public class User extends Dao {
     public final static int SEX_MALE = 2;//女
     public final static int SEX_OTHER = 3;//其他
 
+
+    public final static String PREF_USER_ID = "PREF_USER_ID";
+    public final static String PREF_USER_TOKEN = "PREF_USER_TOKEN";
+
     private String username;
     private String password;
     private String email;
@@ -91,6 +95,10 @@ public class User extends Dao {
 
     public void setMobile(String mobile) {
         this.mobile = mobile;
+    }
+
+    public boolean isGuest() {
+        return id == null || TextUtils.isEmpty(id);
     }
 
 

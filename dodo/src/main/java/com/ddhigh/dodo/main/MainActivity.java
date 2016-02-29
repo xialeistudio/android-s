@@ -1,8 +1,11 @@
 package com.ddhigh.dodo.main;
 
+import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -13,6 +16,7 @@ import android.widget.Toast;
 import com.ddhigh.dodo.MyApplication;
 import com.ddhigh.dodo.R;
 import com.ddhigh.dodo.authorize.LoginFragment;
+import com.ddhigh.dodo.orm.User;
 
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.Event;
@@ -21,7 +25,7 @@ import org.xutils.x;
 
 @ContentView(R.layout.activity_main)
 public class MainActivity extends AppCompatActivity {
-
+    MyApplication application;
     @ViewInject(R.id.imageList)
     private ImageView imageList;
     @ViewInject(R.id.imageMy)
@@ -35,6 +39,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         x.view().inject(this);
+
+        application = (MyApplication) getApplication();
 
         FragmentManager fragmentManager = getFragmentManager();
         RemindListFragment fragment = new RemindListFragment();
@@ -77,23 +83,59 @@ public class MainActivity extends AppCompatActivity {
         //fragment处理
         FragmentManager fragmentManager = getFragmentManager();
         //TODO://判断登录状态显示不同fragment
-        LoginFragment fragment = (LoginFragment) fragmentManager.findFragmentByTag("loginFragment");
-        if (fragment == null) {
-            fragment = new LoginFragment();
+        Fragment fragment;
+        String tag;
+        if (application.user.isGuest()) {
+            tag = "loginFragment";
+            fragment = fragmentManager.findFragmentByTag(tag);
+            if (fragment == null) {
+                fragment = new LoginFragment();
+            }
+        } else {
+            tag = "userFragment";
+            fragment = fragmentManager.findFragmentByTag(tag);
+            if (fragment == null) {
+                fragment = new UserFragment();
+            }
         }
         fragmentManager.beginTransaction()
-                .replace(R.id.fragmentContainer, fragment, "loginFragment")
+                .replace(R.id.fragmentContainer, fragment, tag)
                 .show(fragment)
                 .commit();
     }
 
     /**
      * 登录成功
+     *
      * @param userId
      * @param token
      */
     public void loginSuccess(String userId, String token) {
         Log.d(MyApplication.TAG, "loginSuccess ===> userId: " + userId + ", token: " + token);
         Toast.makeText(this, "登录成功", Toast.LENGTH_SHORT).show();
+        //持久化
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(User.PREF_USER_ID, userId);
+        editor.putString(User.PREF_USER_TOKEN, token);
+        editor.apply();
+        //更新user对象
+        application.user = new User();
+        application.user.setId(userId);
+        //更新授权对象
+        application.accessToken = new User.AccessToken();
+        application.accessToken.setId(token);
+        application.accessToken.setUserId(userId);
+        //更新fragment
+        FragmentManager fragmentManager = getFragmentManager();
+        UserFragment fragment = (UserFragment) fragmentManager.findFragmentByTag("userFragment");
+        if (fragment == null) {
+            fragment = new UserFragment();
+        }
+        fragmentManager.beginTransaction()
+                .replace(R.id.fragmentContainer, fragment, "userFragment")
+                .show(fragment)
+                .commit();
+
     }
 }
