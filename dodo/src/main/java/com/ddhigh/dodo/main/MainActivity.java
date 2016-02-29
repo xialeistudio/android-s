@@ -1,58 +1,35 @@
 package com.ddhigh.dodo.main;
 
-import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
+import android.app.Fragment;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.Toast;
+import android.support.v7.app.AppCompatActivity;
 
-import com.ddhigh.dodo.MyApplication;
 import com.ddhigh.dodo.R;
-import com.ddhigh.dodo.authorize.AuthorizeActivity;
+import com.ddhigh.dodo.authorize.LoginFragment;
 
 import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.Event;
-import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
 @ContentView(R.layout.activity_main)
 public class MainActivity extends AppCompatActivity {
-    public static final int CODE_LOGIN = 1;
-    @ViewInject(R.id.btnLogin)
-    Button btnLogin;
+
+    public Fragment[] fragments = new Fragment[2];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         x.view().inject(this);
-    }
 
-    @Event(R.id.btnLogin)
-    private void onBtnLoginClicked(View view) {
-        Intent intent = new Intent(this, AuthorizeActivity.class);
-        startActivityForResult(intent, CODE_LOGIN);
-    }
+        fragments[0] = new RemindListFragment();
+        //TODO:判断登录状态显示UserFragment
+        fragments[1] = new LoginFragment();
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode) {
-            case CODE_LOGIN:
-                if (resultCode == RESULT_OK) {
-                    String token = data.getStringExtra("token");
-                    String userId = data.getStringExtra("userId");
-                    Log.d(MyApplication.TAG, "login success,token: " + token + ",userId: " + userId);
-                    Toast.makeText(this, "登录成功", Toast.LENGTH_SHORT).show();
-                }
-                break;
-            default:
-                super.onActivityResult(requestCode, resultCode, data);
-        }
-    }
-
-    private void login(String token, String userId) {
-        //读取用户数据，实例化application的user和accessToken对象
-        //fragment替换
+        getFragmentManager().beginTransaction()
+                .add(R.id.fragmentContainer, fragments[0], "mainFragment")
+                .add(R.id.fragmentContainer, fragments[1], "userFragment")
+                .hide(fragments[0])
+                .hide(fragments[1])
+                .show(fragments[0])
+                .commit();
     }
 }
