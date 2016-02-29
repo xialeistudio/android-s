@@ -1,5 +1,6 @@
 package com.ddhigh.dodo.authorize;
 
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -18,7 +19,10 @@ public class AuthorizeActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_authorize);
-        getFragmentManager().beginTransaction().add(R.id.fragmentContainer, new LoginFragment(), "loginFragment").commit();
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.add(R.id.fragmentContainer, new LoginFragment(), "loginFragment");
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 
 }

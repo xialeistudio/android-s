@@ -1,8 +1,10 @@
 package com.ddhigh.dodo.authorize;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -16,6 +18,7 @@ import android.widget.Toast;
 
 import com.ddhigh.dodo.MyApplication;
 import com.ddhigh.dodo.R;
+import com.ddhigh.dodo.main.MainActivity;
 import com.ddhigh.dodo.orm.User;
 import com.ddhigh.dodo.util.HttpUtil;
 import com.ddhigh.dodo.widget.IosAlertDialog;
@@ -82,7 +85,6 @@ public class LoginFragment extends Fragment {
             final User user = new User();
             user.setUsername(username);
             user.setPassword(password);
-            dialog.show();
             user.login(new Callback.CommonCallback<JSONObject>() {
                 @Override
                 public void onSuccess(JSONObject result) {
@@ -94,7 +96,17 @@ public class LoginFragment extends Fragment {
                             onError(e, true);
                         }
                     } else {
-                        Log.d(MyApplication.TAG, "login success: " + result.toString());
+                        //登录成功
+                        Intent intent = new Intent();
+                        try {
+                            intent.putExtra("token", result.getString("id"));
+                            intent.putExtra("userId", result.getString("userId"));
+                            AuthorizeActivity activity = (AuthorizeActivity) getActivity();
+                            activity.setResult(Activity.RESULT_OK, intent);
+                            activity.finish();
+                        } catch (JSONException e) {
+                            onError(e, true);
+                        }
                     }
                 }
 
@@ -104,7 +116,7 @@ public class LoginFragment extends Fragment {
 
                 @Override
                 public void onError(Throwable ex, boolean isOnCallback) {
-                    handleError("账号、密码错误或邮箱未验证");
+                    handleError("账号或密码错误或邮箱未验证");
                     ex.printStackTrace();
                 }
 
@@ -133,6 +145,7 @@ public class LoginFragment extends Fragment {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_right);
         fragmentTransaction.replace(R.id.fragmentContainer, registerFragment, "registerFragment");
+        fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
 
         getActivity().setTitle("注册");

@@ -106,6 +106,16 @@ public class User extends Dao {
         }
     }
 
+
+
+    public User() {
+        super();
+    }
+
+    public User(JSONObject jsonObject) throws Exception {
+        super(jsonObject);
+    }
+
     /**
      * 登录
      * @param callback 回调方法
@@ -118,11 +128,16 @@ public class User extends Dao {
         x.http().post(params, callback);
     }
 
-    public User() {
-        super();
-    }
-
-    public User(JSONObject jsonObject) throws Exception {
-        super(jsonObject);
+    /**
+     * 注册
+     * @param callback
+     */
+    public void register(Callback.CommonCallback<JSONObject> callback){
+        RequestParams params = HttpUtil.prepare("/mcm/api/user");
+        params.addBodyParameter("username", username);
+        params.addBodyParameter("password", password);
+        params.addBodyParameter("email",email);
+        params.setAsJsonContent(true);
+        x.http().post(params, callback);
     }
 }

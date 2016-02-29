@@ -22,6 +22,7 @@
         android:background="@drawable/bg_corner"
         android:hint="@string/username"
         android:padding="8dp"
+        android:inputType="textPersonName"
         android:textSize="16sp" />
 
     <EditText
@@ -51,14 +52,27 @@
         android:inputType="textPassword"
         android:padding="8dp"
         android:textSize="16sp" />
-
-    <Button
-        android:id="@+id/btnRegister"
+    <EditText
+        android:id="@+id/txtEmail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/txtPassword2"
         android:layout_alignStart="@+id/txtPassword2"
         android:layout_below="@+id/txtPassword2"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/bg_corner"
+        android:hint="@string/email"
+        android:inputType="textEmailAddress"
+        android:padding="8dp"
+        android:textSize="16sp" />
+
+    <Button
+        android:id="@+id/btnRegister"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/txtEmail"
+        android:layout_alignStart="@+id/txtEmail"
+        android:layout_below="@+id/txtEmail"
         android:layout_marginTop="20dp"
         android:background="@drawable/bg_orange_corner_block"
         android:text="@string/register"
