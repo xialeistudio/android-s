@@ -7,7 +7,12 @@ import com.ddhigh.dodo.MyApplication;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.sql.Date;
+import java.lang.reflect.Field;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 
 /**
  * @project Study
@@ -48,6 +53,28 @@ public class Dao {
     }
 
     public void parse(JSONObject result) throws JSONException {
-        Log.d(MyApplication.TAG, "parse " + result.toString() + " ===> " + getClass().getName());
+        if (result.has("id") && !result.isNull("id")) {
+            id = result.getString("id");
+        }
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA);
+
+        if (result.has("createdAt") && !result.isNull("createdAt")) {
+            try {
+                String createdAtStr = result.getString("createdAt").replace("T", " ").replace("Z", " ");
+                createdAt = simpleDateFormat.parse(createdAtStr);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+        if (result.has("updatedAt") && !result.isNull("updatedAt")) {
+            try {
+                String updateAtStr = result.getString("updatedAt").replace("T", " ").replace("Z", " ");
+                updatedAt = simpleDateFormat.parse(updateAtStr);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+        Log.d(MyApplication.TAG, "parse " + result.toString() + " ===> " + getClass().getName() + " ===> createdAt: " + simpleDateFormat.format(createdAt) + ", updatedAt: " + simpleDateFormat.format(updatedAt));
     }
 }

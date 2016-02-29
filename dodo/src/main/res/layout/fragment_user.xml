@@ -17,4 +17,25 @@
             android:textColor="@android:color/white"
             android:textSize="@dimen/headerFontSize" />
     </RelativeLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="87dp"
+            android:layout_marginTop="12dp"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp">
+
+            <ImageView
+                android:id="@+id/imageAvatar"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:layout_centerVertical="true"
+                android:scaleType="centerCrop" />
+        </RelativeLayout>
+    </ScrollView>
 </LinearLayout>
