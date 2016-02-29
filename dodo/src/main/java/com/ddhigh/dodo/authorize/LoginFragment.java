@@ -5,13 +5,13 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 
-import com.ddhigh.dodo.MyApplication;
 import com.ddhigh.dodo.R;
 
 import org.xutils.view.annotation.Event;
@@ -29,6 +29,10 @@ public class LoginFragment extends Fragment {
     private Button btnLogin;
     @ViewInject(R.id.btnGoRegister)
     private Button btnGoRegister;
+    @ViewInject(R.id.txtUsername)
+    EditText txtUsername;
+    @ViewInject(R.id.txtPassword)
+    EditText txtPassword;
 
     @Nullable
     @Override
@@ -40,7 +44,12 @@ public class LoginFragment extends Fragment {
 
     @Event(R.id.btnLogin)
     private void onBtnLoginClicked(final View view) {
-        Log.d(MyApplication.TAG, "12341234");
+        String username = txtUsername.getText().toString();
+        String password = txtPassword.getText().toString();
+        if (TextUtils.isEmpty(username)) {
+        } else if (TextUtils.isEmpty(password)) {
+        } else {
+        }
     }
 
     @Event(R.id.btnGoRegister)
