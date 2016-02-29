@@ -35,7 +35,6 @@ public class IosConfirmDialog extends Dialog {
         private String title;
         private String message;
         private String btnOkText, btnCancelText;
-        private View contentView;
         private OnClickListener okListener, cancelListener;
 
         public Builder(Context context) {

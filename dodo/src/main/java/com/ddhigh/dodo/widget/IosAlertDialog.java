@@ -35,7 +35,6 @@ public class IosAlertDialog extends Dialog {
         private String title;
         private String message;
         private String buttonText;
-        private View contentView;
         private DialogInterface.OnClickListener listener;
 
         public Builder(Context context) {
