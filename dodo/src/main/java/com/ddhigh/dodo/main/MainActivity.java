@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ddhigh.dodo.MyApplication;
 import com.ddhigh.dodo.R;
@@ -84,5 +85,15 @@ public class MainActivity extends AppCompatActivity {
                 .replace(R.id.fragmentContainer, fragment, "loginFragment")
                 .show(fragment)
                 .commit();
+    }
+
+    /**
+     * 登录成功
+     * @param userId
+     * @param token
+     */
+    public void loginSuccess(String userId, String token) {
+        Log.d(MyApplication.TAG, "loginSuccess ===> userId: " + userId + ", token: " + token);
+        Toast.makeText(this, "登录成功", Toast.LENGTH_SHORT).show();
     }
 }

@@ -96,14 +96,12 @@ public class LoginFragment extends Fragment {
                             onError(e, true);
                         }
                     } else {
-                        //登录成功
-                        Intent intent = new Intent();
                         try {
-                            intent.putExtra("token", result.getString("id"));
-                            intent.putExtra("userId", result.getString("userId"));
-                            Activity activity = getActivity();
-                            activity.setResult(Activity.RESULT_OK, intent);
-                            activity.finish();
+                            //处理登录成功
+                            String userId = result.getString("userId");
+                            String token = result.getString("id");
+                            MainActivity mainActivity = (MainActivity) getActivity();
+                            mainActivity.loginSuccess(userId, token);
                         } catch (JSONException e) {
                             onError(e, true);
                         }
