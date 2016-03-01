@@ -82,7 +82,6 @@ public class MainActivity extends AppCompatActivity {
     @Event(R.id.btnMy)
     private void onBtnMyClicked(View view) {
         Log.d(MyApplication.TAG, "onBtnMyClicked");
-        setTitle(R.string.my);
         //字体颜色处理
         Resources resources = getResources();
         imageList.setImageDrawable(resources.getDrawable(R.drawable.icon_list_gray));

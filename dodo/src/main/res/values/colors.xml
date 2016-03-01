@@ -7,6 +7,6 @@
     <color name="tabNormalColor">#aaaaaa</color>
     <color name="tabBorderColor">#aaaaaa</color>
     <color name="tabSelectedColor">#03a0ff</color>
-    <color name="pageBackgroundColor">#f0eff5</color>
+    <color name="pageBackgroundColor">#ebebeb</color>
     <color name="tableBorder">#d8d8da</color>
 </resources>

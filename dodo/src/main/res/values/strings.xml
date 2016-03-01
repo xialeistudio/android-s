@@ -15,4 +15,6 @@
     <string name="setting">设置</string>
     <string name="logout">退出登录</string>
     <string name="user_info">个人信息</string>
+    <string name="sex">性别</string>
+    <string name="mobile">手机</string>
 </resources>
