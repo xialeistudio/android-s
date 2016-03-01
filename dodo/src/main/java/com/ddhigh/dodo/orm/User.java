@@ -125,6 +125,7 @@ public class User extends Dao {
 
     /**
      * 注销
+     *
      * @param context
      */
     public void logout(Context context) {
@@ -135,6 +136,18 @@ public class User extends Dao {
         editor.remove(PREF_USER_ID);
         editor.remove(PREF_USER_TOKEN);
         editor.apply();
+    }
+
+    public String getReadableSex() {
+        if (sex == SEX_FEMALE) {
+            return "男";
+        } else if (sex == SEX_MALE) {
+            return "女";
+        } else if (sex == SEX_OTHER) {
+            return "其他";
+        } else {
+            return "未选择";
+        }
     }
 
 
