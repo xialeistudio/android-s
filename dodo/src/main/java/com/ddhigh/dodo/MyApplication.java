@@ -58,6 +58,7 @@ public class MyApplication extends Application {
         }
         if (token != null && !TextUtils.isEmpty(token)) {
             accessToken.setId(token);
+            HttpUtil.setToken(token);
         }
 
         if (userInfo != null) {

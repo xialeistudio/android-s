@@ -3,7 +3,7 @@
     package="com.ddhigh.dodo">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
@@ -30,6 +30,9 @@
             android:name=".widget.SelectImageActivity"
             android:label="@string/pick_image"
             android:theme="@style/MyDialogStyle" />
+        <activity
+            android:name=".user.ModifyNicknameActivity"
+            android:label="@string/modify_nickname" />
     </application>
 
 </manifest>

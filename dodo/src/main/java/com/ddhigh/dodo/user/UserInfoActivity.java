@@ -108,6 +108,11 @@ public class UserInfoActivity extends AppCompatActivity {
         startActivityForResult(new Intent(this, SelectImageActivity.class), Config.Constants.CODE_PICK_IMAGE);
     }
 
+    @Event(R.id.btnNickname)
+    private void onBtnNicknameClicked(View view) {
+        startActivity(new Intent(this, ModifyNicknameActivity.class));
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
@@ -182,7 +187,6 @@ public class UserInfoActivity extends AppCompatActivity {
     private void updateUserAvatar(final LoadingDialog loadingDialog, final String url) {
         loadingDialog.setTitle("更新中");
         final MyApplication app = (MyApplication) getApplication();
-        HttpUtil.setToken(app.accessToken.getId());
         app.user.setAvatar(url);
         app.user.async(new Callback.CommonCallback<JSONObject>() {
             @Override
