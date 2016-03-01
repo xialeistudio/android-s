@@ -1,5 +1,8 @@
 package com.ddhigh.dodo.orm;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
@@ -118,6 +121,20 @@ public class User extends Dao {
         RequestParams params = HttpUtil.prepare("/mcm/api/user/" + id);
         params.addHeader("authorization", token);
         x.http().get(params, callback);
+    }
+
+    /**
+     * 注销
+     * @param context
+     */
+    public void logout(Context context) {
+        //清空缓存
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.remove(PREF_USER);
+        editor.remove(PREF_USER_ID);
+        editor.remove(PREF_USER_TOKEN);
+        editor.apply();
     }
 
 

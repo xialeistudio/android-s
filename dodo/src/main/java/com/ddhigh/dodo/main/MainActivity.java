@@ -85,7 +85,6 @@ public class MainActivity extends AppCompatActivity {
         txtMy.setTextColor(resources.getColor(R.color.tabSelectedColor));
         //fragment处理
         FragmentManager fragmentManager = getFragmentManager();
-        //TODO://判断登录状态显示不同fragment
         Fragment fragment;
         String tag;
         if (application.user.isGuest()) {
