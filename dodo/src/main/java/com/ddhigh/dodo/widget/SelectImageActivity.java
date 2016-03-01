@@ -72,32 +72,28 @@ public class SelectImageActivity extends Activity {
                         setResult(RESULT_OK, intent);
                     } catch (IOException e) {
                         e.printStackTrace();
-                        setResult(RESULT_CANCELED);
                     }
-                } else {
-                    setResult(RESULT_CANCELED);
                 }
                 finish();
                 break;
             case Config.Constants.CODE_PICK_IMAGE_FROM_PHOTO:
-                Uri uri = data.getData();
-                Log.d(MyApplication.TAG, "photo ===> " + uri.toString());
-                Bitmap bitmap;
-                ContentResolver contentResolver = getContentResolver();
-                try {
-                    bitmap = MediaStore.Images.Media.getBitmap(contentResolver, uri);
-                    bitmap = BitmapUtil.scale(bitmap, 640.0f / bitmap.getWidth());
-                    File path = new File(((MyApplication) getApplication()).appPath, DateUtil.format(new Date(), "yyyyMMddHHmmss") + ".jpg");
-                    FileOutputStream outputStream = new FileOutputStream(path);
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
-                    outputStream.close();
-                    Intent intent = new Intent();
-                    intent.putExtra("path", path.getAbsolutePath());
-                    setResult(RESULT_OK, intent);
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    setResult(RESULT_CANCELED);
+                if(data != null){
+                    Uri uri = data.getData();
+                    Bitmap bitmap;
+                    ContentResolver contentResolver = getContentResolver();
+                    try {
+                        bitmap = MediaStore.Images.Media.getBitmap(contentResolver, uri);
+                        bitmap = BitmapUtil.scale(bitmap, 640.0f / bitmap.getWidth());
+                        File path = new File(((MyApplication) getApplication()).appPath, DateUtil.format(new Date(), "yyyyMMddHHmmss") + ".jpg");
+                        FileOutputStream outputStream = new FileOutputStream(path);
+                        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+                        outputStream.close();
+                        Intent intent = new Intent();
+                        intent.putExtra("path", path.getAbsolutePath());
+                        setResult(RESULT_OK, intent);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
                 finish();
                 break;
