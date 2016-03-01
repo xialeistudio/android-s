@@ -8,7 +8,7 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:windowAnimationStyle">@style/activityAnimation</item>
     </style>
-
+    <!--activity切换动画-->
     <style name="activityAnimation" parent="@android:style/Animation">
         <item name="android:activityOpenEnterAnimation">@anim/slide_in_right</item>
         <item name="android:activityOpenExitAnimation">@anim/slide_out_left</item>
@@ -26,7 +26,7 @@
         <item name="android:windowAnimationStyle">@style/dialogAnimation</item>
         <item name="android:backgroundDimEnabled">true</item>
     </style>
-
+    <!--dialog切换动画-->
     <style name="dialogAnimation" parent="@android:style/Animation">
         <item name="android:activityOpenEnterAnimation">@anim/fade_in</item>
         <item name="android:activityOpenExitAnimation">@anim/fade_out</item>

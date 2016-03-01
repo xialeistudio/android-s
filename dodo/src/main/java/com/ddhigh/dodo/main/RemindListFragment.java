@@ -5,6 +5,9 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -28,9 +31,27 @@ public class RemindListFragment extends Fragment {
         x.view().inject(this, v);
         return v;
     }
-//
-//    @Event(R.id.btnCreate)
-//    private void onBtnCreateClicked(View view) {
-//        Log.d(MyApplication.TAG, "onBtnCreateClicked");
-//    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_home,menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.menuCreate:
+                Log.d(MyApplication.TAG,"!~");
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 }

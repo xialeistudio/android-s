@@ -7,29 +7,22 @@ import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Editable;
-import android.text.TextWatcher;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.ddhigh.dodo.Config;
 import com.ddhigh.dodo.MyApplication;
 import com.ddhigh.dodo.R;
 import com.ddhigh.dodo.orm.User;
-import com.ddhigh.dodo.util.BitmapUtil;
 import com.ddhigh.dodo.widget.LoadingDialog;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.xutils.common.Callback;
-import org.xutils.common.util.DensityUtil;
-import org.xutils.image.ImageOptions;
 import org.xutils.view.annotation.ContentView;
-import org.xutils.view.annotation.Event;
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
@@ -57,8 +50,15 @@ public class ModifyNicknameActivity extends AppCompatActivity {
         txtNickname.setText(application.user.getNickname());
     }
 
-    @Event(R.id.btnSave)
-    private void onBtnSaveClicked(View view) {
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_form, menu);
+        return true;
+    }
+
+    private void onBtnSaveClicked() {
         String nickname = txtNickname.getText().toString().trim();
         if (nickname.isEmpty()) {
             return;
@@ -130,6 +130,9 @@ public class ModifyNicknameActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
+                return true;
+            case R.id.menuSave:
+                onBtnSaveClicked();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
