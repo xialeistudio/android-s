@@ -2,6 +2,7 @@ package com.ddhigh.dodo.main;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -115,6 +116,7 @@ public class UserFragment extends Fragment {
             fragment = new LoginFragment();
         }
         fragmentManager.beginTransaction()
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .replace(R.id.fragmentContainer, fragment, tag)
                 .show(fragment)
                 .commit();

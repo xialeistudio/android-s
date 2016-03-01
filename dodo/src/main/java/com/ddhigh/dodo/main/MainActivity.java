@@ -2,6 +2,7 @@ package com.ddhigh.dodo.main;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;

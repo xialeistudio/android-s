@@ -64,6 +64,7 @@ public class RegisterFragment extends Fragment {
             loginFragment = new LoginFragment();
         }
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         fragmentTransaction.replace(R.id.fragmentContainer, loginFragment, "loginFragment");
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
