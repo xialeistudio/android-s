@@ -124,4 +124,10 @@ public class UserFragment extends Fragment {
                 .show(fragment)
                 .commit();
     }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        getActivity().setTitle(R.string.my);
+    }
 }
