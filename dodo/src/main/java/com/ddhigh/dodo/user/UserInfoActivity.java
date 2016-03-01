@@ -1,6 +1,9 @@
 package com.ddhigh.dodo.user;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -60,6 +63,17 @@ public class UserInfoActivity extends AppCompatActivity {
         }
 
         displayUser();
+
+
+        userChangeReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                Log.d(MyApplication.TAG, "user changed");
+                displayUser();
+            }
+        };
+        Log.d(MyApplication.TAG, "register user change receiver");
+        registerReceiver(userChangeReceiver, new IntentFilter(Config.Constants.BROADCAST_USER_CHANGED));
     }
 
     @ViewInject(R.id.imageAvatar)
@@ -207,16 +221,9 @@ public class UserInfoActivity extends AppCompatActivity {
                         editor.putString(User.PREF_USER, result.toString());
                         editor.apply();
 
-                        ImageOptions imageOptions = new ImageOptions.Builder()
-                                .setSize(DensityUtil.dip2px(65), DensityUtil.dip2px(65))
-                                .setRadius(DensityUtil.dip2px(4))
-                                .setFadeIn(true)
-                                .setImageScaleType(ImageView.ScaleType.CENTER_CROP)
-                                .setLoadingDrawableId(R.drawable.img_avatar_placeholder)
-                                .setFailureDrawableId(R.drawable.img_avatar_placeholder)
-                                .build();
-
-                        x.image().bind(imageAvatar, BitmapUtil.thumbQiniu(url, "/1/w/128"), imageOptions);
+                        Intent intent = new Intent();
+                        intent.setAction(Config.Constants.BROADCAST_USER_CHANGED);
+                        sendBroadcast(intent);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -243,5 +250,14 @@ public class UserInfoActivity extends AppCompatActivity {
                 loadingDialog.dismiss();
             }
         });
+    }
+
+    BroadcastReceiver userChangeReceiver;
+
+
+    @Override
+    protected void onDestroy() {
+        unregisterReceiver(userChangeReceiver);
+        super.onDestroy();
     }
 }

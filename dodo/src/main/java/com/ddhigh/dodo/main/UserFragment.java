@@ -1,10 +1,14 @@
 package com.ddhigh.dodo.main;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -14,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.ddhigh.dodo.Config;
 import com.ddhigh.dodo.MyApplication;
 import com.ddhigh.dodo.R;
 import com.ddhigh.dodo.authorize.LoginFragment;
@@ -48,11 +53,9 @@ public class UserFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_user, container, false);
         x.view().inject(this, v);
-
-        //显示用户信息
-        displayUser();
         return v;
     }
+
 
     /**
      * 显示用户信息
@@ -68,7 +71,7 @@ public class UserFragment extends Fragment {
                 .setLoadingDrawableId(R.drawable.img_avatar_placeholder)
                 .setFailureDrawableId(R.drawable.img_avatar_placeholder)
                 .build();
-        x.image().bind(imageAvatar, BitmapUtil.thumbQiniu(app.user.getAvatar(),"/1/w/128"), imageOptions);
+        x.image().bind(imageAvatar, BitmapUtil.thumbQiniu(app.user.getAvatar(), "/1/w/128"), imageOptions);
 
         txtNickname.setText(app.user.getNickname());
 
@@ -126,9 +129,37 @@ public class UserFragment extends Fragment {
                 .commit();
     }
 
+    BroadcastReceiver userChangeReceiver;
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        getActivity().setTitle(R.string.my);
+        //显示信息
+        displayUser();
+        //注册广播
+        MainActivity activity = (MainActivity) getActivity();
+        activity.setTitle(R.string.my);
+
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        userChangeReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                Log.d(MyApplication.TAG, "user changed");
+                displayUser();
+            }
+        };
+        Log.d(MyApplication.TAG, "register user change receiver");
+        getActivity().registerReceiver(userChangeReceiver, new IntentFilter(Config.Constants.BROADCAST_USER_CHANGED));
+    }
+
+    @Override
+    public void onDetach() {
+        getActivity().unregisterReceiver(userChangeReceiver);
+        super.onDetach();
     }
 }

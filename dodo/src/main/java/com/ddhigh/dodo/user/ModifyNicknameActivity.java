@@ -16,6 +16,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.ddhigh.dodo.Config;
 import com.ddhigh.dodo.MyApplication;
 import com.ddhigh.dodo.R;
 import com.ddhigh.dodo.orm.User;
@@ -90,6 +91,10 @@ public class ModifyNicknameActivity extends AppCompatActivity {
                             //写入本地存储
                             editor.putString(User.PREF_USER, result.toString());
                             editor.apply();
+                            //发送广播
+                            Intent intent = new Intent();
+                            intent.setAction(Config.Constants.BROADCAST_USER_CHANGED);
+                            sendBroadcast(intent);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
