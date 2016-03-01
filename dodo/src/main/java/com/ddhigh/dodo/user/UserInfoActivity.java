@@ -2,6 +2,7 @@ package com.ddhigh.dodo.user;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -13,6 +14,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
@@ -125,6 +127,61 @@ public class UserInfoActivity extends AppCompatActivity {
     @Event(R.id.btnNickname)
     private void onBtnNicknameClicked(View view) {
         startActivity(new Intent(this, ModifyNicknameActivity.class));
+    }
+
+    @Event(R.id.btnSex)
+    private void onBtnSexClicked(View view) {
+        final MyApplication application = (MyApplication) getApplication();
+        new AlertDialog.Builder(this)
+                .setTitle("性别")
+                .setSingleChoiceItems(new String[]{"男", "女", "其他"}, application.user.getSex(), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        Log.d(MyApplication.TAG, "checked sex: " + which);
+                        application.user.setSex(which);
+                        application.user.async(new Callback.CommonCallback<JSONObject>() {
+                            @Override
+                            public void onSuccess(JSONObject result) {
+                                try {
+                                    application.user.parse(result);
+                                    SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                                    SharedPreferences.Editor editor = sp.edit();
+                                    //写入本地存储
+                                    editor.putString(User.PREF_USER, result.toString());
+                                    editor.apply();
+                                    //发送广播
+                                    Intent intent = new Intent();
+                                    intent.setAction(Config.Constants.BROADCAST_USER_CHANGED);
+                                    sendBroadcast(intent);
+                                } catch (JSONException e) {
+                                    onError(e, true);
+                                }
+                            }
+
+                            private void showToast(String msg) {
+                                Toast.makeText(UserInfoActivity.this, msg, Toast.LENGTH_SHORT).show();
+                            }
+
+                            @Override
+                            public void onError(Throwable ex, boolean isOnCallback) {
+                                ex.printStackTrace();
+                                showToast("保存失败");
+                            }
+
+                            @Override
+                            public void onCancelled(CancelledException cex) {
+
+                            }
+
+                            @Override
+                            public void onFinished() {
+
+                            }
+                        });
+                    }
+                })
+                .show();
     }
 
     @Override

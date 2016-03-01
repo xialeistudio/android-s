@@ -29,9 +29,9 @@ import java.sql.Date;
  */
 @SuppressWarnings("ALL")
 public class User extends Dao {
-    public final static int SEX_FEMALE = 1;//男
-    public final static int SEX_MALE = 2;//女
-    public final static int SEX_OTHER = 3;//其他
+    public final static int SEX_FEMALE = 0;//男
+    public final static int SEX_MALE = 1;//女
+    public final static int SEX_OTHER = 2;//其他
 
 
     public final static String PREF_USER_ID = "PREF_USER_ID";
@@ -42,7 +42,7 @@ public class User extends Dao {
     private String password = "";
     private String email = "";
     private boolean emailVerified = false;
-    private int sex = 0;
+    private int sex = -1;
     private String mobile = "";
     private String nickname = "";
     private String avatar = "";
