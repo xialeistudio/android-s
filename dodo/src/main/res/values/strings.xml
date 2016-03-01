@@ -17,4 +17,7 @@
     <string name="user_info">个人信息</string>
     <string name="sex">性别</string>
     <string name="mobile">手机</string>
+    <string name="photo_library">相册</string>
+    <string name="take_photo">拍照</string>
+    <string name="pick_image">选择图片</string>
 </resources>

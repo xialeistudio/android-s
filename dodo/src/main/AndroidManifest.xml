@@ -22,9 +22,13 @@
             </intent-filter>
         </activity>
         <activity
-            android:label="@string/user_info"
             android:name=".user.UserInfoActivity"
+            android:label="@string/user_info"
             android:windowSoftInputMode="stateHidden|adjustPan" />
+        <activity
+            android:name=".widget.SelectImageActivity"
+            android:label="@string/pick_image"
+            android:theme="@style/MyDialogStyle" />
     </application>
 
 </manifest>
