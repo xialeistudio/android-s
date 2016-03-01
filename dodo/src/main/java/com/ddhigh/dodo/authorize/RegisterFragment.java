@@ -70,6 +70,12 @@ public class RegisterFragment extends Fragment {
         fragmentTransaction.commit();
     }
 
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        getActivity().setTitle(R.string.register);
+    }
+
     @Event(R.id.btnRegister)
     private void onBtnRegister(View view) {
         final String username, password, password2, email;

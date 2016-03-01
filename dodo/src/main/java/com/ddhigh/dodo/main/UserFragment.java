@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -17,6 +18,7 @@ import com.ddhigh.dodo.MyApplication;
 import com.ddhigh.dodo.R;
 import com.ddhigh.dodo.authorize.LoginFragment;
 import com.ddhigh.dodo.orm.User;
+import com.ddhigh.dodo.user.UserInfoActivity;
 import com.ddhigh.dodo.util.DateUtil;
 import com.ddhigh.dodo.widget.IosConfirmDialog;
 
@@ -75,7 +77,8 @@ public class UserFragment extends Fragment {
 
     @Event(R.id.btnUser)
     private void onBtnUserClicked(View view) {
-        Log.d(MyApplication.TAG, "onBtnUserClicked");
+        Intent intent = new Intent(getActivity(), UserInfoActivity.class);
+        startActivity(intent);
     }
 
     @Event(R.id.btnSetting)

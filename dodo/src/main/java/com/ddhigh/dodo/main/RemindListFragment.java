@@ -28,9 +28,9 @@ public class RemindListFragment extends Fragment {
         x.view().inject(this, v);
         return v;
     }
-
-    @Event(R.id.btnCreate)
-    private void onBtnCreateClicked(View view) {
-        Log.d(MyApplication.TAG, "onBtnCreateClicked");
-    }
+//
+//    @Event(R.id.btnCreate)
+//    private void onBtnCreateClicked(View view) {
+//        Log.d(MyApplication.TAG, "onBtnCreateClicked");
+//    }
 }

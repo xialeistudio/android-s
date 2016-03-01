@@ -56,6 +56,12 @@ public class LoginFragment extends Fragment {
         return v;
     }
 
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        getActivity().setTitle(R.string.login);
+    }
+
     @Event(R.id.btnLogin)
     private void onBtnLoginClicked(final View view) {
         String username = txtUsername.getText().toString();

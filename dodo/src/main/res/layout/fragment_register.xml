@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/img_login_bg"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:scrollbars="none">
 
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="60dp"
@@ -13,7 +17,6 @@
         android:layout_marginTop="75dp"
         android:contentDescription="camera"
         android:src="@drawable/img_camera" />
-
     <EditText
         android:id="@+id/txtUsername"
         android:layout_width="match_parent"
@@ -92,3 +95,4 @@
         android:text="@string/login"
         android:textColor="#CCCCCC" />
 </RelativeLayout>
+</ScrollView>

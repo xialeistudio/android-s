@@ -2,13 +2,13 @@ package com.ddhigh.dodo.main;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -27,6 +27,7 @@ import org.xutils.view.annotation.Event;
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
+@SuppressWarnings({"unused", "deprecation"})
 @ContentView(R.layout.activity_main)
 public class MainActivity extends AppCompatActivity {
     MyApplication application;
@@ -52,11 +53,14 @@ public class MainActivity extends AppCompatActivity {
                 .add(R.id.fragmentContainer, fragment, "remindListFragment")
                 .show(fragment)
                 .commit();
+
+        setTitle(R.string.app_name);
     }
 
     @Event(R.id.btnList)
     private void onBtnListClicked(View view) {
         Log.d(MyApplication.TAG, "onBtnListClicked");
+        setTitle(R.string.app_name);
         //字体颜色处理
         Resources resources = getResources();
         imageList.setImageDrawable(resources.getDrawable(R.drawable.icon_list_blue));
@@ -78,6 +82,7 @@ public class MainActivity extends AppCompatActivity {
     @Event(R.id.btnMy)
     private void onBtnMyClicked(View view) {
         Log.d(MyApplication.TAG, "onBtnMyClicked");
+        setTitle(R.string.my);
         //字体颜色处理
         Resources resources = getResources();
         imageList.setImageDrawable(resources.getDrawable(R.drawable.icon_list_gray));
@@ -110,8 +115,8 @@ public class MainActivity extends AppCompatActivity {
     /**
      * 登录成功
      *
-     * @param userId
-     * @param token
+     * @param userId 用户ID
+     * @param token  授权码
      */
     public void loginSuccess(String userId, String token) {
         Log.d(MyApplication.TAG, "loginSuccess ===> userId: " + userId + ", token: " + token);
@@ -156,7 +161,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFinished() {
-                Log.d(MyApplication.TAG,"loadUser From Server");
+                Log.d(MyApplication.TAG, "loadUser From Server");
                 //更新fragment
                 FragmentManager fragmentManager = getFragmentManager();
                 UserFragment fragment = (UserFragment) fragmentManager.findFragmentByTag("userFragment");
@@ -169,5 +174,14 @@ public class MainActivity extends AppCompatActivity {
                         .commit();
             }
         });
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            moveTaskToBack(false);
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }
