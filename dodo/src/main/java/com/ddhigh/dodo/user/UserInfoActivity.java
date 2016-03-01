@@ -123,6 +123,7 @@ public class UserInfoActivity extends AppCompatActivity {
                         requestParams.addBodyParameter("type", "image/jpeg");
                         final LoadingDialog loadingDialog = new LoadingDialog(this);
                         loadingDialog.setTitle("上传中");
+                        loadingDialog.setCancelable(false);
                         loadingDialog.show();
                         x.http().post(requestParams, new Callback.CommonCallback<JSONObject>() {
                             @Override
