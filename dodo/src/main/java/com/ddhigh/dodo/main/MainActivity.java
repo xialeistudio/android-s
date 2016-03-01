@@ -44,35 +44,6 @@ public class MainActivity extends AppCompatActivity {
         x.view().inject(this);
 
         application = (MyApplication) getApplication();
-        //加载用户信息
-        if (!application.user.isGuest()) {
-            application.user.loadUser(application.accessToken.getId(), new Callback.CommonCallback<JSONObject>() {
-                @Override
-                public void onSuccess(JSONObject result) {
-                    try {
-                        application.user.parse(result);
-                    } catch (JSONException e) {
-                        onError(e, true);
-                    }
-                }
-
-                @Override
-                public void onError(Throwable ex, boolean isOnCallback) {
-                    Log.d(MyApplication.TAG, "loadUser: " + ex.getMessage());
-                    ex.printStackTrace();
-                }
-
-                @Override
-                public void onCancelled(CancelledException cex) {
-
-                }
-
-                @Override
-                public void onFinished() {
-
-                }
-            });
-        }
         //fragment初始化
         FragmentManager fragmentManager = getFragmentManager();
         RemindListFragment fragment = new RemindListFragment();
@@ -147,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(this, "登录成功", Toast.LENGTH_SHORT).show();
         //持久化
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        SharedPreferences.Editor editor = sharedPreferences.edit();
+        final SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(User.PREF_USER_ID, userId);
         editor.putString(User.PREF_USER_TOKEN, token);
         editor.apply();
@@ -164,6 +135,9 @@ public class MainActivity extends AppCompatActivity {
             public void onSuccess(JSONObject result) {
                 try {
                     application.user.parse(result);
+                    //写入本地存储
+                    editor.putString(User.PREF_USER, result.toString());
+                    editor.apply();
                 } catch (JSONException e) {
                     onError(e, true);
                 }
@@ -182,6 +156,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFinished() {
+                Log.d(MyApplication.TAG,"loadUser From Server");
                 //更新fragment
                 FragmentManager fragmentManager = getFragmentManager();
                 UserFragment fragment = (UserFragment) fragmentManager.findFragmentByTag("userFragment");

@@ -32,6 +32,7 @@ public class User extends Dao {
 
     public final static String PREF_USER_ID = "PREF_USER_ID";
     public final static String PREF_USER_TOKEN = "PREF_USER_TOKEN";
+    public final static String PREF_USER = "PREF_USER";
 
     private String username;
     private String password;
