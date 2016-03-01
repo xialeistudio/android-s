@@ -13,6 +13,7 @@ import com.ddhigh.dodo.util.HttpUtil;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.xutils.common.Callback;
+import org.xutils.http.HttpMethod;
 import org.xutils.http.RequestParams;
 import org.xutils.x;
 
@@ -37,14 +38,14 @@ public class User extends Dao {
     public final static String PREF_USER_TOKEN = "PREF_USER_TOKEN";
     public final static String PREF_USER = "PREF_USER";
 
-    private String username;
-    private String password;
-    private String email;
-    private boolean emailVerified;
-    private int sex;
-    private String mobile;
-    private String nickname;
-    private String avatar;
+    private String username = "";
+    private String password = "";
+    private String email = "";
+    private boolean emailVerified = false;
+    private int sex = 0;
+    private String mobile = "";
+    private String nickname = "";
+    private String avatar = "";
 
     public String getAvatar() {
         return avatar;
@@ -170,6 +171,11 @@ public class User extends Dao {
         public void setUserId(String userId) {
             this.userId = userId;
         }
+
+        @Override
+        public void async() {
+
+        }
     }
 
 
@@ -226,5 +232,27 @@ public class User extends Dao {
         if (result.has("avatar") && !result.isNull("avatar")) {
             avatar = result.getString("avatar");
         }
+    }
+
+    @Override
+    public void async() throws JSONException {
+
+    }
+
+    /**
+     * 同步至远程
+     *
+     * @param callback
+     */
+    public void async(final Callback.CommonCallback<JSONObject> callback) {
+        RequestParams requestParams = HttpUtil.prepare("/mcm/api/user/" + id);
+        requestParams.addBodyParameter("email", email);
+        requestParams.addBodyParameter("emailVerified", String.valueOf(emailVerified));
+        requestParams.addBodyParameter("sex", String.valueOf(sex));
+        requestParams.addBodyParameter("mobile", mobile);
+        requestParams.addBodyParameter("nickname", nickname);
+        requestParams.addBodyParameter("avatar", avatar);
+        requestParams.setAsJsonContent(true);
+        x.http().request(HttpMethod.PUT, requestParams, callback);
     }
 }

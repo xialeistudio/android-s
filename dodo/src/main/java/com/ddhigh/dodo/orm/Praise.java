@@ -25,4 +25,9 @@ public class Praise extends Dao {
     public void setSignId(String signId) {
         this.signId = signId;
     }
+
+    @Override
+    public void async() {
+
+    }
 }

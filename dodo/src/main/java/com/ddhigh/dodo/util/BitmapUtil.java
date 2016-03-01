@@ -22,4 +22,15 @@ public class BitmapUtil {
         matrix.postScale(scale, scale);
         return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
     }
+
+    /**
+     * 七牛缩略图
+     *
+     * @param url
+     * @param q
+     * @return
+     */
+    public static String thumbQiniu(String url, String q) {
+        return url == null ? null : (url + "?imageView2" + q);
+    }
 }

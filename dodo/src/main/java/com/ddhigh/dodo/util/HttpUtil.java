@@ -12,6 +12,15 @@ import org.xutils.http.RequestParams;
  */
 public class HttpUtil {
     static String api;
+    static String token;
+
+    public static String getToken() {
+        return token;
+    }
+
+    public static void setToken(String token) {
+        HttpUtil.token = token;
+    }
 
     public static void setApi(String api) {
         HttpUtil.api = api;
@@ -31,6 +40,9 @@ public class HttpUtil {
         long timestamp = System.currentTimeMillis();
         String key = EncryUtil.sha1(Config.ApiCloud.appid + "UZ" + Config.ApiCloud.appkey + "UZ" + timestamp) + "." + timestamp;
         params.addHeader("X-APICloud-AppKey", key);
+        if (token != null) {
+            params.addHeader("authorization", token);
+        }
         return params;
     }
 

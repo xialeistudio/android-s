@@ -34,4 +34,9 @@ public class Comment extends Dao {
     public void setUserId(String userId) {
         this.userId = userId;
     }
+
+    @Override
+    public void async() {
+
+    }
 }

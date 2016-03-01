@@ -19,6 +19,7 @@ import com.ddhigh.dodo.R;
 import com.ddhigh.dodo.authorize.LoginFragment;
 import com.ddhigh.dodo.orm.User;
 import com.ddhigh.dodo.user.UserInfoActivity;
+import com.ddhigh.dodo.util.BitmapUtil;
 import com.ddhigh.dodo.util.DateUtil;
 import com.ddhigh.dodo.widget.IosConfirmDialog;
 
@@ -67,7 +68,7 @@ public class UserFragment extends Fragment {
                 .setLoadingDrawableId(R.drawable.img_avatar_placeholder)
                 .setFailureDrawableId(R.drawable.img_avatar_placeholder)
                 .build();
-        x.image().bind(imageAvatar, app.user.getAvatar(), imageOptions);
+        x.image().bind(imageAvatar, BitmapUtil.thumbQiniu(app.user.getAvatar(),"/1/w/128"), imageOptions);
 
         txtNickname.setText(app.user.getNickname());
 

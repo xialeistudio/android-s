@@ -21,7 +21,7 @@ import java.util.Locale;
  * @user xialeistudio
  * @date 2016/2/29 0029
  */
-public class Dao {
+abstract public class Dao {
     protected String id;
     protected Date createdAt;
     protected Date updatedAt;
@@ -76,4 +76,9 @@ public class Dao {
         }
         Log.d(MyApplication.TAG, "parse " + result.toString() + " ===> " + getClass().getName() + " ===> createdAt: " + simpleDateFormat.format(createdAt) + ", updatedAt: " + simpleDateFormat.format(updatedAt));
     }
+
+    /**
+     * 同步数据至远程
+     */
+    abstract public void async() throws JSONException;
 }

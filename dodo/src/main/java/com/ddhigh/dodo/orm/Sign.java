@@ -56,4 +56,9 @@ public class Sign extends Dao {
     public void setLocation(Location location) {
         this.location = location;
     }
+
+    @Override
+    public void async() {
+
+    }
 }

@@ -15,8 +15,8 @@
             android:src="@drawable/bg_transparent_black_corner" />
 
         <ProgressBar
-            style="?android:progressBarStyle"
             android:id="@+id/loadingProgress"
+            style="?android:progressBarStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"

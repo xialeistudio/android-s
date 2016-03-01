@@ -25,4 +25,9 @@ public class Member extends Dao {
     public void setRemindId(String remindId) {
         this.remindId = remindId;
     }
+
+    @Override
+    public void async() {
+
+    }
 }
