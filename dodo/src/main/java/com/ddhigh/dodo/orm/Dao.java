@@ -3,6 +3,7 @@ package com.ddhigh.dodo.orm;
 import android.util.Log;
 
 import com.ddhigh.dodo.MyApplication;
+import com.ddhigh.dodo.util.DateUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -61,16 +62,14 @@ public class Dao {
 
         if (result.has("createdAt") && !result.isNull("createdAt")) {
             try {
-                String createdAtStr = result.getString("createdAt").replace("T", " ").replace("Z", " ");
-                createdAt = simpleDateFormat.parse(createdAtStr);
+                createdAt = DateUtil.parse(result.getString("createdAt"));
             } catch (ParseException e) {
                 e.printStackTrace();
             }
         }
         if (result.has("updatedAt") && !result.isNull("updatedAt")) {
             try {
-                String updateAtStr = result.getString("updatedAt").replace("T", " ").replace("Z", " ");
-                updatedAt = simpleDateFormat.parse(updateAtStr);
+                updatedAt = DateUtil.parse(result.getString("updatedAt"));
             } catch (ParseException e) {
                 e.printStackTrace();
             }

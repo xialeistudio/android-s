@@ -9,4 +9,7 @@
     <string name="email">邮箱地址</string>
     <string name="square">广场</string>
     <string name="my">我</string>
+    <string name="avatar">头像</string>
+    <string name="nickname">昵称</string>
+    <string name="createdAt">创建时间</string>
 </resources>

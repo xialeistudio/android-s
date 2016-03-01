@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/pageBackgroundColor">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -24,6 +25,7 @@
         android:scrollbars="vertical">
 
         <RelativeLayout
+            android:background="@drawable/border_top_bottom"
             android:layout_width="match_parent"
             android:layout_height="87dp"
             android:layout_marginTop="12dp"
@@ -35,7 +37,39 @@
                 android:layout_width="64dp"
                 android:layout_height="64dp"
                 android:layout_centerVertical="true"
+                android:contentDescription="@string/avatar"
                 android:scaleType="centerCrop" />
+
+            <TextView
+                android:id="@+id/txtNickname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/imageAvatar"
+                android:layout_marginLeft="12dp"
+                android:layout_marginTop="20dp"
+                android:layout_toRightOf="@+id/imageAvatar"
+                android:text="@string/nickname"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/txtCreatedAt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/txtNickname"
+                android:layout_marginLeft="12dp"
+                android:layout_marginTop="10dp"
+                android:layout_toRightOf="@+id/imageAvatar"
+                android:text="@string/createdAt"
+                android:textSize="14sp" />
+
+            <ImageView
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:scaleType="centerCrop"
+                android:src="@drawable/icon_arrow_right_gray"
+                android:contentDescription="更多" />
         </RelativeLayout>
     </ScrollView>
 </LinearLayout>

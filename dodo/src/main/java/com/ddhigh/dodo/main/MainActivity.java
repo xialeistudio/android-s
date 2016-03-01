@@ -158,16 +158,41 @@ public class MainActivity extends AppCompatActivity {
         application.accessToken = new User.AccessToken();
         application.accessToken.setId(token);
         application.accessToken.setUserId(userId);
-        //更新fragment
-        FragmentManager fragmentManager = getFragmentManager();
-        UserFragment fragment = (UserFragment) fragmentManager.findFragmentByTag("userFragment");
-        if (fragment == null) {
-            fragment = new UserFragment();
-        }
-        fragmentManager.beginTransaction()
-                .replace(R.id.fragmentContainer, fragment, "userFragment")
-                .show(fragment)
-                .commit();
+        //读取用户数据
+        application.user.loadUser(application.accessToken.getId(), new Callback.CommonCallback<JSONObject>() {
+            @Override
+            public void onSuccess(JSONObject result) {
+                try {
+                    application.user.parse(result);
+                } catch (JSONException e) {
+                    onError(e, true);
+                }
+            }
 
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
+                Log.d(MyApplication.TAG, "loadUser: " + ex.getMessage());
+                ex.printStackTrace();
+            }
+
+            @Override
+            public void onCancelled(CancelledException cex) {
+
+            }
+
+            @Override
+            public void onFinished() {
+                //更新fragment
+                FragmentManager fragmentManager = getFragmentManager();
+                UserFragment fragment = (UserFragment) fragmentManager.findFragmentByTag("userFragment");
+                if (fragment == null) {
+                    fragment = new UserFragment();
+                }
+                fragmentManager.beginTransaction()
+                        .replace(R.id.fragmentContainer, fragment, "userFragment")
+                        .show(fragment)
+                        .commit();
+            }
+        });
     }
 }
