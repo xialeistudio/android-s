@@ -3,6 +3,8 @@ package com.ddhigh.dodo.user;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
@@ -98,8 +100,11 @@ public class UserInfoActivity extends AppCompatActivity {
         switch (requestCode) {
             case Config.Constants.CODE_PICK_IMAGE:
                 if (data != null) {
-                    Bitmap bitmap = data.getParcelableExtra("data");
-                    imageAvatar.setImageBitmap(bitmap);
+                    String path = data.getStringExtra("path");
+                    if (path != null) {
+                        Bitmap bitmap = BitmapFactory.decodeFile(path);
+                        imageAvatar.setImageBitmap(bitmap);
+                    }
                 }
                 break;
             default:
