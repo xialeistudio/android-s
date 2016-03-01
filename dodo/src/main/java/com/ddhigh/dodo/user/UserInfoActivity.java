@@ -2,6 +2,7 @@ package com.ddhigh.dodo.user;
 
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
@@ -62,8 +63,8 @@ public class UserInfoActivity extends AppCompatActivity {
         ImageOptions imageOptions = new ImageOptions.Builder()
                 .setSize(DensityUtil.dip2px(65), DensityUtil.dip2px(65))
                 .setRadius(DensityUtil.dip2px(4))
-                .setCrop(false)
-                .setImageScaleType(ImageView.ScaleType.CENTER_INSIDE)
+                .setFadeIn(true)
+                .setImageScaleType(ImageView.ScaleType.CENTER_CROP)
                 .setLoadingDrawableId(R.drawable.img_avatar_placeholder)
                 .setFailureDrawableId(R.drawable.img_avatar_placeholder)
                 .build();
@@ -89,14 +90,17 @@ public class UserInfoActivity extends AppCompatActivity {
     @Event(R.id.btnAvatar)
     private void onBtnAvatarClicked(View view) {
         //打开图片选择
-        startActivityForResult(new Intent(this, SelectImageActivity.class), Config.Constants.CODE_PICKE_IMAGE);
+        startActivityForResult(new Intent(this, SelectImageActivity.class), Config.Constants.CODE_PICK_IMAGE);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
-            case Config.Constants.CODE_PICKE_IMAGE:
-                Log.d(MyApplication.TAG, "pick image result");
+            case Config.Constants.CODE_PICK_IMAGE:
+                if (data != null) {
+                    Bitmap bitmap = data.getParcelableExtra("data");
+                    imageAvatar.setImageBitmap(bitmap);
+                }
                 break;
             default:
                 super.onActivityResult(requestCode, resultCode, data);

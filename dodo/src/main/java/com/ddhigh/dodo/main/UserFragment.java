@@ -62,8 +62,8 @@ public class UserFragment extends Fragment {
         ImageOptions imageOptions = new ImageOptions.Builder()
                 .setSize(DensityUtil.dip2px(65), DensityUtil.dip2px(65))
                 .setRadius(DensityUtil.dip2px(4))
-                .setCrop(false)
-                .setImageScaleType(ImageView.ScaleType.CENTER_INSIDE)
+                .setFadeIn(true)
+                .setImageScaleType(ImageView.ScaleType.CENTER_CROP)
                 .setLoadingDrawableId(R.drawable.img_avatar_placeholder)
                 .setFailureDrawableId(R.drawable.img_avatar_placeholder)
                 .build();

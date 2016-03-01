@@ -16,6 +16,9 @@ public class Config {
      * 常量
      */
     public static class Constants {
-        public static final int CODE_PICKE_IMAGE = 1;//选择图片
+        public static final int CODE_PICK_IMAGE = 1;//选择图片
+        public static final int CODE_PICK_IMAGE_FROM_CAMERA = 2;//相机选择图片
+        public static final int CODE_PICK_IMAGE_FROM_PHOTO = 3;//相册选择图片
+        public static final int CODE_CROP_IMAGE = 4;//裁剪图片
     }
 }

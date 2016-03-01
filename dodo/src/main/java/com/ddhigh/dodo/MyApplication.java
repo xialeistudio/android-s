@@ -2,6 +2,7 @@ package com.ddhigh.dodo;
 
 import android.app.Application;
 import android.content.SharedPreferences;
+import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
@@ -12,6 +13,8 @@ import com.ddhigh.dodo.util.HttpUtil;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.xutils.x;
+
+import java.io.File;
 
 /**
  * @project Study
@@ -24,6 +27,7 @@ public class MyApplication extends Application {
 
     public User user;
     public User.AccessToken accessToken;
+    public File appPath;
 
     @Override
     public void onCreate() {
@@ -32,6 +36,16 @@ public class MyApplication extends Application {
         x.Ext.setDebug(BuildConfig.DEBUG);
         HttpUtil.setApi("https://d.apicloud.com");
 
+        initUser();
+
+        //创建目录
+        appPath = new File(Environment.getExternalStorageDirectory(), getPackageName());
+        if (!appPath.isDirectory()) {
+            appPath.mkdir();
+        }
+    }
+
+    private void initUser() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String userId = sharedPreferences.getString(User.PREF_USER_ID, null);
         String token = sharedPreferences.getString(User.PREF_USER_TOKEN, null);
