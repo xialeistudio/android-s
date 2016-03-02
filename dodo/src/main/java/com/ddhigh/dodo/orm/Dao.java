@@ -7,6 +7,7 @@ import com.ddhigh.dodo.util.DateUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.xutils.common.Callback;
 
 import java.lang.reflect.Field;
 import java.text.ParseException;
@@ -80,5 +81,5 @@ abstract public class Dao {
     /**
      * 同步数据至远程
      */
-    abstract public void async() throws JSONException;
+    abstract public void async(Callback.CommonCallback<JSONObject> callback);
 }

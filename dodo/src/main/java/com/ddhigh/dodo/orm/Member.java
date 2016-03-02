@@ -1,5 +1,8 @@
 package com.ddhigh.dodo.orm;
 
+import org.json.JSONObject;
+import org.xutils.common.Callback;
+
 /**
  * @project Study
  * @package com.ddhigh.dodo.orm
@@ -27,7 +30,7 @@ public class Member extends Dao {
     }
 
     @Override
-    public void async() {
+    public void async(Callback.CommonCallback<JSONObject> callback) {
 
     }
 }

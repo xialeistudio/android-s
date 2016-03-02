@@ -2,6 +2,9 @@ package com.ddhigh.dodo.orm;
 
 import android.location.Location;
 
+import org.json.JSONObject;
+import org.xutils.common.Callback;
+
 import java.util.List;
 
 /**
@@ -58,7 +61,7 @@ public class Sign extends Dao {
     }
 
     @Override
-    public void async() {
+    public void async(Callback.CommonCallback<JSONObject> callback) {
 
     }
 }

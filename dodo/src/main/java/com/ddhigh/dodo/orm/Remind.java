@@ -2,6 +2,9 @@ package com.ddhigh.dodo.orm;
 
 import android.location.Location;
 
+import org.json.JSONObject;
+import org.xutils.common.Callback;
+
 /**
  * @project Study
  * @package com.ddhigh.dodo.orm
@@ -64,8 +67,9 @@ public class Remind  extends Dao{
         this.location = location;
     }
 
+
     @Override
-    public void async() {
+    public void async(Callback.CommonCallback<JSONObject> callback) {
 
     }
 }

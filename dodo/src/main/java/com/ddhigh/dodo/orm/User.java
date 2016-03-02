@@ -173,7 +173,7 @@ public class User extends Dao {
         }
 
         @Override
-        public void async() {
+        public void async(Callback.CommonCallback<JSONObject> callback) {
 
         }
     }
@@ -232,11 +232,6 @@ public class User extends Dao {
         if (result.has("avatar") && !result.isNull("avatar")) {
             avatar = result.getString("avatar");
         }
-    }
-
-    @Override
-    public void async() throws JSONException {
-
     }
 
     /**
