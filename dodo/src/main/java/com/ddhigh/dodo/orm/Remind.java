@@ -1,7 +1,9 @@
 package com.ddhigh.dodo.orm;
 
 import android.location.Location;
+import android.text.TextUtils;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.xutils.common.Callback;
 
@@ -11,12 +13,16 @@ import org.xutils.common.Callback;
  * @user xialeistudio
  * @date 2016/2/29 0029
  */
-public class Remind  extends Dao{
-    private String title;
-    private String thumbnail;
-    private int memberCount;
-    private int hitCount;
-    private int mode;
+public class Remind extends Dao {
+
+    public static final int MODE_DAY = 1;
+
+    private String title = "";
+    private String thumbnail = "";
+    private int memberCount = 0;
+    private int hitCount = 0;
+    private int mode = MODE_DAY;
+    private String userId = "";
     private Location location;
 
     public String getTitle() {
@@ -59,6 +65,14 @@ public class Remind  extends Dao{
         this.mode = mode;
     }
 
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
     public Location getLocation() {
         return location;
     }
@@ -67,6 +81,34 @@ public class Remind  extends Dao{
         this.location = location;
     }
 
+    @Override
+    public void parse(JSONObject result) throws JSONException {
+        super.parse(result);
+        if (result.has("title") && !TextUtils.isEmpty(result.getString("title"))) {
+            title = result.getString("title");
+        }
+        if (result.has("thumbnail") && !TextUtils.isEmpty(result.getString("thumbnail"))) {
+            thumbnail = result.getString("thumbnail");
+        }
+        if (result.has("memberCount") && result.getInt("memberCount") > 0) {
+            memberCount = result.getInt("memberCount");
+        }
+        if (result.has("hitCount") && result.getInt("hitCount") > 0) {
+            hitCount = result.getInt("hitCount");
+        }
+        if (result.has("mode") && result.getInt("mode") > 0) {
+            mode = result.getInt("mode");
+        }
+
+        if (result.has("userId") && !TextUtils.isEmpty(result.getString("userId"))) {
+            userId = result.getString("userId");
+        }
+        if(result.has("location")){
+            location = new Location("apicloud");
+            location.setLatitude(result.getDouble("lat"));
+            location.setLongitude(result.getDouble("lng"));
+        }
+    }
 
     @Override
     public void async(Callback.CommonCallback<JSONObject> callback) {
