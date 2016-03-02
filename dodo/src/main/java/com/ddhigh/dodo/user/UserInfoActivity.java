@@ -5,13 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
-import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
@@ -31,12 +25,13 @@ import com.ddhigh.dodo.util.BitmapUtil;
 import com.ddhigh.dodo.util.HttpUtil;
 import com.ddhigh.dodo.widget.LoadingDialog;
 import com.ddhigh.dodo.widget.SelectImageActivity;
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 
+import org.apache.http.Header;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.xutils.common.Callback;
 import org.xutils.common.util.DensityUtil;
-import org.xutils.http.RequestParams;
 import org.xutils.image.ImageOptions;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.Event;
@@ -44,6 +39,9 @@ import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.UnsupportedEncodingException;
+
 
 /**
  * @project Study
@@ -51,6 +49,7 @@ import java.io.File;
  * @user xialeistudio
  * @date 2016/3/1 0001
  */
+@SuppressWarnings("ALL")
 @ContentView(R.layout.activity_user_info)
 public class UserInfoActivity extends AppCompatActivity {
 
@@ -138,45 +137,33 @@ public class UserInfoActivity extends AppCompatActivity {
                         dialog.dismiss();
                         Log.d(MyApplication.TAG, "checked sex: " + which);
                         application.user.setSex(which);
-                        application.user.async(new Callback.CommonCallback<JSONObject>() {
-                            @Override
-                            public void onSuccess(JSONObject result) {
-                                try {
-                                    application.user.parse(result);
-                                    SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                                    SharedPreferences.Editor editor = sp.edit();
-                                    //写入本地存储
-                                    editor.putString(User.PREF_USER, result.toString());
-                                    editor.apply();
-                                    //发送广播
-                                    Intent intent = new Intent();
-                                    intent.setAction(Config.Constants.BROADCAST_USER_CHANGED);
-                                    sendBroadcast(intent);
-                                } catch (JSONException e) {
-                                    onError(e, true);
+                        try {
+                            application.user.async(UserInfoActivity.this, new JsonHttpResponseHandler() {
+                                @Override
+                                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                                    try {
+                                        application.user.parse(response);
+                                        User.saveToLocal(getApplicationContext(), UserInfoActivity.this, response.toString());
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
                                 }
-                            }
 
-                            private void showToast(String msg) {
-                                Toast.makeText(UserInfoActivity.this, msg, Toast.LENGTH_SHORT).show();
-                            }
-
-                            @Override
-                            public void onError(Throwable ex, boolean isOnCallback) {
-                                ex.printStackTrace();
-                                showToast("保存失败");
-                            }
-
-                            @Override
-                            public void onCancelled(CancelledException cex) {
-
-                            }
-
-                            @Override
-                            public void onFinished() {
-
-                            }
-                        });
+                                @Override
+                                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                                    throwable.printStackTrace();
+                                    Log.d(MyApplication.TAG, "update sex: " + errorResponse.toString());
+                                    if (statusCode == 401) {
+                                        User.broadcastUserAuthorize(UserInfoActivity.this);
+                                    } else {
+                                        Toast.makeText(UserInfoActivity.this, "保存失败", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
+                        } catch (JSONException | UnsupportedEncodingException e) {
+                            e.printStackTrace();
+                            Toast.makeText(UserInfoActivity.this, "保存失败", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 })
                 .show();
@@ -191,60 +178,45 @@ public class UserInfoActivity extends AppCompatActivity {
                     if (path != null) {
                         //上传
                         final File f = new File(path);
-                        RequestParams requestParams = HttpUtil.prepare("/mcm/api/file");
-                        requestParams.addBodyParameter("file", f);
-                        requestParams.addBodyParameter("filename", f.getName());
-                        requestParams.addBodyParameter("type", "image/jpeg");
-                        final LoadingDialog loadingDialog = new LoadingDialog(this);
-                        loadingDialog.setTitle("上传中");
-                        loadingDialog.setCancelable(false);
-                        loadingDialog.show();
-                        x.http().post(requestParams, new Callback.CommonCallback<JSONObject>() {
-                            @Override
-                            public void onSuccess(JSONObject result) {
-                                if (result.has("error")) {
-                                    try {
-                                        JSONObject error = result.getJSONObject("error");
-                                        showToast(error.getString("message"));
-                                    } catch (JSONException e) {
-                                        onError(e, true);
-                                    }
-                                } else {
+                        RequestParams requestParams = new RequestParams();
+                        try {
+                            requestParams.put("file", f);
+                            requestParams.put("filename", f.getName());
+                            requestParams.put("type", "image/jpeg");
+                            final LoadingDialog loadingDialog = new LoadingDialog(this);
+                            loadingDialog.setTitle("上传中");
+                            loadingDialog.setCancelable(false);
+                            loadingDialog.show();
+
+                            HttpUtil.post("/file", requestParams, new JsonHttpResponseHandler() {
+                                @Override
+                                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                                     f.delete();
                                     try {
-                                        String url = result.getString("url");
-                                        //上传成功
-                                        showToast("上传成功");
-                                        //更新用户信息
-                                        Log.d(MyApplication.TAG, "upload url: " + url);
-
+                                        String url = response.getString("url");
                                         updateUserAvatar(loadingDialog, url);
                                     } catch (JSONException e) {
-                                        onError(e, true);
+                                        e.printStackTrace();
+                                        Toast.makeText(UserInfoActivity.this, "上传失败", Toast.LENGTH_SHORT).show();
                                     }
                                 }
-                            }
 
-                            private void showToast(String message) {
-                                Toast.makeText(UserInfoActivity.this, message, Toast.LENGTH_SHORT).show();
-                            }
-
-                            @Override
-                            public void onError(Throwable ex, boolean isOnCallback) {
-                                ex.printStackTrace();
-                                showToast("上传失败");
-                                loadingDialog.dismiss();
-                            }
-
-                            @Override
-                            public void onCancelled(CancelledException cex) {
-
-                            }
-
-                            @Override
-                            public void onFinished() {
-                            }
-                        });
+                                @Override
+                                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                                    loadingDialog.dismiss();
+                                    throwable.printStackTrace();
+                                    Log.d(MyApplication.TAG, "upload avatar: " + errorResponse.toString());
+                                    if (statusCode == 401) {
+                                        User.broadcastUserAuthorize(UserInfoActivity.this);
+                                    } else {
+                                        Toast.makeText(UserInfoActivity.this, "上传失败", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                            Toast.makeText(UserInfoActivity.this, "上传失败", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 }
                 break;
@@ -255,57 +227,40 @@ public class UserInfoActivity extends AppCompatActivity {
 
     private void updateUserAvatar(final LoadingDialog loadingDialog, final String url) {
         loadingDialog.setTitle("更新中");
-        final MyApplication app = (MyApplication) getApplication();
-        app.user.setAvatar(url);
-        app.user.async(new Callback.CommonCallback<JSONObject>() {
-            @Override
-            public void onSuccess(JSONObject result) {
-                if (result.has("error")) {
+        final MyApplication application = (MyApplication) getApplication();
+        application.user.setAvatar(url);
+        try {
+            application.user.async(UserInfoActivity.this,new JsonHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                     try {
-                        JSONObject error = result.getJSONObject("error");
-                        showToast(error.getString("message"));
-                    } catch (JSONException e) {
-                        onError(e, true);
-                    }
-                } else {
-                    try {
-                        app.user.parse(result);
-                        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                        SharedPreferences.Editor editor = sp.edit();
-                        //写入本地存储
-                        editor.putString(User.PREF_USER, result.toString());
-                        editor.apply();
-
-                        Intent intent = new Intent();
-                        intent.setAction(Config.Constants.BROADCAST_USER_CHANGED);
-                        sendBroadcast(intent);
+                        application.user.parse(response);
+                        User.saveToLocal(getApplicationContext(), UserInfoActivity.this, response.toString());
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 }
-            }
 
-            private void showToast(String message) {
-                Toast.makeText(UserInfoActivity.this, message, Toast.LENGTH_SHORT).show();
-            }
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                    throwable.printStackTrace();
+                    Log.d(MyApplication.TAG, "update avatar: " + errorResponse.toString());
+                    if (statusCode == 401) {
+                        User.broadcastUserAuthorize(UserInfoActivity.this);
+                    } else {
+                        Toast.makeText(UserInfoActivity.this, "保存失败", Toast.LENGTH_SHORT).show();
+                    }
+                }
 
-            @Override
-            public void onError(Throwable ex, boolean isOnCallback) {
-                ex.printStackTrace();
-                showToast("更新失败");
-                Log.e(MyApplication.TAG,"update avatar ===> "+ex.getMessage());
-            }
-
-            @Override
-            public void onCancelled(CancelledException cex) {
-
-            }
-
-            @Override
-            public void onFinished() {
-                loadingDialog.dismiss();
-            }
-        });
+                @Override
+                public void onFinish() {
+                    loadingDialog.dismiss();
+                }
+            });
+        } catch (JSONException |UnsupportedEncodingException e) {
+            e.printStackTrace();
+            Toast.makeText(UserInfoActivity.this, "保存失败", Toast.LENGTH_SHORT).show();
+        }
     }
 
     BroadcastReceiver userChangeReceiver;

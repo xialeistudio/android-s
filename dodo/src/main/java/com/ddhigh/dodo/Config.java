@@ -21,5 +21,6 @@ public class Config {
         public static final int CODE_PICK_IMAGE_FROM_PHOTO = 3;//相册选择图片
         public static final int CODE_CROP_IMAGE = 4;//裁剪图片
         public static final String BROADCAST_USER_CHANGED = "com.ddhigh.dodo.action.USER_CHANGED";//用户信息发生改变
+        public static final String BROADCAST_USER_UNAUTHORIZED = "com.ddhigh.dodo.action.USER_UNAUTHORIZED";//用过登录失效
     }
 }

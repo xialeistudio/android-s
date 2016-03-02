@@ -1,23 +1,22 @@
 package com.ddhigh.dodo.orm;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.ddhigh.dodo.Config;
 import com.ddhigh.dodo.MyApplication;
 import com.ddhigh.dodo.util.HttpUtil;
+import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.xutils.common.Callback;
-import org.xutils.http.HttpMethod;
-import org.xutils.http.RequestParams;
-import org.xutils.x;
 
-import java.sql.Date;
+import java.io.UnsupportedEncodingException;
 
 /**
  * 用户
@@ -118,10 +117,8 @@ public class User extends Dao {
     /**
      * 加载用户数据
      */
-    public void loadUser(String token, Callback.CommonCallback<JSONObject> callback) {
-        RequestParams params = HttpUtil.prepare("/mcm/api/user/" + id);
-        params.addHeader("authorization", token);
-        x.http().get(params, callback);
+    public void loadUser(AsyncHttpResponseHandler handler) {
+        HttpUtil.get("/user/" + id, null, handler);
     }
 
     /**
@@ -172,8 +169,9 @@ public class User extends Dao {
             this.userId = userId;
         }
 
+
         @Override
-        public void async(Callback.CommonCallback<JSONObject> callback) {
+        public void async(Context context, AsyncHttpResponseHandler handler) throws JSONException {
 
         }
     }
@@ -188,12 +186,13 @@ public class User extends Dao {
      *
      * @param callback 回调方法
      */
-    public void login(Callback.CommonCallback<JSONObject> callback) {
-        RequestParams params = HttpUtil.prepare("/mcm/api/user/login");
-        params.addBodyParameter("username", username);
-        params.addBodyParameter("password", password);
-        params.setAsJsonContent(true);
-        x.http().post(params, callback);
+    public void login(Context context, AsyncHttpResponseHandler handler) throws UnsupportedEncodingException, JSONException {
+        Log.d(MyApplication.TAG, "login ===> " + username + ", " + password);
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("username", username);
+        jsonObject.put("password", password);
+        HttpUtil.post(context, "/user/login", jsonObject, handler);
     }
 
     /**
@@ -201,13 +200,12 @@ public class User extends Dao {
      *
      * @param callback
      */
-    public void register(Callback.CommonCallback<JSONObject> callback) {
-        RequestParams params = HttpUtil.prepare("/mcm/api/user");
-        params.addBodyParameter("username", username);
-        params.addBodyParameter("password", password);
-        params.addBodyParameter("email", email);
-        params.setAsJsonContent(true);
-        x.http().post(params, callback);
+    public void register(Context context, AsyncHttpResponseHandler handler) throws UnsupportedEncodingException, JSONException {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("username", username);
+        jsonObject.put("password", password);
+        jsonObject.put("email", email);
+        HttpUtil.post(context, "/user", jsonObject, handler);
     }
 
     @Override
@@ -239,15 +237,45 @@ public class User extends Dao {
      *
      * @param callback
      */
-    public void async(final Callback.CommonCallback<JSONObject> callback) {
-        RequestParams requestParams = HttpUtil.prepare("/mcm/api/user/" + id);
-        requestParams.addBodyParameter("email", email);
-        requestParams.addBodyParameter("emailVerified", String.valueOf(emailVerified));
-        requestParams.addBodyParameter("sex", String.valueOf(sex));
-        requestParams.addBodyParameter("mobile", mobile);
-        requestParams.addBodyParameter("nickname", nickname);
-        requestParams.addBodyParameter("avatar", avatar);
-        requestParams.setAsJsonContent(true);
-        x.http().request(HttpMethod.PUT, requestParams, callback);
+    public void async(Context context, AsyncHttpResponseHandler handler) throws JSONException, UnsupportedEncodingException {
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("email", email);
+        jsonObject.put("emailVerified", String.valueOf(emailVerified));
+        jsonObject.put("sex", String.valueOf(sex));
+        jsonObject.put("mobile", mobile);
+        jsonObject.put("nickname", nickname);
+        jsonObject.put("avatar", avatar);
+        HttpUtil.put(context, "/user/" + id, jsonObject, handler);
+    }
+
+    /**
+     * 用户已过期
+     *
+     * @param context
+     */
+    public static void broadcastUserAuthorize(Context context) {
+        Toast.makeText(context, "登录过期", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent();
+        intent.setAction(Config.Constants.BROADCAST_USER_UNAUTHORIZED);
+        context.sendBroadcast(intent);
+    }
+
+    /**
+     * 保存到本地
+     *
+     * @param applicationContext
+     * @param context
+     * @param data
+     */
+    public static void saveToLocal(Context applicationContext, Context context, String data) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(applicationContext);
+        SharedPreferences.Editor editor = sp.edit();
+        //写入本地存储
+        editor.putString(User.PREF_USER, data);
+        editor.apply();
+        Intent intent = new Intent();
+        intent.setAction(Config.Constants.BROADCAST_USER_CHANGED);
+        context.sendBroadcast(intent);
     }
 }

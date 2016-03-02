@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,18 +15,23 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.ddhigh.dodo.MyApplication;
 import com.ddhigh.dodo.R;
 import com.ddhigh.dodo.orm.User;
 import com.ddhigh.dodo.util.RegexUtil;
 import com.ddhigh.dodo.widget.IosAlertDialog;
 import com.ddhigh.dodo.widget.LoadingDialog;
+import com.loopj.android.http.JsonHttpResponseHandler;
 
+import org.apache.http.Header;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.xutils.common.Callback;
 import org.xutils.view.annotation.Event;
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
+
+import java.io.UnsupportedEncodingException;
+
 
 /**
  * @project Study
@@ -138,54 +144,58 @@ public class RegisterFragment extends Fragment {
             user.setPassword(password);
             user.setEmail(email);
 
-            user.register(new Callback.CommonCallback<JSONObject>() {
-                @Override
-                public void onSuccess(JSONObject result) {
-                    if (result.has("error")) {
-                        try {
-                            JSONObject error = result.getJSONObject("error");
-                            handleError(error.getString("message"));
-                        } catch (JSONException e) {
-                            onError(e, true);
+
+            try {
+                user.register(getActivity(),new JsonHttpResponseHandler() {
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                        if (response.has("error")) {
+                            Log.e(MyApplication.TAG, "register: " + response.toString());
+                            try {
+                                JSONObject error = response.getJSONObject("error");
+                                String msg = error.getString("message");
+                                if (msg.equals("username:already exists")) {
+                                    Toast.makeText(getActivity(), "用户名已存在", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(getActivity(), "注册失败: " + msg, Toast.LENGTH_SHORT).show();
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        } else {
+                            IosAlertDialog dialog = new IosAlertDialog.Builder(getActivity())
+                                    .setTitle("提示")
+                                    .setMessage("注册成功，请验证邮箱后登录")
+                                    .setButton("返回登录", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.dismiss();
+                                            onBtnGoLogin(btnGoLogin);
+                                        }
+                                    })
+                                    .create();
+                            dialog.setCancelable(false);
+                            dialog.show();
                         }
-                    } else {
-                        IosAlertDialog dialog = new IosAlertDialog.Builder(getActivity())
-                                .setTitle("提示")
-                                .setMessage("注册成功，请验证邮箱后登录")
-                                .setButton("返回登录", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.dismiss();
-                                        onBtnGoLogin(btnGoLogin);
-                                    }
-                                })
-                                .create();
-                        dialog.setCancelable(false);
-                        dialog.show();
                     }
-                }
 
-                private void handleError(String msg) {
-                    Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
-                }
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                        throwable.printStackTrace();
+                        Log.e(MyApplication.TAG, "register: " + errorResponse.toString());
+                        Toast.makeText(getActivity(), "注册失败", Toast.LENGTH_SHORT).show();
+                    }
 
-                @Override
-                public void onError(Throwable ex, boolean isOnCallback) {
-                    handleError("注册失败");
-                    ex.printStackTrace();
-                }
-
-
-                @Override
-                public void onCancelled(CancelledException cex) {
-                    dialog.dismiss();
-                }
-
-                @Override
-                public void onFinished() {
-                    dialog.dismiss();
-                }
-            });
+                    @Override
+                    public void onFinish() {
+                        dialog.dismiss();
+                    }
+                });
+            } catch (UnsupportedEncodingException | JSONException e) {
+                e.printStackTrace();
+                dialog.dismiss();
+                Toast.makeText(getActivity(), "注册失败", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 }

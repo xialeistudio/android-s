@@ -1,15 +1,16 @@
 package com.ddhigh.dodo.orm;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.ddhigh.dodo.MyApplication;
 import com.ddhigh.dodo.util.DateUtil;
+import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.xutils.common.Callback;
 
-import java.lang.reflect.Field;
+import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -81,5 +82,5 @@ abstract public class Dao {
     /**
      * 同步数据至远程
      */
-    abstract public void async(Callback.CommonCallback<JSONObject> callback);
+    abstract public void async(Context context,AsyncHttpResponseHandler handler) throws JSONException, UnsupportedEncodingException;
 }

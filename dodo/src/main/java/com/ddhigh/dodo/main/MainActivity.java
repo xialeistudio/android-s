@@ -18,10 +18,12 @@ import com.ddhigh.dodo.MyApplication;
 import com.ddhigh.dodo.R;
 import com.ddhigh.dodo.authorize.LoginFragment;
 import com.ddhigh.dodo.orm.User;
+import com.ddhigh.dodo.util.HttpUtil;
+import com.loopj.android.http.JsonHttpResponseHandler;
 
+import org.apache.http.Header;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.xutils.common.Callback;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.Event;
 import org.xutils.view.annotation.ViewInject;
@@ -134,43 +136,35 @@ public class MainActivity extends AppCompatActivity {
         application.accessToken.setId(token);
         application.accessToken.setUserId(userId);
         //读取用户数据
-        application.user.loadUser(application.accessToken.getId(), new Callback.CommonCallback<JSONObject>() {
+        HttpUtil.setToken(token);
+        application.user.loadUser(new JsonHttpResponseHandler() {
             @Override
-            public void onSuccess(JSONObject result) {
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                //同步至磁盘
                 try {
-                    application.user.parse(result);
-                    //写入本地存储
-                    editor.putString(User.PREF_USER, result.toString());
+                    application.user.parse(response);
+                    editor.putString(User.PREF_USER, response.toString());
                     editor.apply();
+
+                    FragmentManager fragmentManager = getFragmentManager();
+                    UserFragment fragment = (UserFragment) fragmentManager.findFragmentByTag("userFragment");
+                    if (fragment == null) {
+                        fragment = new UserFragment();
+                    }
+                    fragmentManager.beginTransaction()
+                            .replace(R.id.fragmentContainer, fragment, "userFragment")
+                            .show(fragment)
+                            .commit();
+
                 } catch (JSONException e) {
-                    onError(e, true);
+                    e.printStackTrace();
+                    Toast.makeText(MainActivity.this, "读取用户信息失败", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
-            public void onError(Throwable ex, boolean isOnCallback) {
-                Log.d(MyApplication.TAG, "loadUser: " + ex.getMessage());
-                ex.printStackTrace();
-            }
-
-            @Override
-            public void onCancelled(CancelledException cex) {
-
-            }
-
-            @Override
-            public void onFinished() {
-                Log.d(MyApplication.TAG, "loadUser From Server");
-                //更新fragment
-                FragmentManager fragmentManager = getFragmentManager();
-                UserFragment fragment = (UserFragment) fragmentManager.findFragmentByTag("userFragment");
-                if (fragment == null) {
-                    fragment = new UserFragment();
-                }
-                fragmentManager.beginTransaction()
-                        .replace(R.id.fragmentContainer, fragment, "userFragment")
-                        .show(fragment)
-                        .commit();
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                throwable.printStackTrace();
             }
         });
     }

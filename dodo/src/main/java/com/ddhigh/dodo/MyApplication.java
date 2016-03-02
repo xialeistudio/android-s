@@ -34,7 +34,7 @@ public class MyApplication extends Application {
         super.onCreate();
         x.Ext.init(this);
         x.Ext.setDebug(BuildConfig.DEBUG);
-        HttpUtil.setApi("https://d.apicloud.com");
+        HttpUtil.setApi("https://d.apicloud.com/mcm/api");
 
         initUser();
 
