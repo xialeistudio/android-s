@@ -33,6 +33,9 @@
         <activity
             android:name=".user.ModifyNicknameActivity"
             android:label="@string/modify_nickname" />
+        <activity
+            android:name=".user.SettingActivity"
+            android:label="@string/setting" />
     </application>
 
 </manifest>

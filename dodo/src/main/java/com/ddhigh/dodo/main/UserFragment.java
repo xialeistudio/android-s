@@ -23,6 +23,7 @@ import com.ddhigh.dodo.MyApplication;
 import com.ddhigh.dodo.R;
 import com.ddhigh.dodo.authorize.LoginFragment;
 import com.ddhigh.dodo.orm.User;
+import com.ddhigh.dodo.user.SettingActivity;
 import com.ddhigh.dodo.user.UserInfoActivity;
 import com.ddhigh.dodo.util.BitmapUtil;
 import com.ddhigh.dodo.util.DateUtil;
@@ -85,9 +86,8 @@ public class UserFragment extends Fragment {
 
     @Event(R.id.btnSetting)
     private void onBtnSettingClicked(View view) {
-        Log.d(MyApplication.TAG, "onBtnSettingClicked");
+        startActivity(new Intent(getActivity(), SettingActivity.class));
     }
-
     @Event(R.id.btnLogout)
     private void onBtnLogoutClicked(View view) {
         IosConfirmDialog.Builder builder = new IosConfirmDialog.Builder(getActivity());
