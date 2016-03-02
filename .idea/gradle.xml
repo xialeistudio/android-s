@@ -9,7 +9,6 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/dodo" />
             <option value="$PROJECT_DIR$/downloadmanager" />
             <option value="$PROJECT_DIR$/earthquake" />
             <option value="$PROJECT_DIR$/mylibrary" />
@@ -19,7 +18,6 @@
         <option name="myModules">
           <set>
             <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/dodo" />
             <option value="$PROJECT_DIR$/downloadmanager" />
             <option value="$PROJECT_DIR$/earthquake" />
             <option value="$PROJECT_DIR$/mylibrary" />

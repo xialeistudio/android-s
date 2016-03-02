@@ -1,18 +1,35 @@
 package com.ddhigh.mylibrary.util;
 
+import android.content.Context;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
+import org.apache.http.entity.StringEntity;
+import org.json.JSONObject;
+
+import java.io.UnsupportedEncodingException;
+
 /**
  * @project Study
- * @package com.ddhigh.mylibrary.util
+ * @package com.ddhigh.dodo.util
  * @user xialeistudio
- * @date 2016/3/2 0002
+ * @date 2016/2/29 0029
  */
 public class HttpUtil {
-    private static AsyncHttpClient client = new AsyncHttpClient(true, 80, 443);
-    private static String BASE_URL = "https://d.apicloud.com/mcm/api";
+
+    public static AsyncHttpClient client = new AsyncHttpClient(true, 80, 443);
+
+    static String api;
+    static String token;
+
+    public static void setToken(String token) {
+        HttpUtil.token = token;
+    }
+
+    public static void setApi(String api) {
+        HttpUtil.api = api;
+    }
 
     public static void get(String uri, RequestParams params, AsyncHttpResponseHandler handler) {
         encryptRequest();
@@ -24,21 +41,45 @@ public class HttpUtil {
         client.post(getAbsoluteUrl(uri), params, handler);
     }
 
+    public static void delete(String uri, RequestParams params, AsyncHttpResponseHandler handler) {
+        encryptRequest();
+        client.delete(getAbsoluteUrl(uri), params, handler);
+    }
+
+    public static void put(String uri, RequestParams params, AsyncHttpResponseHandler handler) {
+        encryptRequest();
+        client.put(getAbsoluteUrl(uri), params, handler);
+    }
+
+    public static void post(Context context, String uri, JSONObject jsonObject, AsyncHttpResponseHandler handler) throws UnsupportedEncodingException {
+        encryptRequest();
+        client.post(context, getAbsoluteUrl(uri), new StringEntity(jsonObject.toString(),"utf-8"), "application/json", handler);
+    }
+
+    public static void get(Context context, String uri, JSONObject jsonObject, AsyncHttpResponseHandler handler) throws UnsupportedEncodingException {
+        encryptRequest();
+        client.get(context, getAbsoluteUrl(uri), new StringEntity(jsonObject.toString(),"utf-8"), "application/json", handler);
+    }
+
+    public static void delete(Context context, String uri, JSONObject jsonObject, AsyncHttpResponseHandler handler) throws UnsupportedEncodingException {
+        encryptRequest();
+        client.delete(context, getAbsoluteUrl(uri), new StringEntity(jsonObject.toString(),"utf-8"), "application/json", handler);
+    }
+
+    public static void put(Context context, String uri, JSONObject jsonObject, AsyncHttpResponseHandler handler) throws UnsupportedEncodingException {
+        encryptRequest();
+        client.put(context, getAbsoluteUrl(uri), new StringEntity(jsonObject.toString(),"utf-8"), "application/json", handler);
+    }
 
     private static String getAbsoluteUrl(String uri) {
         if (uri.startsWith("http")) {
             return uri;
         }
-        return BASE_URL + uri;
+        return api + uri;
     }
 
     private static void encryptRequest() {
-        String appid = "A6990125149280";
-        String appkey = "E448A921-A1A7-FD66-8B47-BDF15CF872CE";
-        client.addHeader("X-APICloud-AppId", appid);
-        long timestamp = System.currentTimeMillis();
-        String key = EncryUtil.sha1(appid + "UZ" + appkey + "UZ" + timestamp) + "." + timestamp;
-        client.addHeader("X-APICloud-AppKey", key);
+
     }
 
 }
