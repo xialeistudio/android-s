@@ -1,1 +1,1 @@
-include ':app', ':earthquake', ':downloadmanager', ':testview', ':takephoto', ':dodo', ':sample', ':xutils', ':library'
+include ':earthquake', ':downloadmanager', ':dodo', ':mylibrary', ':testlibrary'
