@@ -36,6 +36,9 @@
         <activity
             android:name=".user.SettingActivity"
             android:label="@string/setting" />
+        <activity
+            android:name=".remind.RemindCreateActivity"
+            android:label="@string/create_remind" />
     </application>
 
 </manifest>

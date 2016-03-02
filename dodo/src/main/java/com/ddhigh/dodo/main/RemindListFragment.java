@@ -1,6 +1,7 @@
 package com.ddhigh.dodo.main;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -13,6 +14,7 @@ import android.view.ViewGroup;
 
 import com.ddhigh.dodo.MyApplication;
 import com.ddhigh.dodo.R;
+import com.ddhigh.dodo.remind.RemindCreateActivity;
 
 import org.xutils.view.annotation.Event;
 import org.xutils.x;
@@ -48,7 +50,7 @@ public class RemindListFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.menuCreate:
-                Log.d(MyApplication.TAG,"!~");
+                startActivity(new Intent(getActivity(), RemindCreateActivity.class));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
