@@ -43,7 +43,10 @@ public class RemindListFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.menu_home,menu);
+        MyApplication app = (MyApplication) getActivity().getApplication();
+        if(!app.user.isGuest()){
+            inflater.inflate(R.menu.menu_home,menu);
+        }
     }
 
     @Override
