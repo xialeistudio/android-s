@@ -120,8 +120,12 @@ public class LoginFragment extends Fragment {
 
                 @Override
                 public void onError(Throwable ex, boolean isOnCallback) {
-                    handleError("账号或密码错误或邮箱未验证");
-                    ex.printStackTrace();
+                    String str = ex.toString();
+                    if (str.contains("login failed")) {
+                        handleError("账号或密码错误");
+                    } else if (str.contains("The mailbox is not verified")) {
+                        handleError("邮箱未验证");
+                    }
                 }
 
 

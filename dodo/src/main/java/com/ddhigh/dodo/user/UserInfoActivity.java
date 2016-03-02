@@ -293,6 +293,7 @@ public class UserInfoActivity extends AppCompatActivity {
             public void onError(Throwable ex, boolean isOnCallback) {
                 ex.printStackTrace();
                 showToast("更新失败");
+                Log.e(MyApplication.TAG,"update avatar ===> "+ex.getMessage());
             }
 
             @Override
