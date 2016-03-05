@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.ddhigh.joke.MyApplication;
 import com.ddhigh.joke.R;
 import com.ddhigh.joke.config.Actions;
+import com.ddhigh.joke.user.UserActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -76,7 +77,8 @@ public class MainActivity extends AppCompatActivity {
                     intent.setAction(Actions.ACTION_LOGIN_REQUIRED);
                     sendBroadcast(intent);
                 } else {
-                    Log.d(MyApplication.TAG, "user center clicked");
+                    Intent intent = new Intent(this, UserActivity.class);
+                    startActivity(intent);
                 }
                 return true;
             case R.id.menuAdd:

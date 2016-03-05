@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPageGray">
+
+    <RelativeLayout
+        android:id="@+id/btnUser"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_marginTop="@dimen/table_row_margin_vertical"
+        android:background="@drawable/line_seperator_white"
+        android:clickable="true"
+        android:paddingLeft="@dimen/table_row_horizontal_margin"
+        android:paddingRight="@dimen/table_row_horizontal_margin">
+
+        <ImageView
+            android:id="@+id/imageAvatar"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_centerVertical="true"
+            android:contentDescription="@string/avatar" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="16dp"
+            android:layout_toRightOf="@+id/imageAvatar"
+            android:text="@string/nickname"
+            android:textSize="16sp" />
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:contentDescription="@string/next_page"
+            android:src="@drawable/ic_keyboard_arrow_right_black_24dp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/btnLogout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/table_row_height"
+        android:layout_below="@+id/btnUser"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:background="@drawable/line_seperator_white"
+        android:clickable="true"
+        android:paddingLeft="@dimen/table_row_horizontal_margin"
+        android:paddingRight="@dimen/table_row_horizontal_margin">
+
+        <ImageView
+            android:id="@+id/iconLogout"
+            android:layout_width="@dimen/table_icon_size"
+            android:layout_height="@dimen/table_icon_size"
+            android:layout_centerVertical="true"
+            android:contentDescription="@string/logout"
+            android:src="@drawable/ic_exit_to_app_black_24dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/table_row_icon_text_margin"
+            android:layout_toRightOf="@+id/iconLogout"
+            android:text="@string/logout"
+            android:textSize="16sp" />
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="20dp"
+        android:gravity="center"
+        android:text="段子 1.0"
+        android:textColor="@android:color/darker_gray"
+        android:textSize="12sp" />
+</RelativeLayout>

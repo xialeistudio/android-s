@@ -5,4 +5,6 @@
     <color name="colorAccent">#666666</color>
     <color name="Lime">#37a02f</color>
     <color name="LimeGreen">#3ec234</color>
+    <color name="colorLineSeperator">#d7d7d7</color>
+    <color name="colorPageGray">#ececec</color>
 </resources>
