@@ -8,10 +8,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.ddhigh.joke.R;
+import com.ddhigh.joke.config.Actions;
 
 import org.xutils.view.annotation.ContentView;
+import org.xutils.view.annotation.Event;
 import org.xutils.x;
 
 /**
@@ -54,5 +57,13 @@ public class LoginActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Event(R.id.btnLogin)
+    private void onBntLoginClicked(View view) {
+        Intent intent = new Intent();
+        intent.setAction(Actions.ACTION_LOGIN_SUCCESS);
+        sendBroadcast(intent);
+        finish();
     }
 }

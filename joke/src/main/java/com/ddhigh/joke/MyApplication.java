@@ -3,6 +3,7 @@ package com.ddhigh.joke;
 import android.app.Application;
 
 import com.ddhigh.joke.model.UserModel;
+import com.ddhigh.joke.util.HttpUtil;
 
 /**
  * @project Study
@@ -18,5 +19,7 @@ public class MyApplication extends Application {
     public void onCreate() {
         super.onCreate();
         user = new UserModel();
+        //初始化请求类
+        HttpUtil.setApi("https://d.apicloud.com/mcm/api");
     }
 }

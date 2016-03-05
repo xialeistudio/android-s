@@ -1,6 +1,9 @@
 package com.ddhigh.joke.main;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -19,12 +22,21 @@ import org.xutils.x;
 public class MainActivity extends AppCompatActivity {
     MyApplication application;
 
+    BroadcastReceiver loginSuccessReceiver;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         x.view().inject(this);
 
         application = (MyApplication) getApplication();
+        loginSuccessReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                Log.d(MyApplication.TAG, "login success");
+            }
+        };
+        registerReceiver(loginSuccessReceiver, new IntentFilter(Actions.ACTION_LOGIN_SUCCESS));
     }
 
     @Override
@@ -51,5 +63,11 @@ public class MainActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        unregisterReceiver(loginSuccessReceiver);
+        super.onDestroy();
     }
 }

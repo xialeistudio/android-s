@@ -4,4 +4,7 @@
     <string name="username">用户名</string>
     <string name="password">密码</string>
     <string name="register">注册</string>
+    <string name="user">个人中心</string>
+    <string name="confirm_password">确认密码</string>
+    <string name="email">邮箱</string>
 </resources>
