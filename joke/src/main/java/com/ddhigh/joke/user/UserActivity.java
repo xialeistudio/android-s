@@ -146,7 +146,7 @@ public class UserActivity extends AppCompatActivity {
         } else {
             //加载本地数据
             txtNickname.setText(application.user.getNickname());
-            imageLoader.displayImage(application.user.getAvatar() + "?imageView2/1/w/200", imageAvatar);
+            imageLoader.displayImage(application.user.getAvatar() + "?imageView2/1/w/128", imageAvatar);
         }
     }
 

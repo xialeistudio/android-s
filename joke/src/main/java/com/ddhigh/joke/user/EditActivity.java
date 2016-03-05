@@ -16,6 +16,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -77,7 +78,7 @@ public class EditActivity extends AppCompatActivity {
         ImageLoader imageLoader = ImageLoader.getInstance();
         //显示用户信息
         if (!TextUtils.isEmpty(application.user.getAvatar())) {
-            imageLoader.displayImage(application.user.getAvatar()+"?imageView2/1/w/128", imageAvatar);
+            imageLoader.displayImage(application.user.getAvatar() + "?imageView2/1/w/128", imageAvatar);
         }
         if (!TextUtils.isEmpty(application.user.getNickname())) {
             txtNickname.setText(application.user.getNickname());
@@ -168,6 +169,12 @@ public class EditActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * 上传头像
+     *
+     * @param path 头像路径
+     * @throws FileNotFoundException
+     */
     private void uploadAvatar(File path) throws FileNotFoundException {
         final ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("上传中");
@@ -217,6 +224,13 @@ public class EditActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * 更新头像
+     *
+     * @param url 头像url地址
+     * @throws JSONException
+     * @throws UnsupportedEncodingException
+     */
     private void updateUserAvatar(final String url) throws JSONException, UnsupportedEncodingException {
         Log.d(MyApplication.TAG, "update avatar: " + url);
         final ProgressDialog progressDialog = new ProgressDialog(this);
@@ -275,5 +289,101 @@ public class EditActivity extends AppCompatActivity {
                 progressDialog.hide();
             }
         });
+    }
+
+    @Event(R.id.btnNickname)
+    private void onBtnNicknameClicked(View view) {
+        final EditText txtNickname = new EditText(this);
+        txtNickname.setText(application.user.getNickname());
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("请输入昵称");
+        builder
+                .setView(txtNickname)
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        updateUserNickname(txtNickname.getText().toString().trim());
+                    }
+                })
+                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        builder.create().show();
+    }
+
+    private void updateUserNickname(final String trim) {
+        if (!TextUtils.isEmpty(trim)) {
+            try {
+                final ProgressDialog progressDialog = new ProgressDialog(this);
+                progressDialog.setMessage("更新中");
+                progressDialog.setCancelable(false);
+
+                JSONObject json = new JSONObject();
+                json.put("id", application.user.getId());
+                json.put("nickname", trim);
+
+                try {
+                    HttpUtil.put(this, "/user/" + application.user.getId(), json, new JsonHttpResponseHandler() {
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                            try {
+                                HttpUtil.handleError(response.toString());
+                                application.user.setNickname(trim);
+                                application.user.save(getApplicationContext());
+                                //ui
+                                txtNickname.setText(trim);
+                                //广播用户信息改变
+                                Intent intent = new Intent();
+                                intent.setAction(Actions.ACTION_USER_CHANGED);
+                                sendBroadcast(intent);
+                                Toast.makeText(EditActivity.this, "更新成功", Toast.LENGTH_SHORT).show();
+                            } catch (JSONException | JokeException e) {
+                                e.printStackTrace();
+                                Toast.makeText(EditActivity.this, "更新失败", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                            if (statusCode == 401) {
+                                //用户注销广播
+                                Intent i = new Intent();
+                                i.setAction(Actions.ACTION_LOGOUT);
+                                sendBroadcast(i);
+                                //登录
+                                Intent intent = new Intent();
+                                intent.setAction(Actions.ACTION_LOGIN_REQUIRED);
+                                sendBroadcast(intent);
+                                finish();
+                                return;
+                            }
+                            throwable.printStackTrace();
+                            Toast.makeText(EditActivity.this, "更新失败", Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void onStart() {
+                            progressDialog.show();
+                        }
+
+                        @Override
+                        public void onFinish() {
+                            progressDialog.hide();
+                        }
+                    });
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                    Toast.makeText(EditActivity.this, "更新失败", Toast.LENGTH_SHORT).show();
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+                Toast.makeText(EditActivity.this, "更新失败", Toast.LENGTH_SHORT).show();
+            }
+
+        }
     }
 }
