@@ -1,7 +1,10 @@
 package com.ddhigh.joke.user;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
@@ -50,6 +53,8 @@ public class UserActivity extends AppCompatActivity {
     @ViewInject(R.id.txtNickname)
     TextView txtNickname;
 
+    BroadcastReceiver userChangedReceiver;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,6 +70,23 @@ public class UserActivity extends AppCompatActivity {
         //显示App信息
         String appInfo = "段子 " + AppUtil.getAppInfo(this).versionName;
         txtAppInfo.setText(appInfo);
+        //注册用户信息改变监听器
+        userChangedReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                displayUserInfo();
+            }
+        };
+        registerReceiver(userChangedReceiver, new IntentFilter(Actions.ACTION_USER_CHANGED));
+    }
+
+    private void displayUserInfo() {
+        if (!TextUtils.isEmpty(application.user.getNickname())) {
+            txtNickname.setText(application.user.getNickname());
+        }
+        if (!TextUtils.isEmpty(application.user.getAvatar())) {
+            ImageLoader.getInstance().displayImage(application.user.getAvatar() + "?imageView2/1/w/128", imageAvatar);
+        }
     }
 
     private void loadUserInfo() {
@@ -95,7 +117,7 @@ public class UserActivity extends AppCompatActivity {
                         }
 
                         if (!TextUtils.isEmpty(application.user.getAvatar())) {
-                            imageLoader.displayImage(application.user.getAvatar(), imageAvatar);
+                            imageLoader.displayImage(application.user.getAvatar() + "?imageView2/1/w/128", imageAvatar);
                         }
                     } catch (JSONException | JokeException e) {
                         e.printStackTrace();
@@ -124,7 +146,7 @@ public class UserActivity extends AppCompatActivity {
         } else {
             //加载本地数据
             txtNickname.setText(application.user.getNickname());
-            imageLoader.displayImage(application.user.getAvatar(), imageAvatar);
+            imageLoader.displayImage(application.user.getAvatar() + "?imageView2/1/w/200", imageAvatar);
         }
     }
 
@@ -167,5 +189,11 @@ public class UserActivity extends AppCompatActivity {
     private void onBtnUserClicked(View view) {
         Intent i = new Intent(this, EditActivity.class);
         startActivityForResult(i, Config.REQUEST_CODE_EDIT_USER);
+    }
+
+    @Override
+    protected void onDestroy() {
+        unregisterReceiver(userChangedReceiver);
+        super.onDestroy();
     }
 }

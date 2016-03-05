@@ -14,4 +14,7 @@ public class Config {
 
     public static final String PREF_USER = "PREF_USER";//SharedPreference user key
     public static final int REQUEST_CODE_EDIT_USER = 1;//编辑用户
+
+    public static final int REQUEST_CODE_FROM_PHOTO = 2;//照片
+    public static final int REQUEST_CODE_FROM_CAMERA = 3;//相机
 }
