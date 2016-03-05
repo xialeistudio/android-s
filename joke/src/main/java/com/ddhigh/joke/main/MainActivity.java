@@ -16,6 +16,7 @@ import com.ddhigh.joke.MyApplication;
 import com.ddhigh.joke.R;
 import com.ddhigh.joke.config.Actions;
 import com.ddhigh.joke.user.UserActivity;
+import com.ddhigh.joke.util.HttpUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -27,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
     MyApplication application;
 
     BroadcastReceiver loginSuccessReceiver;
+    BroadcastReceiver logoutReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
         x.view().inject(this);
 
         application = (MyApplication) getApplication();
+        //注册登录成功广播
         loginSuccessReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -44,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
                         application.user.setId(jsonObject.getString("userId"));
                         application.user.setToken(jsonObject.getString("id"));
                         application.user.save(getApplicationContext());
+                        HttpUtil.setToken(jsonObject.getString("id"));
                         //显示发表段子的加号
                         supportInvalidateOptionsMenu();
                     } catch (JSONException e) {
@@ -54,6 +58,19 @@ public class MainActivity extends AppCompatActivity {
             }
         };
         registerReceiver(loginSuccessReceiver, new IntentFilter(Actions.ACTION_LOGIN_SUCCESS));
+        //注册退出登录广播
+        logoutReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                application.user.setId(null);
+                application.user.setToken(null);
+                application.user.save(getApplicationContext());
+                HttpUtil.setToken(null);
+                //更新菜单
+                supportInvalidateOptionsMenu();
+            }
+        };
+        registerReceiver(logoutReceiver, new IntentFilter(Actions.ACTION_LOGOUT));
     }
 
     @Override
@@ -92,6 +109,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         unregisterReceiver(loginSuccessReceiver);
+        unregisterReceiver(logoutReceiver);
         super.onDestroy();
     }
 }
