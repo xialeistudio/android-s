@@ -316,7 +316,7 @@ public class EditActivity extends AppCompatActivity {
     }
 
     private void updateUserNickname(final String trim) {
-        if (!TextUtils.isEmpty(trim)) {
+        if (!TextUtils.isEmpty(trim) && !trim.equals(application.user.getNickname())) {
             try {
                 final ProgressDialog progressDialog = new ProgressDialog(this);
                 progressDialog.setMessage("更新中");
