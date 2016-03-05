@@ -24,7 +24,7 @@ public class UserModel extends BaseModel {
     private String avatar;
 
     public String getNickname() {
-        if(!TextUtils.isEmpty(nickname) && nickname.equals("null")){
+        if (!TextUtils.isEmpty(nickname) && nickname.equals("null")) {
             return null;
         }
         return nickname;
@@ -35,7 +35,7 @@ public class UserModel extends BaseModel {
     }
 
     public String getAvatar() {
-        if(!TextUtils.isEmpty(avatar) && avatar.equals("null")){
+        if (!TextUtils.isEmpty(avatar) && avatar.equals("null")) {
             return null;
         }
         return avatar;
@@ -72,12 +72,8 @@ public class UserModel extends BaseModel {
         try {
             jsonObject.put("id", id);
             jsonObject.put("token", token);
-            if (!TextUtils.isEmpty(nickname)) {
-                jsonObject.put("nickname", nickname);
-            }
-            if (!TextUtils.isEmpty(avatar)) {
-                jsonObject.put("avatar", avatar);
-            }
+            jsonObject.put("nickname", nickname);
+            jsonObject.put("avatar", avatar);
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext);
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putString(Config.PREF_USER, jsonObject.toString());
@@ -110,5 +106,21 @@ public class UserModel extends BaseModel {
                 }
             }
         }
+    }
+
+    /**
+     * 清空缓存
+     *
+     * @param applicationContext 应用上下文
+     */
+    public void clean(Context applicationContext) {
+        id = null;
+        token = null;
+        nickname = null;
+        avatar = null;
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.remove(Config.PREF_USER);
+        editor.apply();
     }
 }

@@ -59,7 +59,7 @@ public class UserActivity extends AppCompatActivity {
         }
 
         application = (MyApplication) getApplication();
-
+        //显示用户信息
         loadUserInfo();
         //显示App信息
         String appInfo = "段子 " + AppUtil.getAppInfo(this).versionName;
@@ -68,7 +68,7 @@ public class UserActivity extends AppCompatActivity {
 
     private void loadUserInfo() {
         final ImageLoader imageLoader = ImageLoader.getInstance();
-        if (application.user.getNickname() == null || application.user.getAvatar() == null) {
+        if (TextUtils.isEmpty(application.user.getNickname()) || TextUtils.isEmpty(application.user.getAvatar())) {
             //从远程加载用户数据
             HttpUtil.get("/user/" + application.user.getId(), null, new JsonHttpResponseHandler() {
                 @Override
@@ -100,6 +100,10 @@ public class UserActivity extends AppCompatActivity {
                 @Override
                 public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                     if (statusCode == 401) {
+                        //用户注销广播
+                        Intent i = new Intent();
+                        i.setAction(Actions.ACTION_LOGOUT);
+                        sendBroadcast(i);
                         //登录
                         Intent intent = new Intent();
                         intent.setAction(Actions.ACTION_LOGIN_REQUIRED);

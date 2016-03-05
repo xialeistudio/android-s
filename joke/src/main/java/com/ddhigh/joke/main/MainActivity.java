@@ -62,10 +62,8 @@ public class MainActivity extends AppCompatActivity {
         logoutReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                application.user.setId(null);
-                application.user.setToken(null);
-                application.user.save(getApplicationContext());
                 HttpUtil.setToken(null);
+                application.user.clean(getApplicationContext());
                 //更新菜单
                 supportInvalidateOptionsMenu();
             }
