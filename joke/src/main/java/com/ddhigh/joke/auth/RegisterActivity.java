@@ -150,12 +150,9 @@ public class RegisterActivity extends AppCompatActivity {
                     progressDialog.dismiss();
                 }
             });
-        } catch (JSONException e) {
+        } catch (UnsupportedEncodingException | JSONException e) {
             e.printStackTrace();
-            Toast.makeText(this, "注册失败，请勿输入特殊字符", Toast.LENGTH_SHORT).show();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-            Toast.makeText(this, "解析服务器响应失败", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "请勿请输入特殊字符", Toast.LENGTH_SHORT).show();
         }
     }
 }

@@ -108,9 +108,7 @@ public class HttpUtil {
         if (jsonObject.has("error")) {
             JSONObject error = jsonObject.getJSONObject("error");
             String msg = error.getString("message");
-            if (errmap.containsKey(msg)) {
-                msg = errmap.get(msg);
-            }
+            msg = translateMessage(msg);
             throw new JokeException(msg, error.getInt("statusCode"));
         }
     }
@@ -119,9 +117,24 @@ public class HttpUtil {
     /**
      * 错误消息翻译
      */
-    private static Map<String, String> errmap = new HashMap<>();
+    private static Map<String, String> msgmap = new HashMap<>();
 
     static {
-        errmap.put("username:already exists", "用户名已存在");
+        msgmap.put("username:already exists", "用户名已存在");
+        msgmap.put("login failed","登录失败，请检查用户名和密码是否正确");
+        msgmap.put("The mailbox is not verified","请先验证邮箱");
+    }
+
+    /**
+     * 翻译消息
+     *
+     * @param msg
+     * @return
+     */
+    public static String translateMessage(String msg) {
+        if (msgmap.containsKey(msg)) {
+            return msgmap.get(msg);
+        }
+        return msg;
     }
 }

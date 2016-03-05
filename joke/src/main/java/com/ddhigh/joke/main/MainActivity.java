@@ -10,11 +10,14 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.ddhigh.joke.MyApplication;
 import com.ddhigh.joke.R;
 import com.ddhigh.joke.config.Actions;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.x;
 
@@ -33,7 +36,20 @@ public class MainActivity extends AppCompatActivity {
         loginSuccessReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                Log.d(MyApplication.TAG, "login success");
+                String data = intent.getStringExtra("data");
+                if (data != null) {
+                    try {
+                        JSONObject jsonObject = new JSONObject(data);
+                        application.user.setId(jsonObject.getString("userId"));
+                        application.user.setToken(jsonObject.getString("id"));
+                        application.user.save(getApplicationContext());
+                        //显示发表段子的加号
+                        supportInvalidateOptionsMenu();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        Toast.makeText(MainActivity.this, "参数解析失败", Toast.LENGTH_SHORT).show();
+                    }
+                }
             }
         };
         registerReceiver(loginSuccessReceiver, new IntentFilter(Actions.ACTION_LOGIN_SUCCESS));
@@ -44,6 +60,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreateOptionsMenu(menu);
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_person, menu);
+        if (!application.user.isGuest()) {
+            inflater.inflate(R.menu.menu_add, menu);
+        }
         return true;
     }
 
@@ -57,8 +76,11 @@ public class MainActivity extends AppCompatActivity {
                     intent.setAction(Actions.ACTION_LOGIN_REQUIRED);
                     sendBroadcast(intent);
                 } else {
-                    Log.d(MyApplication.TAG, "user logined");
+                    Log.d(MyApplication.TAG, "user center clicked");
                 }
+                return true;
+            case R.id.menuAdd:
+                Log.d(MyApplication.TAG, "post joke clicked");
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
