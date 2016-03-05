@@ -78,8 +78,7 @@ public class HttpUtil {
         return api + uri;
     }
 
-    private static void encryptRequest() {
-
+    protected static void encryptRequest() {
     }
 
 }
