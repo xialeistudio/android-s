@@ -19,15 +19,18 @@
             android:layout_width="64dp"
             android:layout_height="64dp"
             android:layout_centerVertical="true"
+            android:src="@drawable/img_default_avatar"
+            android:scaleType="centerInside"
             android:contentDescription="@string/avatar" />
 
         <TextView
+            android:id="@+id/txtNickname"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="16dp"
             android:layout_toRightOf="@+id/imageAvatar"
-            android:text="@string/nickname"
+            android:text="@string/no_nickname_user"
             android:textSize="16sp" />
 
         <ImageView

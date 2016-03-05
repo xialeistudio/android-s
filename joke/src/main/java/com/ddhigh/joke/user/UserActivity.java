@@ -7,15 +7,26 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.ddhigh.joke.JokeException;
 import com.ddhigh.joke.MyApplication;
 import com.ddhigh.joke.R;
 import com.ddhigh.joke.config.Actions;
+import com.ddhigh.joke.util.HttpUtil;
 import com.ddhigh.mylibrary.util.AppUtil;
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
+import org.apache.http.Header;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.Event;
 import org.xutils.view.annotation.ViewInject;
@@ -33,6 +44,10 @@ public class UserActivity extends AppCompatActivity {
 
     @ViewInject(R.id.txtAppInfo)
     TextView txtAppInfo;
+    @ViewInject(R.id.imageAvatar)
+    ImageView imageAvatar;
+    @ViewInject(R.id.txtNickname)
+    TextView txtNickname;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -44,10 +59,63 @@ public class UserActivity extends AppCompatActivity {
         }
 
         application = (MyApplication) getApplication();
-        //TODO:加载用户信息
+
+        loadUserInfo();
         //显示App信息
         String appInfo = "段子 " + AppUtil.getAppInfo(this).versionName;
         txtAppInfo.setText(appInfo);
+    }
+
+    private void loadUserInfo() {
+        final ImageLoader imageLoader = ImageLoader.getInstance();
+        if (application.user.getNickname() == null || application.user.getAvatar() == null) {
+            //从远程加载用户数据
+            HttpUtil.get("/user/" + application.user.getId(), null, new JsonHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    try {
+                        HttpUtil.handleError(response.toString());
+                        Log.d(MyApplication.TAG, "load user: " + response.toString());
+                        if (response.has("nickname")) {
+                            application.user.setNickname(response.getString("nickname"));
+                        }
+                        if (response.has("avatar")) {
+                            application.user.setAvatar(response.getString("avatar"));
+                        }
+                        application.user.save(getApplicationContext());
+
+                        if (!TextUtils.isEmpty(application.user.getNickname())) {
+                            txtNickname.setText(application.user.getNickname());
+                        }
+
+                        if (!TextUtils.isEmpty(application.user.getAvatar())) {
+                            imageLoader.displayImage(application.user.getAvatar(), imageAvatar);
+                        }
+                    } catch (JSONException | JokeException e) {
+                        e.printStackTrace();
+                        Toast.makeText(UserActivity.this, "加载用户信息失败", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                    if (statusCode == 401) {
+                        //登录
+                        Intent intent = new Intent();
+                        intent.setAction(Actions.ACTION_LOGIN_REQUIRED);
+                        sendBroadcast(intent);
+                        finish();
+                        return;
+                    }
+                    throwable.printStackTrace();
+                    Toast.makeText(UserActivity.this, "加载用户信息失败", Toast.LENGTH_SHORT).show();
+                }
+            });
+        } else {
+            //加载本地数据
+            txtNickname.setText(application.user.getNickname());
+            imageLoader.displayImage(application.user.getAvatar(), imageAvatar);
+        }
     }
 
     @Override

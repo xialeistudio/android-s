@@ -20,6 +20,30 @@ import org.json.JSONObject;
  */
 public class UserModel extends BaseModel {
     private String token;
+    private String nickname;
+    private String avatar;
+
+    public String getNickname() {
+        if(!TextUtils.isEmpty(nickname) && nickname.equals("null")){
+            return null;
+        }
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public String getAvatar() {
+        if(!TextUtils.isEmpty(avatar) && avatar.equals("null")){
+            return null;
+        }
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
 
     /**
      * 是否登录
@@ -48,6 +72,12 @@ public class UserModel extends BaseModel {
         try {
             jsonObject.put("id", id);
             jsonObject.put("token", token);
+            if (!TextUtils.isEmpty(nickname)) {
+                jsonObject.put("nickname", nickname);
+            }
+            if (!TextUtils.isEmpty(avatar)) {
+                jsonObject.put("avatar", avatar);
+            }
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext);
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putString(Config.PREF_USER, jsonObject.toString());
@@ -72,6 +102,8 @@ public class UserModel extends BaseModel {
                     JSONObject jsonObject = new JSONObject(userString);
                     id = jsonObject.getString("id");
                     token = jsonObject.getString("token");
+                    nickname = jsonObject.getString("nickname");
+                    avatar = jsonObject.getString("avatar");
                     Log.d(MyApplication.TAG, "restore user ===> " + jsonObject.toString());
                 } catch (JSONException e) {
                     e.printStackTrace();
