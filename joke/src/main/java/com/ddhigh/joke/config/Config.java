@@ -13,4 +13,5 @@ public class Config {
     }
 
     public static final String PREF_USER = "PREF_USER";//SharedPreference user key
+    public static final int REQUEST_CODE_EDIT_USER = 1;//编辑用户
 }

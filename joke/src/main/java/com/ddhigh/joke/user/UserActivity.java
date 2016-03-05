@@ -19,6 +19,7 @@ import com.ddhigh.joke.JokeException;
 import com.ddhigh.joke.MyApplication;
 import com.ddhigh.joke.R;
 import com.ddhigh.joke.config.Actions;
+import com.ddhigh.joke.config.Config;
 import com.ddhigh.joke.util.HttpUtil;
 import com.ddhigh.mylibrary.util.AppUtil;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -82,6 +83,11 @@ public class UserActivity extends AppCompatActivity {
                         if (response.has("avatar")) {
                             application.user.setAvatar(response.getString("avatar"));
                         }
+
+                        if (response.has("email")) {
+                            application.user.setEmail(response.getString("email"));
+                        }
+
                         application.user.save(getApplicationContext());
 
                         if (!TextUtils.isEmpty(application.user.getNickname())) {
@@ -155,5 +161,11 @@ public class UserActivity extends AppCompatActivity {
             }
         });
         builder.create().show();
+    }
+
+    @Event(R.id.btnUser)
+    private void onBtnUserClicked(View view) {
+        Intent i = new Intent(this, EditActivity.class);
+        startActivityForResult(i, Config.REQUEST_CODE_EDIT_USER);
     }
 }

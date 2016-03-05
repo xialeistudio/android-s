@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPageGray"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:background="@android:color/white"
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/table_row_horizontal_margin"
+        android:paddingRight="@dimen/table_row_horizontal_margin">
+
+        <RelativeLayout
+            android:id="@+id/btnAvatar"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:background="@android:color/white"
+            android:clickable="true">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="@string/avatar" />
+
+            <ImageView
+                android:id="@+id/imageAvatar"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:contentDescription="@string/avatar"
+                android:scaleType="centerInside"
+                android:src="@drawable/img_default_avatar" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/btnNickname"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/table_row_height"
+            android:background="@drawable/line_seperator_top_border">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="@string/nickname" />
+
+            <TextView
+                android:id="@+id/txtNickname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:text="@string/no_nickname_user" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/btnEmail"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/table_row_height"
+            android:background="@drawable/line_seperator_top_border">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="@string/email" />
+
+            <TextView
+                android:id="@+id/txtEmail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true" />
+        </RelativeLayout>
+    </LinearLayout>
+</LinearLayout>

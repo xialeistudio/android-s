@@ -29,10 +29,16 @@
                 <action android:name="com.ddhigh.joke.action.LOGIN_REQUIRED" />
             </intent-filter>
         </receiver>
+
         <activity
             android:name=".auth.RegisterActivity"
             android:label="@string/register" />
-        <activity android:name=".user.UserActivity" android:label="@string/user"/>
+        <activity
+            android:name=".user.UserActivity"
+            android:label="@string/user" />
+        <activity
+            android:name=".user.EditActivity"
+            android:label="@string/user_info" />
     </application>
 
 </manifest>

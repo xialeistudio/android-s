@@ -22,6 +22,15 @@ public class UserModel extends BaseModel {
     private String token;
     private String nickname;
     private String avatar;
+    private String email;
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
     public String getNickname() {
         if (!TextUtils.isEmpty(nickname) && nickname.equals("null")) {
@@ -74,6 +83,7 @@ public class UserModel extends BaseModel {
             jsonObject.put("token", token);
             jsonObject.put("nickname", nickname);
             jsonObject.put("avatar", avatar);
+            jsonObject.put("email", email);
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext);
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putString(Config.PREF_USER, jsonObject.toString());
@@ -100,6 +110,7 @@ public class UserModel extends BaseModel {
                     token = jsonObject.getString("token");
                     nickname = jsonObject.getString("nickname");
                     avatar = jsonObject.getString("avatar");
+                    email = jsonObject.getString("email");
                     Log.d(MyApplication.TAG, "restore user ===> " + jsonObject.toString());
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -118,6 +129,7 @@ public class UserModel extends BaseModel {
         token = null;
         nickname = null;
         avatar = null;
+        email = null;
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.remove(Config.PREF_USER);
