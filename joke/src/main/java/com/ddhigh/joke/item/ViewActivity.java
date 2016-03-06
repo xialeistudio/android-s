@@ -6,11 +6,14 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ddhigh.joke.JokeException;
+import com.ddhigh.joke.MyApplication;
 import com.ddhigh.joke.R;
 import com.ddhigh.joke.util.HttpUtil;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -27,6 +30,8 @@ public class ViewActivity extends AppCompatActivity {
     @ViewInject(R.id.txtContent)
     TextView txtContent;
 
+    JSONObject item;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,11 +44,9 @@ public class ViewActivity extends AppCompatActivity {
         //加载远程数据
         Intent intent = getIntent();
         String id = intent.getStringExtra("id");
-
         final ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setCancelable(false);
         progressDialog.setMessage("加载中");
-
         HttpUtil.get("/joke/" + id, null, new JsonHttpResponseHandler() {
             @Override
             public void onStart() {
@@ -60,6 +63,7 @@ public class ViewActivity extends AppCompatActivity {
                 try {
                     HttpUtil.handleError(response.toString());
                     txtContent.setText(response.toString());
+                    item = response;
                 } catch (JSONException | JokeException e) {
                     e.printStackTrace();
                     Toast.makeText(ViewActivity.this, "加载失败", Toast.LENGTH_SHORT).show();
@@ -80,8 +84,19 @@ public class ViewActivity extends AppCompatActivity {
             case android.R.id.home:
                 finish();
                 return true;
+            case R.id.menuShare:
+                Toast.makeText(this, "分享", Toast.LENGTH_SHORT).show();
+                Log.d(MyApplication.TAG, "share: " + item.toString());
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.menu_share, menu);
+        return true;
     }
 }

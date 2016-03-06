@@ -20,4 +20,5 @@
     <string name="thumbnail">缩略图</string>
     <string name="delete">删除</string>
     <string name="view_joke">查看段子</string>
+    <string name="share">分享</string>
 </resources>
