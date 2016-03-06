@@ -187,7 +187,11 @@ public class PostActivity extends AppCompatActivity {
                         try {
                             HttpUtil.handleError(response.toString());
                             String id = response.getString("id");
-                            Toast.makeText(PostActivity.this, "发表成功: " + id, Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(PostActivity.this, ViewActivity.class);
+                            intent.putExtra("id", id);
+                            startActivity(intent);
+                            finish();
+
                         } catch (JSONException | JokeException e) {
                             e.printStackTrace();
                             Toast.makeText(PostActivity.this, "发表失败", Toast.LENGTH_SHORT).show();

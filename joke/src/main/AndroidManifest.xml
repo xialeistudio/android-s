@@ -42,6 +42,9 @@
         <activity
             android:name=".item.PostActivity"
             android:label="@string/post_joke" />
+        <activity
+            android:name=".item.ViewActivity"
+            android:label="@string/view_joke" />
     </application>
 
 </manifest>
