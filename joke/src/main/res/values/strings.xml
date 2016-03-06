@@ -14,4 +14,9 @@
     <string name="logout">退出登录</string>
     <string name="no_nickname_user">匿名用户</string>
     <string name="user_info">个人信息</string>
+    <string name="please_input">请输入内容</string>
+    <string name="post_joke">发表段子</string>
+    <string name="upload_image">上传图片</string>
+    <string name="thumbnail">缩略图</string>
+    <string name="delete">删除</string>
 </resources>

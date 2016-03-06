@@ -1,1 +1,1 @@
-include ':earthquake', ':downloadmanager', ':mylibrary', ':testlibrary', ':joke'
+include ':earthquake', ':downloadmanager', ':mylibrary', ':joke'

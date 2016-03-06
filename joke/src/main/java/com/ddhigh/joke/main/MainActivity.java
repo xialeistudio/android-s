@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.ddhigh.joke.MyApplication;
 import com.ddhigh.joke.R;
 import com.ddhigh.joke.config.Actions;
+import com.ddhigh.joke.item.PostActivity;
 import com.ddhigh.joke.user.UserActivity;
 import com.ddhigh.joke.util.HttpUtil;
 
@@ -97,7 +98,8 @@ public class MainActivity extends AppCompatActivity {
                 }
                 return true;
             case R.id.menuAdd:
-                Log.d(MyApplication.TAG, "post joke clicked");
+                Intent intent = new Intent(this, PostActivity.class);
+                startActivity(intent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

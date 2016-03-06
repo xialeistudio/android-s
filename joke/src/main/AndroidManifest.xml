@@ -39,6 +39,9 @@
         <activity
             android:name=".user.EditActivity"
             android:label="@string/user_info" />
+        <activity
+            android:name=".item.PostActivity"
+            android:label="@string/post_joke" />
     </application>
 
 </manifest>
