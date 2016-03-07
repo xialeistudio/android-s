@@ -10,6 +10,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -18,6 +20,7 @@ import com.ddhigh.joke.MyApplication;
 import com.ddhigh.joke.R;
 import com.ddhigh.joke.config.Actions;
 import com.ddhigh.joke.item.PostActivity;
+import com.ddhigh.joke.item.ViewActivity;
 import com.ddhigh.joke.model.JokeModel;
 import com.ddhigh.joke.user.UserActivity;
 import com.ddhigh.joke.util.HttpUtil;
@@ -30,6 +33,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.xutils.view.annotation.ContentView;
+import org.xutils.view.annotation.Event;
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
@@ -189,5 +193,13 @@ public class MainActivity extends AppCompatActivity {
      */
     private void doLoadMore() {
 
+    }
+
+    @Event(value = R.id.listJoke, type = AdapterView.OnItemClickListener.class)
+    private void jokeClicked(AdapterView<?> parent, View view, int position, long id) {
+        JokeModel joke = jokes.get(position);
+        Intent i = new Intent(this, ViewActivity.class);
+        i.putExtra("id",joke.getId());
+        startActivity(i);
     }
 }
