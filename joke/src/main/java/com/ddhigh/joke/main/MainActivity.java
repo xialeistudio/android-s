@@ -106,6 +106,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onReceive(Context context, Intent intent) {
                 doRefresh();
+                Log.d(MyApplication.TAG, "doRefresh");
             }
         };
         registerReceiver(newJokeReceiver, new IntentFilter(Actions.ACTION_NEW_JOKE));
@@ -162,7 +163,8 @@ public class MainActivity extends AppCompatActivity {
      * 加载最新
      */
     private void doRefresh() {
-
+        jokes.clear();
+        jokeAdapter.notifyDataSetChanged();
         Log.d(MyApplication.TAG, "refresh start");
         RequestParams query = new RequestParams();
         query.put("order", "createdAt DESC");
