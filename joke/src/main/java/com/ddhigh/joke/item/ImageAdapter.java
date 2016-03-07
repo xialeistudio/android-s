@@ -9,6 +9,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
 import com.ddhigh.joke.R;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.List;
 
@@ -43,7 +44,12 @@ public class ImageAdapter extends BaseAdapter {
             convertView = inflater.inflate(R.layout.griditem_image, null);
         }
         ImageView imageThumbnail = (ImageView) convertView.findViewById(R.id.imageThumbnail);
-        imageThumbnail.setImageBitmap(BitmapFactory.decodeFile((String) getItem(position)));
+        String url = (String) getItem(position);
+        if (!url.startsWith("http")) {
+            imageThumbnail.setImageBitmap(BitmapFactory.decodeFile(url));
+        } else {
+            ImageLoader.getInstance().displayImage(url, imageThumbnail);
+        }
         return convertView;
     }
 }

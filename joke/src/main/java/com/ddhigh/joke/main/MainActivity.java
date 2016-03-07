@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
         jokes = new ArrayList<>();
         jokeAdapter = new JokeAdapter(this, jokes);
         listJoke.setAdapter(jokeAdapter);
-        listJoke.setOnScrollListener(new PauseOnScrollListener(ImageLoader.getInstance(), true, false));
+        listJoke.setOnScrollListener(new PauseOnScrollListener(ImageLoader.getInstance(), false, true));
 
         application = (MyApplication) getApplication();
         //注册登录成功广播

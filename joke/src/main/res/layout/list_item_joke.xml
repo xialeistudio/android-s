@@ -45,7 +45,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="18dp"
-        android:columnWidth="90dp"
+        android:columnWidth="100dp"
         android:gravity="center"
         android:horizontalSpacing="5dp"
         android:numColumns="3"

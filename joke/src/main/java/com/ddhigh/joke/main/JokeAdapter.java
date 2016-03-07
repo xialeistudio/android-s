@@ -1,15 +1,21 @@
 package com.ddhigh.joke.main;
 
 import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.ddhigh.joke.MyApplication;
 import com.ddhigh.joke.R;
+import com.ddhigh.joke.item.ImageAdapter;
+import com.ddhigh.joke.item.ViewActivity;
 import com.ddhigh.joke.model.JokeModel;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -58,8 +64,14 @@ public class JokeAdapter extends BaseAdapter {
         TextView txtNickname = (TextView) convertView.findViewById(R.id.txtNickname);
         TextView txtText = (TextView) convertView.findViewById(R.id.txtText);
         GridView gridImage = (GridView) convertView.findViewById(R.id.gridImages);
+        final JokeModel jokeModel = (JokeModel) getItem(position);
 
-        JokeModel jokeModel = (JokeModel) getItem(position);
+        //图片处理
+        if (jokeModel.getImages().size() > 0) {
+            ImageAdapter imageAdapter = new ImageAdapter(mContent, jokeModel.getImages());
+            gridImage.setAdapter(imageAdapter);
+            gridImage.setVisibility(View.VISIBLE);
+        }
         DisplayImageOptions imageOptions = new DisplayImageOptions.Builder()
                 .displayer(new CircleBitmapDisplayer())
                 .build();
