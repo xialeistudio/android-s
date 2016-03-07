@@ -104,12 +104,14 @@ public class HttpUtil {
      * @throws JokeException
      */
     public static void handleError(String object) throws JSONException, JokeException {
-        JSONObject jsonObject = new JSONObject(object);
-        if (jsonObject.has("error")) {
-            JSONObject error = jsonObject.getJSONObject("error");
-            String msg = error.getString("message");
-            msg = translateMessage(msg);
-            throw new JokeException(msg, error.getInt("statusCode"));
+        if (!object.startsWith("[")) {
+            JSONObject jsonObject = new JSONObject(object);
+            if (jsonObject.has("error")) {
+                JSONObject error = jsonObject.getJSONObject("error");
+                String msg = error.getString("message");
+                msg = translateMessage(msg);
+                throw new JokeException(msg, error.getInt("statusCode"));
+            }
         }
     }
 
@@ -121,8 +123,8 @@ public class HttpUtil {
 
     static {
         msgmap.put("username:already exists", "用户名已存在");
-        msgmap.put("login failed","登录失败，请检查用户名和密码是否正确");
-        msgmap.put("The mailbox is not verified","请先验证邮箱");
+        msgmap.put("login failed", "登录失败，请检查用户名和密码是否正确");
+        msgmap.put("The mailbox is not verified", "请先验证邮箱");
     }
 
     /**

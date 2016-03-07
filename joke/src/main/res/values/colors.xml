@@ -7,4 +7,5 @@
     <color name="LimeGreen">#3ec234</color>
     <color name="colorLineSeperator">#d7d7d7</color>
     <color name="colorPageGray">#ececec</color>
+    <color name="colorItemSeperator">#eeeeee</color>
 </resources>

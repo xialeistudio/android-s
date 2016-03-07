@@ -10,19 +10,33 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.ListView;
 import android.widget.Toast;
 
+import com.ddhigh.joke.JokeException;
 import com.ddhigh.joke.MyApplication;
 import com.ddhigh.joke.R;
 import com.ddhigh.joke.config.Actions;
 import com.ddhigh.joke.item.PostActivity;
+import com.ddhigh.joke.model.JokeModel;
 import com.ddhigh.joke.user.UserActivity;
 import com.ddhigh.joke.util.HttpUtil;
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.listener.PauseOnScrollListener;
 
+import org.apache.http.Header;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.xutils.view.annotation.ContentView;
+import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
+
+import java.io.UnsupportedEncodingException;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
 
 @ContentView(R.layout.activity_main)
 public class MainActivity extends AppCompatActivity {
@@ -31,10 +45,21 @@ public class MainActivity extends AppCompatActivity {
     BroadcastReceiver loginSuccessReceiver;
     BroadcastReceiver logoutReceiver;
 
+    @ViewInject(R.id.listJoke)
+    ListView listJoke;
+    List<JokeModel> jokes;
+    JokeAdapter jokeAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         x.view().inject(this);
+
+        //列表处理
+        jokes = new ArrayList<>();
+        jokeAdapter = new JokeAdapter(this, jokes);
+        listJoke.setAdapter(jokeAdapter);
+        listJoke.setOnScrollListener(new PauseOnScrollListener(ImageLoader.getInstance(), true, false));
 
         application = (MyApplication) getApplication();
         //注册登录成功广播
@@ -70,6 +95,8 @@ public class MainActivity extends AppCompatActivity {
             }
         };
         registerReceiver(logoutReceiver, new IntentFilter(Actions.ACTION_LOGOUT));
+        //加载数据
+        doRefresh();
     }
 
     @Override
@@ -111,5 +138,56 @@ public class MainActivity extends AppCompatActivity {
         unregisterReceiver(loginSuccessReceiver);
         unregisterReceiver(logoutReceiver);
         super.onDestroy();
+    }
+
+
+    final int pageSize = 10;
+
+    /**
+     * 加载最新
+     */
+    private void doRefresh() {
+        Log.d(MyApplication.TAG, "refresh start");
+        JSONObject query = new JSONObject();
+        try {
+            query.put("order", "createdAt DESC");
+            query.put("skip", jokes.size());
+            query.put("limit", pageSize);
+            HttpUtil.get(this, "/joke", query, new JsonHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                    Log.d(MyApplication.TAG, "refresh complete ===> " + response.toString());
+                    try {
+                        HttpUtil.handleError(response.toString());
+                        for (int i = 0; i < response.length(); i++) {
+                            JSONObject item = response.getJSONObject(i);
+                            JokeModel joke = new JokeModel();
+                            joke.parse(item);
+                            jokes.add(joke);
+                        }
+                        jokeAdapter.notifyDataSetChanged();
+                    } catch (JSONException | JokeException | ParseException e) {
+                        e.printStackTrace();
+                        Toast.makeText(MainActivity.this, "解析服务器响应失败", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                    throwable.printStackTrace();
+                    Toast.makeText(MainActivity.this, "服务器响应错误", Toast.LENGTH_SHORT).show();
+                }
+            });
+        } catch (JSONException | UnsupportedEncodingException e) {
+            e.printStackTrace();
+            Toast.makeText(this, "服务器响应错误", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    /**
+     * 分页加载
+     */
+    private void doLoadMore() {
+
     }
 }

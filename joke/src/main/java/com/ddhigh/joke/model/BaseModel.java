@@ -1,6 +1,12 @@
 package com.ddhigh.joke.model;
 
-import java.sql.Date;
+import com.ddhigh.mylibrary.util.DateUtil;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.text.ParseException;
+import java.util.Date;
 
 /**
  * @project Study
@@ -35,5 +41,17 @@ public class BaseModel {
 
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public void parse(JSONObject object) throws JSONException, ParseException {
+        if (object.has("id")) {
+            id = object.getString("id");
+        }
+        if (object.has("createdAt")) {
+            createdAt = DateUtil.parse(object.getString("createdAt"));
+        }
+        if (object.has("updatedAt")) {
+            updatedAt = DateUtil.parse(object.getString("updatedAt"));
+        }
     }
 }
