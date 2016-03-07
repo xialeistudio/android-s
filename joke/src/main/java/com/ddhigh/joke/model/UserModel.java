@@ -12,6 +12,8 @@ import com.ddhigh.joke.config.Config;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+
 /**
  * @project Study
  * @package com.ddhigh.joke.model
@@ -134,5 +136,16 @@ public class UserModel extends BaseModel {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.remove(Config.PREF_USER);
         editor.apply();
+    }
+
+    @Override
+    public void parse(JSONObject object) throws JSONException, ParseException {
+        super.parse(object);
+        if (object.has("nickname")) {
+            nickname = object.getString("nickname");
+        }
+        if (object.has("avatar")) {
+            avatar = object.getString("avatar");
+        }
     }
 }

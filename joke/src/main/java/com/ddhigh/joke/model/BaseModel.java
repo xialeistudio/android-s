@@ -49,5 +49,13 @@ public class BaseModel {
         if (object.has("_id")) {
             id = object.getString("_id");
         }
+        if (object.has("createdAt")) {
+            JSONObject c = object.getJSONObject("createdAt");
+            createdAt = new Date(c.getLong("sec") * 1000);
+        }
+        if (object.has("updatedAt")) {
+            JSONObject c = object.getJSONObject("updatedAt");
+            updatedAt = new Date(c.getLong("sec") * 1000);
+        }
     }
 }

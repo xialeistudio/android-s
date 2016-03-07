@@ -105,6 +105,11 @@ public class JokeModel extends BaseModel {
             userId = jsonObject.getString("userId");
         }
 
+        if (jsonObject.has("user")) {
+            JSONObject userJson = jsonObject.getJSONObject("user");
+            user.parse(userJson);
+        }
+
     }
 
     public JokeModel() {

@@ -25,6 +25,7 @@ import com.ddhigh.joke.model.JokeModel;
 import com.ddhigh.joke.user.UserActivity;
 import com.ddhigh.joke.util.HttpUtil;
 import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.listener.PauseOnScrollListener;
 
@@ -48,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
 
     BroadcastReceiver loginSuccessReceiver;
     BroadcastReceiver logoutReceiver;
-
+    BroadcastReceiver newJokeReceiver;
     @ViewInject(R.id.listJoke)
     ListView listJoke;
     List<JokeModel> jokes;
@@ -99,6 +100,15 @@ public class MainActivity extends AppCompatActivity {
             }
         };
         registerReceiver(logoutReceiver, new IntentFilter(Actions.ACTION_LOGOUT));
+        //注册新段子广播
+
+        newJokeReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                doRefresh();
+            }
+        };
+        registerReceiver(newJokeReceiver, new IntentFilter(Actions.ACTION_NEW_JOKE));
         //加载数据
         doRefresh();
     }
@@ -141,6 +151,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         unregisterReceiver(loginSuccessReceiver);
         unregisterReceiver(logoutReceiver);
+        unregisterReceiver(newJokeReceiver);
         super.onDestroy();
     }
 
@@ -153,40 +164,36 @@ public class MainActivity extends AppCompatActivity {
     private void doRefresh() {
 
         Log.d(MyApplication.TAG, "refresh start");
-        JSONObject query = new JSONObject();
-        try {
-            query.put("order", "createdAt DESC");
-            query.put("skip", jokes.size());
-            query.put("limit", pageSize);
-            HttpUtil.get(this, "/jokes", query, new JsonHttpResponseHandler() {
-                @Override
-                public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                    Log.d(MyApplication.TAG, "refresh complete ===> " + response.toString());
-                    try {
-                        HttpUtil.handleError(response.toString());
-                        for (int i = 0; i < response.length(); i++) {
-                            JSONObject item = response.getJSONObject(i);
-                            JokeModel joke = new JokeModel();
-                            joke.parse(item);
-                            jokes.add(joke);
-                        }
-                        jokeAdapter.notifyDataSetChanged();
-                    } catch (JSONException | JokeException | ParseException e) {
-                        e.printStackTrace();
-                        Toast.makeText(MainActivity.this, "解析服务器响应失败", Toast.LENGTH_SHORT).show();
+        RequestParams query = new RequestParams();
+        query.put("order", "createdAt DESC");
+        query.put("skip", jokes.size());
+        query.put("limit", pageSize);
+        query.put("expand", "user");
+        HttpUtil.get("/jokes", query, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                Log.d(MyApplication.TAG, "refresh complete ===> " + response.toString());
+                try {
+                    HttpUtil.handleError(response.toString());
+                    for (int i = 0; i < response.length(); i++) {
+                        JSONObject item = response.getJSONObject(i);
+                        JokeModel joke = new JokeModel();
+                        joke.parse(item);
+                        jokes.add(joke);
                     }
+                    jokeAdapter.notifyDataSetChanged();
+                } catch (JSONException | JokeException | ParseException e) {
+                    e.printStackTrace();
+                    Toast.makeText(MainActivity.this, "解析服务器响应失败", Toast.LENGTH_SHORT).show();
                 }
+            }
 
-                @Override
-                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                    throwable.printStackTrace();
-                    Toast.makeText(MainActivity.this, "服务器响应错误", Toast.LENGTH_SHORT).show();
-                }
-            });
-        } catch (JSONException | UnsupportedEncodingException e) {
-            e.printStackTrace();
-            Toast.makeText(this, "服务器响应错误", Toast.LENGTH_SHORT).show();
-        }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                throwable.printStackTrace();
+                Toast.makeText(MainActivity.this, "服务器响应错误", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     /**

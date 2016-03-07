@@ -187,6 +187,10 @@ public class PostActivity extends AppCompatActivity {
                             response = HttpUtil.handleMongoId(response);
                             HttpUtil.handleError(response.toString());
                             String id = response.getString("_id");
+                            //发送广播
+                            Intent i = new Intent();
+                            i.setAction(Actions.ACTION_NEW_JOKE);
+                            sendBroadcast(i);
                             Intent intent = new Intent(PostActivity.this, ViewActivity.class);
                             intent.putExtra("id", id);
                             startActivity(intent);

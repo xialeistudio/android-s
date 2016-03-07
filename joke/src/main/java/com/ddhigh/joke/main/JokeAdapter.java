@@ -64,7 +64,7 @@ public class JokeAdapter extends BaseAdapter {
                 .displayer(new CircleBitmapDisplayer())
                 .build();
         ImageLoader.getInstance().displayImage(jokeModel.getUser().getAvatar() + "?imageView2/1/w/64", imageAvatar, imageOptions);
-        txtNickname.setText(jokeModel.getUser().getAvatar());
+        txtNickname.setText(jokeModel.getUser().getNickname());
         txtText.setText(jokeModel.getText());
         //TODO:列表图片
         return convertView;
