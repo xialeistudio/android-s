@@ -121,7 +121,7 @@ public class RegisterActivity extends AppCompatActivity {
             progressDialog.setMessage("注册中");
             progressDialog.setCancelable(false);
 
-            HttpUtil.post(this, "/user", jsonObject, new JsonHttpResponseHandler() {
+            HttpUtil.post(this, "/users", jsonObject, new JsonHttpResponseHandler() {
                 @Override
                 public void onStart() {
                     progressDialog.show();
@@ -130,6 +130,7 @@ public class RegisterActivity extends AppCompatActivity {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                     try {
+                        response = HttpUtil.handleMongoId(response);
                         HttpUtil.handleError(response.toString());
                         Toast.makeText(RegisterActivity.this, "注册成功", Toast.LENGTH_SHORT).show();
                         finish();
@@ -141,8 +142,13 @@ public class RegisterActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                    try {
+                        HttpUtil.handleError(errorResponse.toString());
+                    } catch (JSONException | JokeException e) {
+                        e.printStackTrace();
+                        Toast.makeText(RegisterActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
                     throwable.printStackTrace();
-                    Toast.makeText(RegisterActivity.this, "请求失败", Toast.LENGTH_SHORT).show();
                 }
 
                 @Override

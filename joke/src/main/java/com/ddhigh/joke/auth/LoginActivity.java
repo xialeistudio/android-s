@@ -123,6 +123,7 @@ public class LoginActivity extends AppCompatActivity {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                     try {
+                        response = HttpUtil.handleMongoId(response);
                         HttpUtil.handleError(response.toString());
                         Toast.makeText(LoginActivity.this, "登录成功", Toast.LENGTH_SHORT).show();
                         //发送广播
@@ -139,17 +140,13 @@ public class LoginActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                    if (statusCode == 401) {
-                        try {
-                            HttpUtil.handleError(errorResponse.toString());
-                        } catch (JSONException | JokeException e) {
-                            e.printStackTrace();
-                            Toast.makeText(LoginActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                        return;
+                    try {
+                        HttpUtil.handleError(errorResponse.toString());
+                    } catch (JSONException | JokeException e) {
+                        e.printStackTrace();
+                        Toast.makeText(LoginActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                     throwable.printStackTrace();
-                    Toast.makeText(LoginActivity.this, "请求失败", Toast.LENGTH_SHORT).show();
                 }
 
                 @Override

@@ -93,10 +93,11 @@ public class UserActivity extends AppCompatActivity {
         final ImageLoader imageLoader = ImageLoader.getInstance();
         if (TextUtils.isEmpty(application.user.getNickname()) || TextUtils.isEmpty(application.user.getAvatar())) {
             //从远程加载用户数据
-            HttpUtil.get("/user/" + application.user.getId(), null, new JsonHttpResponseHandler() {
+            HttpUtil.get("/users/" + application.user.getId(), null, new JsonHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                     try {
+                        response = HttpUtil.handleMongoId(response);
                         HttpUtil.handleError(response.toString());
                         Log.d(MyApplication.TAG, "load user: " + response.toString());
                         if (response.has("nickname")) {

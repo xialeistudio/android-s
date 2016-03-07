@@ -45,9 +45,8 @@ public class ViewActivity extends AppCompatActivity {
         Intent intent = getIntent();
         String id = intent.getStringExtra("id");
         final ProgressDialog progressDialog = new ProgressDialog(this);
-        progressDialog.setCancelable(false);
         progressDialog.setMessage("加载中");
-        HttpUtil.get("/joke/" + id, null, new JsonHttpResponseHandler() {
+        HttpUtil.get("/jokes/" + id, null, new JsonHttpResponseHandler() {
             @Override
             public void onStart() {
                 progressDialog.show();
@@ -61,6 +60,7 @@ public class ViewActivity extends AppCompatActivity {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 try {
+                    response = HttpUtil.handleMongoId(response);
                     HttpUtil.handleError(response.toString());
                     txtContent.setText(response.toString());
                     item = response;

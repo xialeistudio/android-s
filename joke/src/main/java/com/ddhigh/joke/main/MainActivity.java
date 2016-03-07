@@ -75,9 +75,9 @@ public class MainActivity extends AppCompatActivity {
                     try {
                         JSONObject jsonObject = new JSONObject(data);
                         application.user.setId(jsonObject.getString("userId"));
-                        application.user.setToken(jsonObject.getString("id"));
+                        application.user.setToken(jsonObject.getString("_id"));
                         application.user.save(getApplicationContext());
-                        HttpUtil.setToken(jsonObject.getString("id"));
+                        HttpUtil.setToken(jsonObject.getString("_id"));
                         //显示发表段子的加号
                         supportInvalidateOptionsMenu();
                     } catch (JSONException e) {
@@ -151,13 +151,14 @@ public class MainActivity extends AppCompatActivity {
      * 加载最新
      */
     private void doRefresh() {
+
         Log.d(MyApplication.TAG, "refresh start");
         JSONObject query = new JSONObject();
         try {
             query.put("order", "createdAt DESC");
             query.put("skip", jokes.size());
             query.put("limit", pageSize);
-            HttpUtil.get(this, "/joke", query, new JsonHttpResponseHandler() {
+            HttpUtil.get(this, "/jokes", query, new JsonHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                     Log.d(MyApplication.TAG, "refresh complete ===> " + response.toString());
@@ -199,7 +200,7 @@ public class MainActivity extends AppCompatActivity {
     private void jokeClicked(AdapterView<?> parent, View view, int position, long id) {
         JokeModel joke = jokes.get(position);
         Intent i = new Intent(this, ViewActivity.class);
-        i.putExtra("id",joke.getId());
+        i.putExtra("id", joke.getId());
         startActivity(i);
     }
 }

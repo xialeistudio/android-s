@@ -185,8 +185,6 @@ public class EditActivity extends AppCompatActivity {
 
         RequestParams params = new RequestParams();
         params.put("file", path);
-        params.put("filename", path.getName());
-        params.put("type", "image/jpeg");
 
         HttpUtil.post("/file", params, new JsonHttpResponseHandler() {
             @Override
@@ -238,10 +236,9 @@ public class EditActivity extends AppCompatActivity {
         progressDialog.setCancelable(false);
 
         JSONObject json = new JSONObject();
-        json.put("id", application.user.getId());
         json.put("avatar", url);
 
-        HttpUtil.put(this, "/user/" + application.user.getId(), json, new JsonHttpResponseHandler() {
+        HttpUtil.put(this, "/users/" + application.user.getId(), json, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 try {
@@ -323,11 +320,10 @@ public class EditActivity extends AppCompatActivity {
                 progressDialog.setCancelable(false);
 
                 JSONObject json = new JSONObject();
-                json.put("id", application.user.getId());
                 json.put("nickname", trim);
 
                 try {
-                    HttpUtil.put(this, "/user/" + application.user.getId(), json, new JsonHttpResponseHandler() {
+                    HttpUtil.put(this, "/users/" + application.user.getId(), json, new JsonHttpResponseHandler() {
                         @Override
                         public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                             try {

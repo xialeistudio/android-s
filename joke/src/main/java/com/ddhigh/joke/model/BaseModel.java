@@ -1,5 +1,6 @@
 package com.ddhigh.joke.model;
 
+import com.ddhigh.joke.util.HttpUtil;
 import com.ddhigh.mylibrary.util.DateUtil;
 
 import org.json.JSONException;
@@ -44,14 +45,9 @@ public class BaseModel {
     }
 
     public void parse(JSONObject object) throws JSONException, ParseException {
-        if (object.has("id")) {
-            id = object.getString("id");
-        }
-        if (object.has("createdAt")) {
-            createdAt = DateUtil.parse(object.getString("createdAt"));
-        }
-        if (object.has("updatedAt")) {
-            updatedAt = DateUtil.parse(object.getString("updatedAt"));
+        object = HttpUtil.handleMongoId(object);
+        if (object.has("_id")) {
+            id = object.getString("_id");
         }
     }
 }

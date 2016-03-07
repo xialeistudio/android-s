@@ -130,8 +130,6 @@ public class PostActivity extends AppCompatActivity {
                     HttpUtil.client.setTimeout(30000);
                     File f = new File(path);
                     params.put("file", f);
-                    params.put("filename", f.getName());
-                    params.put("type", "image/jpeg");
                     HttpUtil.post("/file", params, new JsonHttpResponseHandler() {
                         @Override
                         public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
@@ -176,17 +174,19 @@ public class PostActivity extends AppCompatActivity {
             try {
                 json.put("text", txtContent.getText().toString().trim());
                 json.put("images", new JSONArray(urls));
-                json.put("views", 0);
+                json.put("viewCount", 0);
                 json.put("userId", application.user.getId());
                 json.put("praiseCount", 0);
+                json.put("unpraiseCount", 0);
                 json.put("commentCount", 0);
 
-                HttpUtil.post(this, "/joke", json, new JsonHttpResponseHandler() {
+                HttpUtil.post(this, "/jokes", json, new JsonHttpResponseHandler() {
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                         try {
+                            response = HttpUtil.handleMongoId(response);
                             HttpUtil.handleError(response.toString());
-                            String id = response.getString("id");
+                            String id = response.getString("_id");
                             Intent intent = new Intent(PostActivity.this, ViewActivity.class);
                             intent.putExtra("id", id);
                             startActivity(intent);

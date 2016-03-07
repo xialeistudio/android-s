@@ -7,6 +7,7 @@ import org.json.JSONObject;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Date;
 
 /**
  * @project android-s
@@ -15,13 +16,26 @@ import java.util.List;
  * @date 2016/3/7 0007
  */
 public class JokeModel extends BaseModel {
-    private int commentCount;
     private List<String> images;
-    private int praiseCount;
     private String text;
+    private int viewCount;
+    private int praiseCount;
+    private int unpraiseCount;
+    private int commentCount;
     private String userId;
-    private int views;
+    private Date createdAt;
+    private Date updatedAt;
     private UserModel user;
+//    '_id' => 'ID',
+//            'text' => '内容',
+//            'images' => '图片',
+//            'viewCount' => '点击数',
+//            'praiseCount' => '顶数',
+//            'unpraiseCount' => '踩数',
+//            'commentCount' => '评论数',
+//            'userId' => '用户ID',
+//            'createdAt' => '发表时间',
+//            'updatedAt' => '更新时间',
 
     public int getCommentCount() {
         return commentCount;
@@ -63,13 +77,6 @@ public class JokeModel extends BaseModel {
         this.userId = userId;
     }
 
-    public int getViews() {
-        return views;
-    }
-
-    public void setViews(int views) {
-        this.views = views;
-    }
 
     public void parse(JSONObject jsonObject) throws JSONException, ParseException {
         super.parse(jsonObject);
@@ -85,15 +92,19 @@ public class JokeModel extends BaseModel {
         if (jsonObject.has("praiseCount")) {
             praiseCount = jsonObject.getInt("praiseCount");
         }
+        if (jsonObject.has("unpraiseCount")) {
+            unpraiseCount = jsonObject.getInt("unpraiseCount");
+        }
+        if (jsonObject.has("commentCount")) {
+            commentCount = jsonObject.getInt("commentCount");
+        }
         if (jsonObject.has("text")) {
             text = jsonObject.getString("text");
         }
         if (jsonObject.has("userId")) {
             userId = jsonObject.getString("userId");
         }
-        if (jsonObject.has("views")) {
-            views = jsonObject.getInt("views");
-        }
+
     }
 
     public JokeModel() {

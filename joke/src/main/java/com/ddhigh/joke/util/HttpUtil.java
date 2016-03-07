@@ -11,6 +11,7 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
 import org.apache.http.entity.StringEntity;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -32,7 +33,7 @@ public class HttpUtil {
     static String token;
 
     public static void setToken(String token) {
-        HttpUtil.token = token;
+        HttpUtil.token = "Bearer " + token;
     }
 
     public static void setApi(String api) {
@@ -87,12 +88,8 @@ public class HttpUtil {
     }
 
     protected static void encryptRequest() {
-        long timestamp = System.currentTimeMillis();
-        String key = EncryUtil.sha1(Config.ApiCloud.AppId + "UZ" + Config.ApiCloud.AppKey + "UZ" + timestamp) + "." + timestamp;
-        client.addHeader("X-APICloud-AppId", Config.ApiCloud.AppId);
-        client.addHeader("X-APICloud-AppKey", key);
         if (token != null && !TextUtils.isEmpty(token)) {
-            client.addHeader("authorization", token);
+            client.addHeader("Authorization", token);
         }
     }
 
@@ -106,37 +103,29 @@ public class HttpUtil {
     public static void handleError(String object) throws JSONException, JokeException {
         if (!object.startsWith("[")) {
             JSONObject jsonObject = new JSONObject(object);
-            if (jsonObject.has("error")) {
-                JSONObject error = jsonObject.getJSONObject("error");
-                String msg = error.getString("message");
-                msg = translateMessage(msg);
-                throw new JokeException(msg, error.getInt("statusCode"));
+            if (jsonObject.has("message")) {
+                String msg = jsonObject.getString("message");
+                int status = jsonObject.getInt("status");
+                throw new JokeException(msg, status);
             }
         }
     }
 
-
     /**
-     * 错误消息翻译
-     */
-    private static Map<String, String> msgmap = new HashMap<>();
-
-    static {
-        msgmap.put("username:already exists", "用户名已存在");
-        msgmap.put("login failed", "登录失败，请检查用户名和密码是否正确");
-        msgmap.put("The mailbox is not verified", "请先验证邮箱");
-    }
-
-    /**
-     * 翻译消息
+     * 处理mongoId
      *
-     * @param msg
+     * @param jsonObject
      * @return
      */
-    public static String translateMessage(String msg) {
-        if (msgmap.containsKey(msg)) {
-            return msgmap.get(msg);
+    public static JSONObject handleMongoId(JSONObject jsonObject) {
+        if (jsonObject.has("_id")) {
+            try {
+                JSONObject _id = jsonObject.getJSONObject("_id");
+                jsonObject.put("_id", _id.getString("$id"));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
-        return msg;
+        return jsonObject;
     }
 }
