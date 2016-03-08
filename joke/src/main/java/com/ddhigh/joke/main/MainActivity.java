@@ -12,7 +12,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.ddhigh.joke.JokeException;
@@ -24,6 +23,8 @@ import com.ddhigh.joke.item.ViewActivity;
 import com.ddhigh.joke.model.JokeModel;
 import com.ddhigh.joke.user.UserActivity;
 import com.ddhigh.joke.util.HttpUtil;
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -38,20 +39,19 @@ import org.xutils.view.annotation.Event;
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
-import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
 @ContentView(R.layout.activity_main)
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements PullToRefreshBase.OnRefreshListener2 {
     MyApplication application;
 
     BroadcastReceiver loginSuccessReceiver;
     BroadcastReceiver logoutReceiver;
     BroadcastReceiver newJokeReceiver;
     @ViewInject(R.id.listJoke)
-    ListView listJoke;
+    PullToRefreshListView listJoke;
     List<JokeModel> jokes;
     JokeAdapter jokeAdapter;
 
@@ -111,6 +111,7 @@ public class MainActivity extends AppCompatActivity {
         };
         registerReceiver(newJokeReceiver, new IntentFilter(Actions.ACTION_NEW_JOKE));
         //加载数据
+        listJoke.setOnRefreshListener(this);
         doRefresh();
     }
 
@@ -163,8 +164,6 @@ public class MainActivity extends AppCompatActivity {
      * 加载最新
      */
     private void doRefresh() {
-        jokes.clear();
-        jokeAdapter.notifyDataSetChanged();
         Log.d(MyApplication.TAG, "refresh start");
         RequestParams query = new RequestParams();
         query.put("expand", "user");
@@ -174,6 +173,7 @@ public class MainActivity extends AppCompatActivity {
                 //获取分页大小
                 Log.d(MyApplication.TAG, "refresh complete ===> " + response.toString());
                 try {
+                    jokes.clear();
                     HttpUtil.handleError(response.toString());
                     for (int i = 0; i < response.length(); i++) {
                         JSONObject item = response.getJSONObject(i);
@@ -182,6 +182,7 @@ public class MainActivity extends AppCompatActivity {
                         jokes.add(joke);
                     }
                     jokeAdapter.notifyDataSetChanged();
+                    listJoke.onRefreshComplete();
                 } catch (JSONException | JokeException | ParseException e) {
                     e.printStackTrace();
                     Toast.makeText(MainActivity.this, "解析服务器响应失败", Toast.LENGTH_SHORT).show();
@@ -209,5 +210,15 @@ public class MainActivity extends AppCompatActivity {
         Intent i = new Intent(this, ViewActivity.class);
         i.putExtra("id", joke.getId());
         startActivity(i);
+    }
+
+    @Override
+    public void onPullDownToRefresh(PullToRefreshBase refreshView) {
+        doRefresh();
+    }
+
+    @Override
+    public void onPullUpToRefresh(PullToRefreshBase refreshView) {
+        Log.d(MyApplication.TAG, "pull up");
     }
 }
