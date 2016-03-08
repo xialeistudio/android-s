@@ -143,8 +143,9 @@ public class ViewActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         String url = images.get(position);
+        Log.d(MyApplication.TAG, "xxx===>" + url);
         Intent intent = new Intent(this, ImageViewActivity.class);
-        intent.putExtra("path",url);
+        intent.putExtra("path", url);
         startActivity(intent);
     }
 }

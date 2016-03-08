@@ -5,9 +5,11 @@ import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.ImageView;
 
-import com.ddhigh.mylibrary.R;
+import com.ddhigh.joke.MyApplication;
+import com.ddhigh.joke.R;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.io.File;
@@ -29,8 +31,9 @@ public class ImageViewActivity extends Activity {
         setContentView(R.layout.activity_imageview);
         imageView = (ImageView) findViewById(R.id.image);
 
-        Intent intent = new Intent();
+        Intent intent = getIntent();
         String path = intent.getStringExtra("path");
+        Log.d(MyApplication.TAG, "path: " + path);
         if (!TextUtils.isEmpty(path)) {
             File f = new File(path);
             if (f.exists()) {

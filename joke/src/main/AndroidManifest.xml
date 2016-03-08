@@ -46,8 +46,7 @@
             android:name=".item.ViewActivity"
             android:label="@string/view_joke" />
         <activity
-            android:name=".widget.ImageViewActivity"
-            android:theme="@android:style/Theme.Dialog" />
+            android:name=".widget.ImageViewActivity" />
     </application>
 
 </manifest>
