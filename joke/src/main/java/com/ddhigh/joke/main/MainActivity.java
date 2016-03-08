@@ -261,7 +261,7 @@ public class MainActivity extends AppCompatActivity implements PullToRefreshBase
 
     @Event(value = R.id.listJoke, type = AdapterView.OnItemClickListener.class)
     private void jokeClicked(AdapterView<?> parent, View view, int position, long id) {
-        JokeModel joke = jokes.get(position);
+        JokeModel joke = jokes.get(position - 1);
         Intent i = new Intent(this, ViewActivity.class);
         i.putExtra("id", joke.getId());
         startActivity(i);
