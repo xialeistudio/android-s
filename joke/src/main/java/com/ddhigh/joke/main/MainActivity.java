@@ -4,9 +4,11 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Display;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -55,11 +57,19 @@ public class MainActivity extends AppCompatActivity implements PullToRefreshBase
     List<JokeModel> jokes;
     JokeAdapter jokeAdapter;
 
+    private int mScreenWidth;
+    private int mScreenHeight;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         x.view().inject(this);
 
+        Display display = getWindowManager().getDefaultDisplay();
+        Point point = new Point();
+        display.getSize(point);
+        mScreenHeight = point.y;
+        mScreenWidth = point.x;
         //列表处理
         jokes = new ArrayList<>();
         jokeAdapter = new JokeAdapter(this, jokes);
@@ -261,6 +271,7 @@ public class MainActivity extends AppCompatActivity implements PullToRefreshBase
 
     @Event(value = R.id.listJoke, type = AdapterView.OnItemClickListener.class)
     private void jokeClicked(AdapterView<?> parent, View view, int position, long id) {
+        Log.d(MyApplication.TAG, "joke clicked: " + position + "/" + jokes.size());
         JokeModel joke = jokes.get(position - 1);
         Intent i = new Intent(this, ViewActivity.class);
         i.putExtra("id", joke.getId());

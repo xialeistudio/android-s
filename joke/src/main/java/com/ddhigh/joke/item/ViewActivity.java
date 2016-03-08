@@ -9,14 +9,21 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ddhigh.joke.JokeException;
 import com.ddhigh.joke.MyApplication;
 import com.ddhigh.joke.R;
+import com.ddhigh.joke.model.JokeModel;
 import com.ddhigh.joke.util.HttpUtil;
+import com.ddhigh.mylibrary.widget.NoScrollGridView;
 import com.loopj.android.http.JsonHttpResponseHandler;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+import com.nostra13.universalimageloader.core.display.CircleBitmapDisplayer;
 
 import org.apache.http.Header;
 import org.json.JSONException;
@@ -25,12 +32,26 @@ import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
+
 @ContentView(R.layout.activity_item_view)
 public class ViewActivity extends AppCompatActivity {
+    @ViewInject(R.id.imageAvatar)
+    ImageView imageAvatar;
+    @ViewInject(R.id.txtNickname)
+    TextView txtNickname;
+
     @ViewInject(R.id.txtContent)
     TextView txtContent;
 
     JSONObject item;
+    @ViewInject(R.id.gridImages)
+    NoScrollGridView gridImages;
+
+    List<String> images;
+    ImageAdapter adapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -46,7 +67,7 @@ public class ViewActivity extends AppCompatActivity {
         String id = intent.getStringExtra("id");
         final ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("加载中");
-        HttpUtil.get("/jokes/" + id, null, new JsonHttpResponseHandler() {
+        HttpUtil.get("/jokes/" + id + "?expand=user", null, new JsonHttpResponseHandler() {
             @Override
             public void onStart() {
                 progressDialog.show();
@@ -62,9 +83,23 @@ public class ViewActivity extends AppCompatActivity {
                 try {
                     response = HttpUtil.handleMongoId(response);
                     HttpUtil.handleError(response.toString());
-                    txtContent.setText(response.toString());
+                    JokeModel jokeModel = new JokeModel();
+                    jokeModel.parse(response);
+                    txtNickname.setText(jokeModel.getUser().getNickname());
+                    DisplayImageOptions displayImageOptions = new DisplayImageOptions.Builder()
+                            .cacheInMemory(true)
+                            .cacheOnDisk(true)
+                            .imageScaleType(ImageScaleType.EXACTLY)
+                            .displayer(new CircleBitmapDisplayer())
+                            .build();
+                    ImageLoader.getInstance().displayImage(jokeModel.getUser().getAvatar() + "?imageView2/1/w/96", imageAvatar, displayImageOptions);
+                    txtContent.setText(jokeModel.getText());
                     item = response;
-                } catch (JSONException | JokeException e) {
+
+                    images = jokeModel.getImages();
+                    adapter = new ImageAdapter(ViewActivity.this, images);
+                    gridImages.setAdapter(adapter);
+                } catch (JSONException | JokeException | ParseException e) {
                     e.printStackTrace();
                     Toast.makeText(ViewActivity.this, "加载失败", Toast.LENGTH_SHORT).show();
                 }
