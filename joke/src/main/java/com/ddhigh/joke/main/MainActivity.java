@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
         jokes = new ArrayList<>();
         jokeAdapter = new JokeAdapter(this, jokes);
         listJoke.setAdapter(jokeAdapter);
-        listJoke.setOnScrollListener(new PauseOnScrollListener(ImageLoader.getInstance(), false, true));
+        listJoke.setOnScrollListener(new PauseOnScrollListener(ImageLoader.getInstance(), true, false));
 
         application = (MyApplication) getApplication();
         //注册登录成功广播
@@ -157,7 +157,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    final int pageSize = 10;
+    int currentPage = 1;
 
     /**
      * 加载最新
@@ -167,13 +167,11 @@ public class MainActivity extends AppCompatActivity {
         jokeAdapter.notifyDataSetChanged();
         Log.d(MyApplication.TAG, "refresh start");
         RequestParams query = new RequestParams();
-        query.put("order", "createdAt DESC");
-        query.put("skip", jokes.size());
-        query.put("limit", pageSize);
         query.put("expand", "user");
         HttpUtil.get("/jokes", query, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                //获取分页大小
                 Log.d(MyApplication.TAG, "refresh complete ===> " + response.toString());
                 try {
                     HttpUtil.handleError(response.toString());
