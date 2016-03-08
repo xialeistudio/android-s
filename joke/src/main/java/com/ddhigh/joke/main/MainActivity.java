@@ -177,6 +177,8 @@ public class MainActivity extends AppCompatActivity implements PullToRefreshBase
     }
 
 
+    int currentPage = 1;
+
     /**
      * 加载最新
      */
@@ -184,15 +186,14 @@ public class MainActivity extends AppCompatActivity implements PullToRefreshBase
         Log.d(MyApplication.TAG, "refresh start");
         RequestParams query = new RequestParams();
         query.put("expand", "user");
-        if (jokes.size() > 0) {
-            query.put("min", jokes.get(0).getCreatedAt().getTime() / 1000);
-        }
+        query.put("page", 1);
         HttpUtil.get("/jokes", query, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 //获取分页大小
                 Log.d(MyApplication.TAG, "refresh complete ===> " + response.toString());
                 try {
+                    jokes.clear();
                     HttpUtil.handleError(response.toString());
                     for (int i = 0; i < response.length(); i++) {
                         JSONObject item = response.getJSONObject(i);
@@ -201,8 +202,12 @@ public class MainActivity extends AppCompatActivity implements PullToRefreshBase
                         jokes.add(joke);
                     }
                     listJoke.onRefreshComplete();
-                    if (response.length() > 0) {
-                        jokeAdapter.notifyDataSetChanged();
+                    jokeAdapter.notifyDataSetChanged();
+                    currentPage = 1;
+                    if (response.length() < 20) {
+                        listJoke.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
+                    } else {
+                        listJoke.setMode(PullToRefreshBase.Mode.BOTH);
                     }
                 } catch (JSONException | JokeException | ParseException e) {
                     e.printStackTrace();
@@ -231,9 +236,7 @@ public class MainActivity extends AppCompatActivity implements PullToRefreshBase
         Log.d(MyApplication.TAG, "loadmore start");
         RequestParams query = new RequestParams();
         query.put("expand", "user");
-        if (jokes.size() > 0) {
-            query.put("max", jokes.get(jokes.size() - 1).getCreatedAt().getTime() / 1000);
-        }
+        query.put("page", ++currentPage);
         HttpUtil.get("/jokes", query, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
@@ -249,6 +252,11 @@ public class MainActivity extends AppCompatActivity implements PullToRefreshBase
                     }
                     if (response.length() > 0) {
                         jokeAdapter.notifyDataSetChanged();
+                    }
+                    if (response.length() < 20) {
+                        listJoke.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
+                    } else {
+                        listJoke.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
                     }
                 } catch (JSONException | JokeException | ParseException e) {
                     e.printStackTrace();
