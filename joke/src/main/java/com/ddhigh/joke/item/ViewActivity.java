@@ -9,6 +9,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,12 +20,14 @@ import com.ddhigh.joke.MyApplication;
 import com.ddhigh.joke.R;
 import com.ddhigh.joke.model.JokeModel;
 import com.ddhigh.joke.util.HttpUtil;
+import com.ddhigh.joke.widget.ImageViewActivity;
 import com.ddhigh.mylibrary.widget.NoScrollGridView;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.display.CircleBitmapDisplayer;
+import com.nostra13.universalimageloader.core.imageaware.ImageViewAware;
 
 import org.apache.http.Header;
 import org.json.JSONException;
@@ -33,11 +37,10 @@ import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.List;
 
 @ContentView(R.layout.activity_item_view)
-public class ViewActivity extends AppCompatActivity {
+public class ViewActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
     @ViewInject(R.id.imageAvatar)
     ImageView imageAvatar;
     @ViewInject(R.id.txtNickname)
@@ -111,6 +114,8 @@ public class ViewActivity extends AppCompatActivity {
                 Toast.makeText(ViewActivity.this, "加载失败", Toast.LENGTH_SHORT).show();
             }
         });
+
+        gridImages.setOnItemClickListener(this);
     }
 
     @Override
@@ -133,5 +138,13 @@ public class ViewActivity extends AppCompatActivity {
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.menu_share, menu);
         return true;
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        String url = images.get(position);
+        Intent intent = new Intent(this, ImageViewActivity.class);
+        intent.putExtra("path",url);
+        startActivity(intent);
     }
 }
