@@ -67,6 +67,9 @@ public class JokeAdapter extends BaseAdapter {
             viewHolder.txtNickname = (TextView) convertView.findViewById(R.id.txtNickname);
             viewHolder.txtText = (TextView) convertView.findViewById(R.id.txtText);
             viewHolder.gridView = (NoScrollGridView) convertView.findViewById(R.id.gridImages);
+            viewHolder.gridView.setClickable(false);
+            viewHolder.gridView.setPressed(false);
+            viewHolder.gridView.setEnabled(false);
             convertView.setTag(viewHolder);
         }else{
             viewHolder = (ViewHolder) convertView.getTag();
