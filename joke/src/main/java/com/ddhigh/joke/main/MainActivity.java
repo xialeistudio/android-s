@@ -65,6 +65,16 @@ public class MainActivity extends AppCompatActivity implements PullToRefreshBase
         jokeAdapter = new JokeAdapter(this, jokes);
         listJoke.setAdapter(jokeAdapter);
         listJoke.setOnScrollListener(new PauseOnScrollListener(ImageLoader.getInstance(), true, false));
+        listJoke.setOnRefreshListener(this);
+        listJoke.setMode(PullToRefreshBase.Mode.BOTH);
+        listJoke.getLoadingLayoutProxy(false, true).setPullLabel("上拉加载...");
+        listJoke.getLoadingLayoutProxy(false, true).setRefreshingLabel("正在加载...");
+        listJoke.getLoadingLayoutProxy(false, true).setReleaseLabel("松开加载更多...");
+
+        // 设置PullRefreshListView下拉加载时的加载提示
+        listJoke.getLoadingLayoutProxy(true, false).setPullLabel("下拉刷新...");
+        listJoke.getLoadingLayoutProxy(true, false).setRefreshingLabel("正在加载...");
+        listJoke.getLoadingLayoutProxy(true, false).setReleaseLabel("松开加载更多...");
 
         application = (MyApplication) getApplication();
         //注册登录成功广播
@@ -111,7 +121,6 @@ public class MainActivity extends AppCompatActivity implements PullToRefreshBase
         };
         registerReceiver(newJokeReceiver, new IntentFilter(Actions.ACTION_NEW_JOKE));
         //加载数据
-        listJoke.setOnRefreshListener(this);
         doRefresh();
     }
 
@@ -159,6 +168,7 @@ public class MainActivity extends AppCompatActivity implements PullToRefreshBase
 
 
     int currentPage = 1;
+    boolean hasMore = false;
 
     /**
      * 加载最新
@@ -183,6 +193,14 @@ public class MainActivity extends AppCompatActivity implements PullToRefreshBase
                     }
                     jokeAdapter.notifyDataSetChanged();
                     listJoke.onRefreshComplete();
+                    if (response.length() >= 20) {
+                        currentPage = 2;
+                        hasMore = true;
+                        listJoke.setMode(PullToRefreshBase.Mode.BOTH);//只能下拉刷新
+                    }else{
+                        hasMore = false;
+                        listJoke.setMode(PullToRefreshBase.Mode.PULL_FROM_START);//只能下拉刷新
+                    }
                 } catch (JSONException | JokeException | ParseException e) {
                     e.printStackTrace();
                     Toast.makeText(MainActivity.this, "解析服务器响应失败", Toast.LENGTH_SHORT).show();
@@ -201,7 +219,45 @@ public class MainActivity extends AppCompatActivity implements PullToRefreshBase
      * 分页加载
      */
     private void doLoadMore() {
+        Log.d(MyApplication.TAG, "loadmore start");
+        RequestParams query = new RequestParams();
+        query.put("expand", "user");
+        query.put("page", currentPage);
+        HttpUtil.get("/jokes", query, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                //获取分页大小
+                Log.d(MyApplication.TAG, "loadmore complete ===> " + response.toString());
+                try {
+                    HttpUtil.handleError(response.toString());
+                    for (int i = 0; i < response.length(); i++) {
+                        JSONObject item = response.getJSONObject(i);
+                        JokeModel joke = new JokeModel();
+                        joke.parse(item);
+                        jokes.add(joke);
+                    }
+                    jokeAdapter.notifyDataSetChanged();
+                    listJoke.onRefreshComplete();
+                    if (response.length() >= 20) {
+                        currentPage++;
+                        hasMore = true;
+                        listJoke.setMode(PullToRefreshBase.Mode.BOTH);//只能下拉刷新
+                    } else {
+                        listJoke.setMode(PullToRefreshBase.Mode.PULL_FROM_START);//只能下拉刷新
+                        hasMore = false;
+                    }
+                } catch (JSONException | JokeException | ParseException e) {
+                    e.printStackTrace();
+                    Toast.makeText(MainActivity.this, "解析服务器响应失败", Toast.LENGTH_SHORT).show();
+                }
+            }
 
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                throwable.printStackTrace();
+                Toast.makeText(MainActivity.this, "服务器响应错误", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Event(value = R.id.listJoke, type = AdapterView.OnItemClickListener.class)
@@ -219,6 +275,8 @@ public class MainActivity extends AppCompatActivity implements PullToRefreshBase
 
     @Override
     public void onPullUpToRefresh(PullToRefreshBase refreshView) {
-        Log.d(MyApplication.TAG, "pull up");
+        if (hasMore) {
+            doLoadMore();
+        }
     }
 }
