@@ -33,9 +33,11 @@ import org.apache.http.Header;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.xutils.view.annotation.ContentView;
+import org.xutils.view.annotation.Event;
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
+import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.util.List;
 
@@ -45,17 +47,21 @@ public class ViewActivity extends AppCompatActivity implements AdapterView.OnIte
     ImageView imageAvatar;
     @ViewInject(R.id.txtNickname)
     TextView txtNickname;
-
     @ViewInject(R.id.txtContent)
     TextView txtContent;
-
-    JSONObject item;
     @ViewInject(R.id.gridImages)
     NoScrollGridView gridImages;
+    @ViewInject(R.id.txtPraiseCount)
+    TextView txtPraiseCount;
+    @ViewInject(R.id.txtUnPraiseCount)
+    TextView txtUnPraiseCount;
+    @ViewInject(R.id.txtCommentCount)
+    TextView txtCommentCount;
 
     List<String> images;
     ImageAdapter adapter;
-
+    JSONObject item;
+    JokeModel jokeModel;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,6 +71,7 @@ public class ViewActivity extends AppCompatActivity implements AdapterView.OnIte
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
+        jokeModel  = new JokeModel();
         //加载远程数据
         Intent intent = getIntent();
         String id = intent.getStringExtra("id");
@@ -85,7 +92,6 @@ public class ViewActivity extends AppCompatActivity implements AdapterView.OnIte
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 try {
                     HttpUtil.handleError(response.toString());
-                    JokeModel jokeModel = new JokeModel();
                     jokeModel.parse(response);
                     txtNickname.setText(jokeModel.getUser().getNickname());
                     DisplayImageOptions displayImageOptions = new DisplayImageOptions.Builder()
@@ -101,6 +107,9 @@ public class ViewActivity extends AppCompatActivity implements AdapterView.OnIte
                     images = jokeModel.getImages();
                     adapter = new ImageAdapter(ViewActivity.this, images);
                     gridImages.setAdapter(adapter);
+                    txtPraiseCount.setText(String.valueOf(jokeModel.getPraiseCount()));
+                    txtUnPraiseCount.setText(String.valueOf(jokeModel.getUnpraiseCount()));
+                    txtCommentCount.setText(String.valueOf(jokeModel.getCommentCount()));
                 } catch (JSONException | JokeException | ParseException e) {
                     e.printStackTrace();
                     Toast.makeText(ViewActivity.this, "加载失败", Toast.LENGTH_SHORT).show();
@@ -146,5 +155,66 @@ public class ViewActivity extends AppCompatActivity implements AdapterView.OnIte
         Intent intent = new Intent(this, ImageViewActivity.class);
         intent.putExtra("path", url);
         startActivity(intent);
+    }
+
+    @Event(R.id.txtPraiseCount)
+    private void onPraised(View view) {
+        JSONObject json = new JSONObject();
+        try {
+            json.put("praiseCount", jokeModel.getPraiseCount() + 1);
+            HttpUtil.put(this, "/jokes/" + jokeModel.getId(), json, new JsonHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    try {
+                        HttpUtil.handleError(response.toString());
+                        JokeModel _joke = new JokeModel();
+                        _joke.parse(response);
+                        jokeModel.setPraiseCount(_joke.getPraiseCount());
+                        txtPraiseCount.setText(String.valueOf(jokeModel.getPraiseCount()));
+                    } catch (JSONException | JokeException | ParseException e) {
+                        e.printStackTrace();
+                        Toast.makeText(ViewActivity.this, "点赞失败", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                    throwable.printStackTrace();
+                }
+            });
+        } catch (JSONException | UnsupportedEncodingException e) {
+            e.printStackTrace();
+            Toast.makeText(ViewActivity.this, "点赞失败", Toast.LENGTH_SHORT).show();
+        }
+    }
+    @Event(R.id.txtUnPraiseCount)
+    private void onUnPraised(View view) {
+        JSONObject json = new JSONObject();
+        try {
+            json.put("unpraiseCount", jokeModel.getUnpraiseCount() + 1);
+            HttpUtil.put(this, "/jokes/" + jokeModel.getId(), json, new JsonHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    try {
+                        HttpUtil.handleError(response.toString());
+                        JokeModel _joke = new JokeModel();
+                        _joke.parse(response);
+                        jokeModel.setUnpraiseCount(_joke.getUnpraiseCount());
+                        txtUnPraiseCount.setText(String.valueOf(jokeModel.getUnpraiseCount()));
+                    } catch (JSONException | JokeException | ParseException e) {
+                        e.printStackTrace();
+                        Toast.makeText(ViewActivity.this, "操作失败", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                    throwable.printStackTrace();
+                }
+            });
+        } catch (JSONException | UnsupportedEncodingException e) {
+            e.printStackTrace();
+            Toast.makeText(ViewActivity.this, "操作失败", Toast.LENGTH_SHORT).show();
+        }
     }
 }
