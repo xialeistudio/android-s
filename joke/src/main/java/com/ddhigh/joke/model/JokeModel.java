@@ -23,19 +23,23 @@ public class JokeModel extends BaseModel {
     private int unpraiseCount;
     private int commentCount;
     private String userId;
-    private Date createdAt;
-    private Date updatedAt;
     private UserModel user;
-//    '_id' => 'ID',
-//            'text' => '内容',
-//            'images' => '图片',
-//            'viewCount' => '点击数',
-//            'praiseCount' => '顶数',
-//            'unpraiseCount' => '踩数',
-//            'commentCount' => '评论数',
-//            'userId' => '用户ID',
-//            'createdAt' => '发表时间',
-//            'updatedAt' => '更新时间',
+
+    public int getViewCount() {
+        return viewCount;
+    }
+
+    public void setViewCount(int viewCount) {
+        this.viewCount = viewCount;
+    }
+
+    public int getUnpraiseCount() {
+        return unpraiseCount;
+    }
+
+    public void setUnpraiseCount(int unpraiseCount) {
+        this.unpraiseCount = unpraiseCount;
+    }
 
     public int getCommentCount() {
         return commentCount;
@@ -80,9 +84,6 @@ public class JokeModel extends BaseModel {
 
     public void parse(JSONObject jsonObject) throws JSONException, ParseException {
         super.parse(jsonObject);
-        if (jsonObject.has("commentCount")) {
-            commentCount = jsonObject.getInt("commentCount");
-        }
         if (jsonObject.has("images")) {
             JSONArray jsonArray = jsonObject.getJSONArray("images");
             for (int i = 0; i < jsonArray.length(); i++) {
@@ -97,6 +98,9 @@ public class JokeModel extends BaseModel {
         }
         if (jsonObject.has("commentCount")) {
             commentCount = jsonObject.getInt("commentCount");
+        }
+        if (jsonObject.has("viewCount")) {
+            viewCount = jsonObject.getInt("viewCount");
         }
         if (jsonObject.has("text")) {
             text = jsonObject.getString("text");

@@ -84,7 +84,6 @@ public class ViewActivity extends AppCompatActivity implements AdapterView.OnIte
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 try {
-                    response = HttpUtil.handleMongoId(response);
                     HttpUtil.handleError(response.toString());
                     JokeModel jokeModel = new JokeModel();
                     jokeModel.parse(response);

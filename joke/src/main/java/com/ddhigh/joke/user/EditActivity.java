@@ -283,7 +283,7 @@ public class EditActivity extends AppCompatActivity {
 
             @Override
             public void onFinish() {
-                progressDialog.hide();
+                progressDialog.dismiss();
             }
         });
     }
@@ -368,7 +368,7 @@ public class EditActivity extends AppCompatActivity {
 
                         @Override
                         public void onFinish() {
-                            progressDialog.hide();
+                            progressDialog.dismiss();
                         }
                     });
                 } catch (UnsupportedEncodingException e) {

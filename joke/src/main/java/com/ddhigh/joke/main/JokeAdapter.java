@@ -6,23 +6,31 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.ddhigh.joke.JokeException;
 import com.ddhigh.joke.MyApplication;
 import com.ddhigh.joke.R;
 import com.ddhigh.joke.item.ImageAdapter;
 import com.ddhigh.joke.item.ViewActivity;
 import com.ddhigh.joke.model.JokeModel;
+import com.ddhigh.joke.util.HttpUtil;
 import com.ddhigh.mylibrary.widget.NoScrollGridView;
+import com.loopj.android.http.JsonHttpResponseHandler;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.display.CircleBitmapDisplayer;
 
+import org.apache.http.Header;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.UnsupportedEncodingException;
+import java.text.ParseException;
 import java.util.List;
 
 /**
@@ -70,8 +78,11 @@ public class JokeAdapter extends BaseAdapter {
             viewHolder.gridView.setClickable(false);
             viewHolder.gridView.setPressed(false);
             viewHolder.gridView.setEnabled(false);
+            viewHolder.txtPraiseCount = (TextView) convertView.findViewById(R.id.txtPraiseCount);
+            viewHolder.txtUnPraiseCount = (TextView) convertView.findViewById(R.id.txtUnPraiseCount);
+            viewHolder.txtCommentCount = (TextView) convertView.findViewById(R.id.txtCommentCount);
             convertView.setTag(viewHolder);
-        }else{
+        } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
@@ -93,13 +104,117 @@ public class JokeAdapter extends BaseAdapter {
         ImageLoader.getInstance().displayImage(jokeModel.getUser().getAvatar() + "?imageView2/1/w/64", viewHolder.imageAvatar, imageOptions);
         viewHolder.txtNickname.setText(jokeModel.getUser().getNickname());
         viewHolder.txtText.setText(jokeModel.getText());
+        viewHolder.txtPraiseCount.setText(String.valueOf(jokeModel.getPraiseCount()));
+        viewHolder.txtUnPraiseCount.setText(String.valueOf(jokeModel.getUnpraiseCount()));
+        viewHolder.txtCommentCount.setText(String.valueOf(jokeModel.getCommentCount()));
+        //事件监听
+        viewHolder.txtPraiseCount.setOnClickListener(new OnClickListener(position));
+        viewHolder.txtUnPraiseCount.setOnClickListener(new OnClickListener(position));
+        viewHolder.txtCommentCount.setOnClickListener(new OnClickListener(position));
         return convertView;
     }
 
-    private static class ViewHolder{
+    private static class ViewHolder {
         ImageView imageAvatar;
-        TextView  txtNickname;
+        TextView txtNickname;
         TextView txtText;
         NoScrollGridView gridView;
+        TextView txtPraiseCount;
+        TextView txtUnPraiseCount;
+        TextView txtCommentCount;
+    }
+
+    private class OnClickListener implements View.OnClickListener {
+        private int position;
+
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.txtPraiseCount:
+                    praise(position);
+                    break;
+                case R.id.txtUnPraiseCount:
+                    unpraise(position);
+                    break;
+                case R.id.txtCommentCount:
+                    comment(position);
+                    break;
+            }
+        }
+
+        private void comment(int position) {
+            //跳转到详情
+            Log.d(MyApplication.TAG, "comment clicked: " + position + "/" + jokes.size());
+            Intent i = new Intent(mContent, ViewActivity.class);
+            JokeModel j = jokes.get(position);
+            i.putExtra("id", j.getId());
+            mContent.startActivity(i);
+        }
+
+        private void unpraise(int position) {
+            final JokeModel joke = jokes.get(position);
+            JSONObject json = new JSONObject();
+            try {
+                json.put("unpraiseCount", joke.getUnpraiseCount() + 1);
+                HttpUtil.put(mContent, "/jokes/" + joke.getId(), json, new JsonHttpResponseHandler() {
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                        try {
+                            HttpUtil.handleError(response.toString());
+                            JokeModel _joke = new JokeModel();
+                            _joke.parse(response);
+                            joke.setUnpraiseCount(_joke.getUnpraiseCount());
+                            notifyDataSetChanged();
+                        } catch (JSONException | JokeException | ParseException e) {
+                            e.printStackTrace();
+                            Toast.makeText(mContent, "操作失败", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                        throwable.printStackTrace();
+                    }
+                });
+            } catch (JSONException | UnsupportedEncodingException e) {
+                e.printStackTrace();
+                Toast.makeText(mContent, "操作失败", Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        private void praise(int position) {
+            final JokeModel joke = jokes.get(position);
+            JSONObject json = new JSONObject();
+            try {
+                json.put("praiseCount", joke.getPraiseCount() + 1);
+                HttpUtil.put(mContent, "/jokes/" + joke.getId(), json, new JsonHttpResponseHandler() {
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                        try {
+                            HttpUtil.handleError(response.toString());
+                            JokeModel _joke = new JokeModel();
+                            _joke.parse(response);
+                            joke.setPraiseCount(_joke.getPraiseCount());
+                            notifyDataSetChanged();
+                        } catch (JSONException | JokeException | ParseException e) {
+                            e.printStackTrace();
+                            Toast.makeText(mContent, "点赞失败", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                        throwable.printStackTrace();
+                    }
+                });
+            } catch (JSONException | UnsupportedEncodingException e) {
+                e.printStackTrace();
+                Toast.makeText(mContent, "点赞失败", Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        public OnClickListener(int position) {
+            this.position = position;
+        }
     }
 }

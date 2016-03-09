@@ -2,10 +2,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp"
+    android:background="@drawable/list_seperator_20dp"
     android:descendantFocusability="blocksDescendants"
-    android:background="@drawable/list_seperator_20dp">
+    android:orientation="vertical"
+    android:padding="16dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -43,4 +43,6 @@
 
 
     <include layout="@layout/grid_images" />
+    <!--操作区-->
+    <include layout="@layout/widget_item_operation" />
 </LinearLayout>
