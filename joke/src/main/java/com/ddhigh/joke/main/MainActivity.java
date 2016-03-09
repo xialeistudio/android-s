@@ -45,6 +45,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
+@SuppressWarnings("unused")
 @ContentView(R.layout.activity_main)
 public class MainActivity extends AppCompatActivity implements PullToRefreshBase.OnRefreshListener2 {
     MyApplication application;
@@ -57,9 +58,6 @@ public class MainActivity extends AppCompatActivity implements PullToRefreshBase
     List<JokeModel> jokes;
     JokeAdapter jokeAdapter;
 
-    private int mScreenWidth;
-    private int mScreenHeight;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,8 +66,6 @@ public class MainActivity extends AppCompatActivity implements PullToRefreshBase
         Display display = getWindowManager().getDefaultDisplay();
         Point point = new Point();
         display.getSize(point);
-        mScreenHeight = point.y;
-        mScreenWidth = point.x;
         //列表处理
         jokes = new ArrayList<>();
         jokeAdapter = new JokeAdapter(this, jokes);
