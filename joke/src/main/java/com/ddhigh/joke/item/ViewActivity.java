@@ -77,6 +77,8 @@ public class ViewActivity extends AppCompatActivity implements AdapterView.OnIte
     NoScrollListView commentListView;
     @ViewInject(R.id.txtComment)
     EditText txtComment;
+    @ViewInject(R.id.txtLoadingComment)
+    TextView txtLoadingComment;
 
     List<String> images;
     ImageAdapter adapter;
@@ -155,6 +157,7 @@ public class ViewActivity extends AppCompatActivity implements AdapterView.OnIte
             @Override
             public void onFinish() {
                 scrollView.onRefreshComplete();
+                txtLoadingComment.setVisibility(View.GONE);
             }
         });
     }

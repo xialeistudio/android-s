@@ -7,8 +7,8 @@
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scrollbars="vertical"
-        android:layout_marginBottom="66dp">
+        android:layout_marginBottom="66dp"
+        android:scrollbars="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -72,6 +72,14 @@
                     android:textColor="#e395af"
                     android:textSize="12sp" />
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/txtLoadingComment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="16dp"
+                android:text="加载评论中" />
 
             <com.ddhigh.mylibrary.widget.NoScrollListView
                 android:id="@+id/listComment"
