@@ -45,7 +45,6 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
-@SuppressWarnings("unused")
 @ContentView(R.layout.activity_main)
 public class MainActivity extends AppCompatActivity implements PullToRefreshBase.OnRefreshListener2 {
     MyApplication application;

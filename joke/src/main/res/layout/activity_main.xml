@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     tools:context=".main.MainActivity">
     <com.handmark.pulltorefresh.library.PullToRefreshListView
+        android:dividerPadding="10dp"
         android:layout_width="match_parent"
         android:id="@+id/listJoke"
         android:scrollbars="vertical"
