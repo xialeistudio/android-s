@@ -1,49 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.handmark.pulltorefresh.library.PullToRefreshScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/scrollView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:scrollbars="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/white"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:orientation="vertical">
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/white">
+            android:background="@android:color/white"
+            android:orientation="vertical"
+            android:padding="16dp">
 
-            <ImageView
-                android:id="@+id/imageAvatar"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_centerVertical="true"
-                android:contentDescription="头像"
-                android:scaleType="centerInside" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white">
+
+                <ImageView
+                    android:id="@+id/imageAvatar"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_centerVertical="true"
+                    android:contentDescription="头像"
+                    android:scaleType="centerInside" />
+
+                <TextView
+                    android:id="@+id/txtNickname"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="10dp"
+                    android:layout_toRightOf="@+id/imageAvatar"
+                    android:textColor="#686868"
+                    android:textSize="16sp" />
+            </RelativeLayout>
 
             <TextView
-                android:id="@+id/txtNickname"
-                android:layout_width="wrap_content"
+                android:id="@+id/txtContent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="10dp"
-                android:layout_toRightOf="@+id/imageAvatar"
-                android:textColor="#686868"
-                android:textSize="16sp" />
-        </RelativeLayout>
+                android:layout_marginTop="12dp"
+                android:textSize="18sp" />
 
-        <TextView
-            android:id="@+id/txtContent"
+            <include layout="@layout/grid_images" />
+
+            <include layout="@layout/widget_item_operation" />
+        </LinearLayout>
+        <!--评论list-->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:textSize="18sp" />
+            android:layout_marginTop="10dp"
+            android:background="@android:color/white"
+            android:padding="16dp">
 
-        <include layout="@layout/grid_images" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="评论列表"
+                android:textColor="#e395af"
+                android:textSize="12sp" />
+        </LinearLayout>
 
-        <include layout="@layout/widget_item_operation" />
+        <com.ddhigh.mylibrary.widget.NoScrollListView
+            android:id="@+id/listComment"
+            android:scrollbars="none"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
     </LinearLayout>
-</LinearLayout>
+</com.handmark.pulltorefresh.library.PullToRefreshScrollView>

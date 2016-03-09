@@ -18,11 +18,16 @@ import android.widget.Toast;
 import com.ddhigh.joke.JokeException;
 import com.ddhigh.joke.MyApplication;
 import com.ddhigh.joke.R;
+import com.ddhigh.joke.model.CommentModel;
 import com.ddhigh.joke.model.JokeModel;
 import com.ddhigh.joke.util.HttpUtil;
 import com.ddhigh.joke.widget.ImageViewActivity;
 import com.ddhigh.mylibrary.widget.NoScrollGridView;
+import com.ddhigh.mylibrary.widget.NoScrollListView;
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
 import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
@@ -30,6 +35,7 @@ import com.nostra13.universalimageloader.core.display.CircleBitmapDisplayer;
 import com.nostra13.universalimageloader.core.imageaware.ImageViewAware;
 
 import org.apache.http.Header;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.xutils.view.annotation.ContentView;
@@ -39,10 +45,11 @@ import org.xutils.x;
 
 import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.List;
 
 @ContentView(R.layout.activity_item_view)
-public class ViewActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
+public class ViewActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, PullToRefreshBase.OnRefreshListener2 {
     @ViewInject(R.id.imageAvatar)
     ImageView imageAvatar;
     @ViewInject(R.id.txtNickname)
@@ -57,11 +64,18 @@ public class ViewActivity extends AppCompatActivity implements AdapterView.OnIte
     TextView txtUnPraiseCount;
     @ViewInject(R.id.txtCommentCount)
     TextView txtCommentCount;
+    @ViewInject(R.id.scrollView)
+    PullToRefreshScrollView scrollView;
+    @ViewInject(R.id.listComment)
+    NoScrollListView commentListView;
 
     List<String> images;
     ImageAdapter adapter;
     JSONObject item;
     JokeModel jokeModel;
+    List<CommentModel> listComments;
+    CommentAdapter commentAdapter;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,8 +85,71 @@ public class ViewActivity extends AppCompatActivity implements AdapterView.OnIte
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        jokeModel  = new JokeModel();
-        //加载远程数据
+        jokeModel = new JokeModel();
+        listComments = new ArrayList<>();
+        commentAdapter = new CommentAdapter(this, listComments);
+        commentListView.setAdapter(commentAdapter);
+        gridImages.setOnItemClickListener(this);
+        loadJoke();
+        loadComment();
+
+        scrollView.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
+        scrollView.setOnRefreshListener(this);
+    }
+
+    int currentPage = 1;
+
+    private void loadComment() {
+        Intent intent = getIntent();
+        String id = intent.getStringExtra("id");
+        RequestParams query = new RequestParams();
+        query.put("expand", "user");
+        query.put("page", currentPage);
+        query.put("jokeId", id);
+        Log.d(MyApplication.TAG, "load comments: jokeId ===> " + id + ", page ===> " + currentPage);
+        HttpUtil.get("/comments", query, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                try {
+                    HttpUtil.handleError(response.toString());
+                    for (int i = 0; i < response.length(); i++) {
+                        JSONObject item = response.getJSONObject(i);
+                        CommentModel comment = new CommentModel();
+                        comment.parse(item);
+                        listComments.add(comment);
+                    }
+                    if (response.length() > 0) {
+                        commentAdapter.notifyDataSetChanged();
+                    }
+                    if (response.length() >= 20) {
+                        currentPage++;
+                        scrollView.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
+                    } else {
+                        scrollView.setMode(PullToRefreshBase.Mode.DISABLED);
+                    }
+                } catch (JSONException | JokeException | ParseException e) {
+                    e.printStackTrace();
+                    Toast.makeText(ViewActivity.this, "解析服务器响应失败", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                throwable.printStackTrace();
+                Toast.makeText(ViewActivity.this, "服务器响应错误", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFinish() {
+                scrollView.onRefreshComplete();
+            }
+        });
+    }
+
+    /**
+     * 加载远程数据
+     */
+    private void loadJoke() {
         Intent intent = getIntent();
         String id = intent.getStringExtra("id");
         final ProgressDialog progressDialog = new ProgressDialog(this);
@@ -122,8 +199,6 @@ public class ViewActivity extends AppCompatActivity implements AdapterView.OnIte
                 Toast.makeText(ViewActivity.this, "加载失败", Toast.LENGTH_SHORT).show();
             }
         });
-
-        gridImages.setOnItemClickListener(this);
     }
 
     @Override
@@ -187,6 +262,7 @@ public class ViewActivity extends AppCompatActivity implements AdapterView.OnIte
             Toast.makeText(ViewActivity.this, "点赞失败", Toast.LENGTH_SHORT).show();
         }
     }
+
     @Event(R.id.txtUnPraiseCount)
     private void onUnPraised(View view) {
         JSONObject json = new JSONObject();
@@ -216,5 +292,15 @@ public class ViewActivity extends AppCompatActivity implements AdapterView.OnIte
             e.printStackTrace();
             Toast.makeText(ViewActivity.this, "操作失败", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @Override
+    public void onPullDownToRefresh(PullToRefreshBase refreshView) {
+
+    }
+
+    @Override
+    public void onPullUpToRefresh(PullToRefreshBase refreshView) {
+        loadComment();
     }
 }
