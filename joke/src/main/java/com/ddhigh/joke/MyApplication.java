@@ -38,7 +38,7 @@ public class MyApplication extends Application {
             HttpUtil.setToken(user.getToken());
         }
         //初始化请求类
-        HttpUtil.setApi("http://myjoke.duapp.com/v1");
+        HttpUtil.setApi("http://jokexx.duapp.com/v1");
         //初始化应用存储目录
         applicationPath = new File(Environment.getExternalStorageDirectory(), getPackageName());
         if (!applicationPath.isDirectory()) {
