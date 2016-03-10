@@ -1,5 +1,10 @@
 package com.ddhigh.overtime.model;
 
+import android.text.TextUtils;
+
+import org.xutils.db.annotation.Column;
+import org.xutils.db.annotation.Table;
+
 /**
  * AccessToken
  *
@@ -8,11 +13,17 @@ package com.ddhigh.overtime.model;
  * @user xialeistudio
  * @date 2016/3/10 0010
  */
+@Table(name = "ot_access_token")
 public class AccessToken extends Model {
+    @Column(name = "token", isId = true)
     private String token;
+    @Column(name = "ttl")
     private int ttl;
+    @Column(name = "created_at")
     private int created_at;
+    @Column(name = "user_id")
     private int user_id;
+    private final static String PREF_ACCESS_TOKEN = "PREF_ACCESS_TOKEN";
 
     public String getToken() {
         return token;
@@ -45,4 +56,12 @@ public class AccessToken extends Model {
     public void setUser_id(int user_id) {
         this.user_id = user_id;
     }
+
+    /**
+     * 是否为游客
+     */
+    public boolean isGuest() {
+        return TextUtils.isEmpty(token);
+    }
+
 }

@@ -1,4 +1,4 @@
-package com.ddhigh.overtime;
+package com.ddhigh.overtime.activity;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -8,15 +8,23 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-public class MainActivity extends AppCompatActivity {
+import com.ddhigh.overtime.MyApplication;
+import com.ddhigh.overtime.R;
+import com.ddhigh.overtime.model.User;
 
+import org.xutils.view.annotation.ContentView;
+import org.xutils.x;
+
+@ContentView(R.layout.activity_main)
+public class MainActivity extends AppCompatActivity {
+    MyApplication application;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        x.view().inject(this);
+        application = (MyApplication) getApplication();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -24,6 +32,14 @@ public class MainActivity extends AppCompatActivity {
                 //TODO:弹出新增请求
             }
         });
+        checkLogin();
+    }
+
+    private void checkLogin() {
+        if (application.getAccessToken().isGuest()) {
+            User.loginRequired(this);
+            finish();
+        }
     }
 
     @Override

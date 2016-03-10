@@ -3,4 +3,9 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">@android:color/holo_green_light</color>
+    <color name="Lime">#37a02f</color>
+    <color name="LimeGreen">#3ec234</color>
+    <color name="colorLineSeperator">#d7d7d7</color>
+    <color name="colorPageGray">#ececec</color>
+    <color name="colorItemSeperator">#eeeeee</color>
 </resources>

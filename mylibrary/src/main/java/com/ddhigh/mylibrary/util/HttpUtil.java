@@ -1,6 +1,8 @@
 package com.ddhigh.mylibrary.util;
 
 import android.content.Context;
+import android.text.TextUtils;
+
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -53,22 +55,22 @@ public class HttpUtil {
 
     public static void post(Context context, String uri, JSONObject jsonObject, AsyncHttpResponseHandler handler) throws UnsupportedEncodingException {
         encryptRequest();
-        client.post(context, getAbsoluteUrl(uri), new StringEntity(jsonObject.toString(),"utf-8"), "application/json", handler);
+        client.post(context, getAbsoluteUrl(uri), new StringEntity(jsonObject.toString(), "utf-8"), "application/json", handler);
     }
 
     public static void get(Context context, String uri, JSONObject jsonObject, AsyncHttpResponseHandler handler) throws UnsupportedEncodingException {
         encryptRequest();
-        client.get(context, getAbsoluteUrl(uri), new StringEntity(jsonObject.toString(),"utf-8"), "application/json", handler);
+        client.get(context, getAbsoluteUrl(uri), new StringEntity(jsonObject.toString(), "utf-8"), "application/json", handler);
     }
 
     public static void delete(Context context, String uri, JSONObject jsonObject, AsyncHttpResponseHandler handler) throws UnsupportedEncodingException {
         encryptRequest();
-        client.delete(context, getAbsoluteUrl(uri), new StringEntity(jsonObject.toString(),"utf-8"), "application/json", handler);
+        client.delete(context, getAbsoluteUrl(uri), new StringEntity(jsonObject.toString(), "utf-8"), "application/json", handler);
     }
 
     public static void put(Context context, String uri, JSONObject jsonObject, AsyncHttpResponseHandler handler) throws UnsupportedEncodingException {
         encryptRequest();
-        client.put(context, getAbsoluteUrl(uri), new StringEntity(jsonObject.toString(),"utf-8"), "application/json", handler);
+        client.put(context, getAbsoluteUrl(uri), new StringEntity(jsonObject.toString(), "utf-8"), "application/json", handler);
     }
 
     private static String getAbsoluteUrl(String uri) {
@@ -79,6 +81,9 @@ public class HttpUtil {
     }
 
     protected static void encryptRequest() {
+        if (!TextUtils.isEmpty(token)) {
+            client.addHeader("Authorization", token);
+        }
     }
 
 }

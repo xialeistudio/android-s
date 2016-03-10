@@ -1,5 +1,8 @@
 package com.ddhigh.overtime.model;
 
+import org.xutils.db.annotation.Column;
+import org.xutils.db.annotation.Table;
+
 /**
  * 操作日志
  *
@@ -8,11 +11,17 @@ package com.ddhigh.overtime.model;
  * @user xialeistudio
  * @date 2016/3/10 0010
  */
+@Table(name = "ot_optlog")
 public class Optlog extends Model {
+    @Column(name = "log_id", isId = true)
     private int log_id;
+    @Column(name = "msg")
     private String msg;
+    @Column(name = "created_at")
     private int created_at;
+    @Column(name = "created_ip")
     private String created_ip;
+    @Column(name = "user_id")
     private int user_id;
 
     public int getLog_id() {

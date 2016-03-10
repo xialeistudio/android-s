@@ -1,17 +1,40 @@
 package com.ddhigh.overtime.model;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+
+import com.ddhigh.overtime.activity.LoginActivity;
+import com.ddhigh.overtime.activity.MainActivity;
+import com.ddhigh.overtime.constants.Actions;
+import com.ddhigh.overtime.util.HttpUtil;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+
+import org.xutils.db.annotation.Column;
+import org.xutils.db.annotation.Table;
+
 /**
  * @project android-s
  * @package com.ddhigh.overtime.model
  * @user xialeistudio
  * @date 2016/3/10 0010
  */
+@Table(name = "ot_user")
 public class User extends Model {
+    private static final String PREF_USER_ID = "PREF_USER_ID";
+    @Column(name = "user_id", isId = true)
     private int user_id;
+    @Column(name = "avatar")
     private String avatar;
+    @Column(name = "realname")
     private String realname;
+    @Column(name = "phone")
     private String phone;
+    @Column(name = "created_at")
     private int created_at;
+    @Column(name = "total_time")
     private int total_time;
 
     public int getUser_id() {
@@ -60,5 +83,56 @@ public class User extends Model {
 
     public void setTotal_time(int total_time) {
         this.total_time = total_time;
+    }
+
+    /**
+     * 注册
+     *
+     * @param username 帐号
+     * @param password 密码
+     * @param handler  回调
+     */
+    public void register(String username, String password, AsyncHttpResponseHandler handler) {
+        RequestParams params = new RequestParams();
+        params.put("username", username);
+        params.put("password", password);
+        params.put("realname", realname);
+        params.put("phone", phone);
+        HttpUtil.post("/user/register", params, handler);
+    }
+
+    /**
+     * 登录
+     *
+     * @param username 帐号
+     * @param password 密码
+     * @param handler  回调
+     */
+    public void login(String username, String password, AsyncHttpResponseHandler handler) {
+        RequestParams params = new RequestParams();
+        params.put("username", username);
+        params.put("password", password);
+        HttpUtil.post("/user/login", params, handler);
+    }
+
+
+    /**
+     * 从本地读取 userId
+     *
+     * @param applicationContext 应用上下文
+     * @return 用户ID
+     */
+    public static int getUserIdFromLocal(Context applicationContext) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext);
+        return sharedPreferences.getInt(PREF_USER_ID, 0);
+    }
+
+    /**
+     * 用户需要登录
+     * @param context 上下文
+     */
+    public static void loginRequired(Context context){
+        Intent intent = new Intent(context, LoginActivity.class);
+        context.startActivity(intent);
     }
 }

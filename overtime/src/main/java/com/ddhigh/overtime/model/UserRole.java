@@ -1,15 +1,23 @@
 package com.ddhigh.overtime.model;
 
+import org.xutils.db.annotation.Column;
+import org.xutils.db.annotation.Table;
+
 /**
  * @project android-s
  * @package com.ddhigh.overtime.model
  * @user xialeistudio
  * @date 2016/3/10 0010
  */
+@Table(name = "ot_user_role")
 public class UserRole extends Model {
+    @Column(name = "hash", isId = true)
     private String hash;
+    @Column(name = "created_at")
     private int created_at;
+    @Column(name = "user_id")
     private int user_id;
+    @Column(name = "role_id")
     private int role_id;
 
     public String getHash() {

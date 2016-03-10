@@ -1,11 +1,15 @@
 package com.ddhigh.overtime.model;
 
+import org.xutils.db.annotation.Column;
+import org.xutils.db.annotation.Table;
+
 /**
  * @project android-s
  * @package com.ddhigh.overtime.model
  * @user xialeistudio
  * @date 2016/3/10 0010
  */
+@Table(name = "ot_overtime")
 public class Overtime extends Model {
 
     /**
@@ -15,12 +19,19 @@ public class Overtime extends Model {
     public static final byte STATUS_ACCEPT = 1;//已审批
     public static final byte STATUS_REJECT = 2;//已拒绝
 
+    @Column(name = "id", isId = true)
     private int id;
+    @Column(name = "content")
     private String content;
+    @Column(name = "begin_at")
     private String begin_at;
+    @Column(name = "end_at")
     private String end_at;
+    @Column(name = "status")
     private byte status;
+    @Column(name = "created_at")
     private int created_at;
+    @Column(name = "user_id")
     private int user_id;
 
     public int getId() {
