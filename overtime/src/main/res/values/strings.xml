@@ -9,4 +9,7 @@
     <string name="my">我的</string>
     <string name="register">注册</string>
     <string name="share">分享</string>
+    <string name="realname">姓名</string>
+    <string name="phone">电话</string>
+    <string name="user_register_tips">我已使用真实信息注册</string>
 </resources>
