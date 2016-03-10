@@ -65,4 +65,23 @@ public class Model {
         }
         return builder.toString();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        boolean isInstanceOf = o instanceof Model;
+        if (!isInstanceOf) {
+            return false;
+        }
+        boolean isEqual = true;
+        Field[] fields = getClass().getDeclaredFields();
+        for (Field field : fields) {
+            field.setAccessible(true);
+            try {
+                isEqual = field.get(this).equals(field.get(o));
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
+        return isEqual;
+    }
 }
