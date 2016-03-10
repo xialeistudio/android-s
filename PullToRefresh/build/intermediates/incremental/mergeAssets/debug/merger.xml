@@ -1,2 +1,2 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merger version="3"><dataSet config="main"><source path="D:\Android\Project\Study\PullToRefresh\src\main\assets"/></dataSet><dataSet config="debug"><source path="D:\Android\Project\Study\PullToRefresh\src\debug\assets"/></dataSet></merger>
+<merger version="3"><dataSet config="main"><source path="E:\Project\Android\android-s\PullToRefresh\src\main\assets"/></dataSet><dataSet config="debug"><source path="E:\Project\Android\android-s\PullToRefresh\src\debug\assets"/></dataSet></merger>
