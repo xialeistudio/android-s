@@ -41,13 +41,28 @@ public class Model {
      *
      * @return json
      */
-    public JSONObject encode() throws JSONException {
+    public JSONObject encode() throws JSONException, IllegalAccessException {
         JSONObject jsonObject = new JSONObject();
         Field[] fields = getClass().getDeclaredFields();
         for (Field field : fields) {
             field.setAccessible(true);
-            jsonObject.put(field.getName(), field);
+            jsonObject.put(field.getName(), field.get(this));
         }
         return jsonObject;
+    }
+
+    @Override
+    public String toString() {
+        Field[] fields = getClass().getDeclaredFields();
+        StringBuilder builder = new StringBuilder();
+        for (Field field : fields) {
+            field.setAccessible(true);
+            try {
+                builder.append(field.getName()).append(": ").append(field.get(this)).append("\n");
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
+        return builder.toString();
     }
 }
