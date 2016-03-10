@@ -14,6 +14,7 @@
             <option value="$PROJECT_DIR$/earthquake" />
             <option value="$PROJECT_DIR$/joke" />
             <option value="$PROJECT_DIR$/mylibrary" />
+            <option value="$PROJECT_DIR$/overtime" />
           </set>
         </option>
         <option name="myModules">
@@ -24,6 +25,7 @@
             <option value="$PROJECT_DIR$/earthquake" />
             <option value="$PROJECT_DIR$/joke" />
             <option value="$PROJECT_DIR$/mylibrary" />
+            <option value="$PROJECT_DIR$/overtime" />
           </set>
         </option>
       </GradleProjectSettings>
