@@ -1,13 +1,13 @@
 package com.ddhigh.overtime.model;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import com.ddhigh.overtime.activity.LoginActivity;
-import com.ddhigh.overtime.activity.MainActivity;
-import com.ddhigh.overtime.constants.Actions;
+import com.ddhigh.overtime.constants.RequestCode;
 import com.ddhigh.overtime.util.HttpUtil;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -23,8 +23,13 @@ import org.xutils.db.annotation.Table;
  */
 @Table(name = "ot_user")
 public class User extends Model {
-    private static final String PREF_USER_ID = "PREF_USER_ID";
-    @Column(name = "user_id", isId = true)
+    public static final String PREF_USER_ID = "PREF_USER_ID";
+    public static final String PREF_USER = "PREF_USER";
+    public static final String PREF_USERNAME = "PREF_USERNAME";
+    public static final String PREF_PASSWORD = "PREF_PASSWORD";
+    @Column(name = "id", isId = true)
+    private int id;
+    @Column(name = "user_id")
     private int user_id;
     @Column(name = "avatar")
     private String avatar;
@@ -36,6 +41,19 @@ public class User extends Model {
     private int created_at;
     @Column(name = "total_time")
     private int total_time;
+
+    public User() {
+        super();
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
 
     public int getUser_id() {
         return user_id;
@@ -128,11 +146,17 @@ public class User extends Model {
     }
 
     /**
-     * 用户需要登录
-     * @param context 上下文
+     * 登录
+     *
+     * @param activity    回调
+     * @param hasCallback 是否有回调
      */
-    public static void loginRequired(Context context){
-        Intent intent = new Intent(context, LoginActivity.class);
-        context.startActivity(intent);
+    public static void loginRequired(Activity activity, boolean hasCallback) {
+        Intent intent = new Intent(activity, LoginActivity.class);
+        if (hasCallback) {
+            activity.startActivityForResult(intent, RequestCode.LOGIN);
+        } else {
+            activity.startActivity(intent);
+        }
     }
 }

@@ -6,10 +6,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class HttpUtil extends com.ddhigh.mylibrary.util.HttpUtil {
-    static {
-        setApi("https://overtime.ddhigh.com/v1");
-    }
-
     /**
      * 处理错误
      *

@@ -1,11 +1,10 @@
 package com.ddhigh.overtime.model;
 
-import android.content.Context;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -38,6 +37,9 @@ public class Model {
         }
     }
 
+    public Model() {
+    }
+
     /**
      * 编码
      *
@@ -48,7 +50,9 @@ public class Model {
         Field[] fields = getClass().getDeclaredFields();
         for (Field field : fields) {
             field.setAccessible(true);
-            jsonObject.put(field.getName(), field.get(this));
+            //不反射静态常量
+            if (!Modifier.isFinal(field.getModifiers()))
+                jsonObject.put(field.getName(), field.get(this));
         }
         return jsonObject;
     }
@@ -59,10 +63,12 @@ public class Model {
         StringBuilder builder = new StringBuilder();
         for (Field field : fields) {
             field.setAccessible(true);
-            try {
-                builder.append(field.getName()).append(": ").append(field.get(this)).append("\n");
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
+            if (!Modifier.isFinal(field.getModifiers())) {
+                try {
+                    builder.append(field.getName()).append(": ").append(field.get(this)).append("\n");
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
             }
         }
         return builder.toString();

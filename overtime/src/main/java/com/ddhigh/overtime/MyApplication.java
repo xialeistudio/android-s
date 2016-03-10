@@ -2,9 +2,11 @@ package com.ddhigh.overtime;
 
 import android.app.Application;
 import android.os.Environment;
+import android.util.Log;
 
 import com.ddhigh.overtime.model.AccessToken;
 import com.ddhigh.overtime.model.User;
+import com.ddhigh.overtime.util.HttpUtil;
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiskCache;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.cache.memory.impl.UsingFreqLimitedMemoryCache;
@@ -45,6 +47,8 @@ public class MyApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        //初始化HttpUtil
+        HttpUtil.setApi("https://overtime.ddhigh.com/v1");
         //初始化应用存储目录
         initApplicationDirectory();
         //初始化xUtils
@@ -83,7 +87,6 @@ public class MyApplication extends Application {
                 .setDbUpgradeListener(new DbManager.DbUpgradeListener() {
                     @Override
                     public void onUpgrade(DbManager db, int oldVersion, int newVersion) {
-
                     }
                 });
     }

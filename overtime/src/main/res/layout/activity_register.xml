@@ -6,6 +6,14 @@
     android:padding="@dimen/page_padding">
 
     <include layout="@layout/form_login" />
+
+
+    <EditText
+        android:id="@+id/txtConfirmPassword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/confirm_password"
+        android:inputType="textPassword" />
     <EditText
         android:id="@+id/txtRealname"
         android:inputType="textPersonName"

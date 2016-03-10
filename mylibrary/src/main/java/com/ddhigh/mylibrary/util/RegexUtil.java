@@ -17,7 +17,7 @@ public class RegexUtil {
      * @return
      */
     public static boolean isMobile(String str) {
-        Pattern p = Pattern.compile("^((13[0-9])|(15[^4,\\D])|(18[0,5-9]))\\d{8}$");
+        Pattern p = Pattern.compile("^(\\+86)?1[3-9]\\d{9}$");
         Matcher m = p.matcher(str);
         return m.matches();
     }
