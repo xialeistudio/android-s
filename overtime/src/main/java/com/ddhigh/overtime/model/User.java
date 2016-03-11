@@ -21,7 +21,7 @@ import org.xutils.db.annotation.Table;
  * @user xialeistudio
  * @date 2016/3/10 0010
  */
-@Table(name = "ot_user", onCreated = "CREATE UNIQUE INDEX uid ON ot_user(user_id)")
+@Table(name = "ot_user")
 public class User extends Model {
     public static final String PREF_USER_ID = "PREF_USER_ID";
     public static final String PREF_USER = "PREF_USER";
@@ -160,6 +160,5 @@ public class User extends Model {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putInt(PREF_USER_ID, user_id);
         editor.apply();
-        ;
     }
 }

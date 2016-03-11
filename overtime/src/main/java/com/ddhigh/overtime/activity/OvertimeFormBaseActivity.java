@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -12,6 +13,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -58,11 +60,17 @@ public class OvertimeFormBaseActivity extends BaseActivity implements Spinner.On
     Spinner spinnerDirector;
     @ViewInject(R.id.checkRealInfo)
     CheckBox checkRealInfo;
+    @ViewInject(R.id.btnSubmit)
+    Button btnSubmit;
 
-    String created_at;
+    Date beginAt;
+    Date endAt;
+
+    String begin_at;
     String end_at;
     String content;
     int director_id;
+    boolean isRealInfoChecked;
 
     List<String> directors = new ArrayList<>();
     List<User> users = new ArrayList<>();
@@ -100,8 +108,9 @@ public class OvertimeFormBaseActivity extends BaseActivity implements Spinner.On
                         e.printStackTrace();
                     }
                 }
-                if(users.size() == 0){
-                    Toast.makeText(OvertimeFormBaseActivity.this,"暂时没有主管，无法发起申请",Toast.LENGTH_SHORT).show();
+                if (users.size() == 0) {
+                    Toast.makeText(OvertimeFormBaseActivity.this, "暂时没有主管，无法发起申请", Toast.LENGTH_SHORT).show();
+                    btnSubmit.setEnabled(false);
                     return;
                 }
 
@@ -172,6 +181,7 @@ public class OvertimeFormBaseActivity extends BaseActivity implements Spinner.On
                         public void onDateTimeSet(Date date) {
                             String d = DateUtil.format(date, "yyyy-MM-dd HH:mm");
                             txtBeginAt.setText(d);
+                            beginAt = date;
                         }
                     })
                     .setIs24HourTime(true)
@@ -192,6 +202,7 @@ public class OvertimeFormBaseActivity extends BaseActivity implements Spinner.On
                         public void onDateTimeSet(Date date) {
                             String d = DateUtil.format(date, "yyyy-MM-dd HH:mm");
                             txtEndAt.setText(d);
+                            endAt = date;
                         }
                     })
                     .setIs24HourTime(true)
@@ -206,6 +217,38 @@ public class OvertimeFormBaseActivity extends BaseActivity implements Spinner.On
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         User u = users.get(position);
         Log.d("overtime-form", "select director: " + u);
+        director_id = u.getUser_id();
+    }
+
+    /**
+     * 检测表单是否合法
+     */
+    protected boolean isFormValidated() {
+        begin_at = txtBeginAt.getText().toString().trim();
+        end_at = txtEndAt.getText().toString().trim();
+        content = txtContent.getText().toString().trim();
+        isRealInfoChecked = checkRealInfo.isChecked();
+        if (TextUtils.isEmpty(begin_at)) {
+            Toast.makeText(this, String.format(getResources().getString(R.string.cannot_empty), "开始时间"), Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if (TextUtils.isEmpty(end_at)) {
+            Toast.makeText(this, String.format(getResources().getString(R.string.cannot_empty), "结束时间"), Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if (beginAt.getTime() >= endAt.getTime()) {
+            Toast.makeText(this, "开始时间必须小于结束时间", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if (TextUtils.isEmpty(content)) {
+            Toast.makeText(this, String.format(getResources().getString(R.string.cannot_empty), "加班内容"), Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if (!isRealInfoChecked) {
+            Toast.makeText(this, "请确认所填信息真实无误", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
     }
 
     @Override

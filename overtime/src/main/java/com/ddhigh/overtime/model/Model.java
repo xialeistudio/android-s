@@ -33,7 +33,7 @@ public class Model {
             String key = (String) iterator.next();
             if (map.containsKey(key)) {
                 Field field = map.get(key);
-                if (!Modifier.isFinal(field.getModifiers())) {
+                if (!Modifier.isFinal(field.getModifiers()) && !Modifier.isStatic(field.getModifiers())) {
                     field.set(this, jsonObject.get(key));
                 }
             }
@@ -55,7 +55,7 @@ public class Model {
         for (Field field : fields) {
             field.setAccessible(true);
             //不反射静态常量
-            if (!Modifier.isFinal(field.getModifiers()))
+            if (!Modifier.isFinal(field.getModifiers()) && !Modifier.isStatic(field.getModifiers()))
                 jsonObject.put(field.getName(), field.get(this));
         }
         return jsonObject;

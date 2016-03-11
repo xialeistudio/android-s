@@ -156,7 +156,7 @@ public class RegisterActivity extends BaseActivity {
 
             @Override
             public void onFinish() {
-                dialog.hide();
+                dialog.dismiss();
             }
         });
     }

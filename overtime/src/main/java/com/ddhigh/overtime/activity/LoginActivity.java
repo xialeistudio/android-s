@@ -145,7 +145,7 @@ public class LoginActivity extends BaseActivity {
 
             @Override
             public void onFinish() {
-                dialog.hide();
+                dialog.dismiss();
             }
         });
     }

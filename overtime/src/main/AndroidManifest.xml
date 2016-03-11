@@ -37,6 +37,7 @@
         <activity
             android:name=".activity.OvertimeFormBaseActivity"
             android:theme="@android:style/Theme.NoDisplay" />
+        <activity android:name=".activity.OvertimeViewActivity" android:label="@string/overtime_detail"/>
     </application>
 
 </manifest>

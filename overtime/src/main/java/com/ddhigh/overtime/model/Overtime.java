@@ -28,7 +28,7 @@ public class Overtime extends Model {
     @Column(name = "end_at")
     private String end_at;
     @Column(name = "status")
-    private byte status;
+    private int status;
     @Column(name = "created_at")
     private int created_at;
     @Column(name = "user_id")
@@ -66,11 +66,11 @@ public class Overtime extends Model {
         this.end_at = end_at;
     }
 
-    public byte getStatus() {
+    public int getStatus() {
         return status;
     }
 
-    public void setStatus(byte status) {
+    public void setStatus(int status) {
         this.status = status;
     }
 

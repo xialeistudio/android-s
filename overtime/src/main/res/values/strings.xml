@@ -32,4 +32,6 @@
     <string name="help">帮助</string>
     <string name="positive">确定</string>
     <string name="load_directors_fail">加载主管数据失败</string>
+    <string name="applying">申请中</string>
+    <string name="overtime_detail">加班详情</string>
 </resources>

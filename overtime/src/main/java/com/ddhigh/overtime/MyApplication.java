@@ -95,8 +95,14 @@ public class MyApplication extends Application {
         x.Ext.init(this);
         daoConfig = new DbManager.DaoConfig()
                 .setDbName("overtime.db")
-                .setDbVersion(1)
-                .setDbDir(applicationPath);
+                .setDbVersion(3)
+                .setDbDir(applicationPath)
+                .setDbUpgradeListener(new DbManager.DbUpgradeListener() {
+                    @Override
+                    public void onUpgrade(DbManager db, int oldVersion, int newVersion) {
+                        Log.d("db", "upgrade overtime.db from " + oldVersion + " to " + newVersion);
+                    }
+                });
     }
 
     private void initApplicationDirectory() {
