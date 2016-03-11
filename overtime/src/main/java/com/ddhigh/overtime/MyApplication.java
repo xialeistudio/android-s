@@ -71,12 +71,13 @@ public class MyApplication extends Application {
             DbManager db = x.getDb(daoConfig);
             try {
                 accessToken = db.selector(AccessToken.class).where("user_id", "=", userId).findFirst();
-                long expiresIn = accessToken.getCreated_at() + accessToken.getTtl();
-                if (accessToken != null && (expiresIn * 1000 > System.currentTimeMillis())) {
-                    Log.i("user", "load accessToken from local: " + accessToken);
-                } else {
-                    Log.i("user", "token invalidate");
+                if (accessToken == null) {
                     accessToken = new AccessToken();
+                }
+                long expiresIn = accessToken.getCreated_at() + accessToken.getTtl();
+                if (expiresIn * 1000 < System.currentTimeMillis()) {
+                    accessToken = new AccessToken();
+                    Log.w("user", "accessToken invalidate");
                 }
                 user = db.findById(User.class, userId);
                 if (user == null) {
@@ -91,8 +92,8 @@ public class MyApplication extends Application {
     private void initXUtils() {
         x.Ext.init(this);
         daoConfig = new DbManager.DaoConfig()
-                .setDbName("overtime_db")
-                .setDbVersion(5)
+                .setDbName("overtime.db")
+                .setDbVersion(1)
                 .setDbDir(applicationPath);
     }
 

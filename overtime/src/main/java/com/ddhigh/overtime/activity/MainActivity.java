@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
                 !application.getAccessToken().isGuest()) {
             Log.i("main", "ready for init");
             //如果本地没有用户数据
-            if (application.getUser().getUser_id() != 0) {
+            if (application.getUser().getRealname() != null) {
                 Log.i("user", "local user from local: " + application.getUser().toString());
             } else {
                 HttpUtil.get("/user/view", null, new JsonHttpResponseHandler() {
