@@ -1,5 +1,7 @@
 package com.ddhigh.overtime.activity;
 
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
 
@@ -16,6 +18,12 @@ import org.xutils.view.annotation.Event;
  */
 @ContentView(R.layout.activity_overtime_cu)
 public class OvertimeCreateActivity extends OvertimeFormBaseActivity {
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setTitle(getString(R.string.new_apply));
+    }
 
     @Event(R.id.btnSubmit)
     private void onSubmit(View view) {
