@@ -8,21 +8,37 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.ddhigh.overtime.R;
+import com.ddhigh.overtime.exception.AppBaseException;
+import com.ddhigh.overtime.model.Overtime;
 import com.ddhigh.overtime.model.User;
 import com.ddhigh.overtime.util.HttpUtil;
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 
 import org.apache.http.Header;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.xutils.ex.DbException;
 import org.xutils.view.annotation.ContentView;
+import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @ContentView(R.layout.activity_main)
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseActivity implements PullToRefreshBase.OnRefreshListener2 {
+    @ViewInject(R.id.listOvertime)
+    PullToRefreshListView listView;
+    List<Overtime> overtimes;
+    OvertimeAdapter overtimeAdapter;
+    RequestParams requestParams;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +55,19 @@ public class MainActivity extends BaseActivity {
             }
         });
         checkLogin();
+        requestParams = new RequestParams();
         init();
+        overtimes = new ArrayList<>();
+        overtimeAdapter = new OvertimeAdapter(this, overtimes);
+        listView.setAdapter(overtimeAdapter);
+        listView.setOnRefreshListener(this);
+        loadFromLocal();
+
+    }
+
+    //本地加载数据
+    private void loadFromLocal() {
+
     }
 
     private void init() {
@@ -49,11 +77,17 @@ public class MainActivity extends BaseActivity {
             Log.i("main", "ready for init");
             //如果本地没有用户数据
             if (application.getUser().getRealname() != null) {
+                loadOnRefresh();
                 Log.i("user", "local user from local: " + application.getUser().toString());
             } else {
                 HttpUtil.get("/user/view", null, new JsonHttpResponseHandler() {
                     @Override
                     public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                        if (statusCode == 401) {
+                            User.loginRequired(MainActivity.this, false);
+                            finish();
+                            return;
+                        }
                         Log.e("user", "load user from remote fail", throwable);
                     }
 
@@ -67,10 +101,129 @@ public class MainActivity extends BaseActivity {
                         } catch (JSONException | IllegalAccessException | DbException e) {
                             Log.e("user", "save user fail", e);
                         }
+
+                        loadOnRefresh();
                     }
                 });
             }
         }
+    }
+
+    int currentPage = 1;
+    int pageSize = 10;
+
+    /**
+     * 加载最新数据
+     */
+    private void loadOnRefresh() {
+        requestParams.put("id", application.getUser().getUser_id());
+        requestParams.put("page", 1);
+        requestParams.put("size", pageSize);
+        HttpUtil.get("/overtime/list", requestParams, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                if (response.length() > 0)
+                    overtimes.clear();
+                for (int i = 0; i < response.length(); i++) {
+                    try {
+                        JSONObject object = response.getJSONObject(i);
+                        Overtime overtime = new Overtime();
+                        overtime.decode(object);
+                        dbManager.saveOrUpdate(overtime);
+                        overtimes.add(overtime);
+                    } catch (JSONException | IllegalAccessException e) {
+                        Log.e("overtime-list", e.getMessage(), e);
+                        Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                    } catch (DbException e) {
+                        e.printStackTrace();
+                        Log.e("overtime-list", "save to db fail: " + e.getMessage(), e);
+                    }
+                }
+                if (response.length() > 0) {
+                    overtimeAdapter.notifyDataSetChanged();
+                    Log.d("overtime-list", "notifyDataSetChanged");
+                }
+                currentPage = 1;
+                if (response.length() < pageSize) {
+                    listView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
+                } else {
+                    listView.setMode(PullToRefreshBase.Mode.BOTH);
+                }
+            }
+
+
+            @Override
+            public void onFinish() {
+                listView.onRefreshComplete();
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                if (statusCode == 401) {
+                    User.loginRequired(MainActivity.this, false);
+                    finish();
+                    return;
+                }
+                try {
+                    HttpUtil.handleError(errorResponse);
+                } catch (AppBaseException e) {
+                    Log.e("overtime-list", e.getMessage(), e);
+                    Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    private void loadOnLoadMore() {
+        requestParams.put("page", ++currentPage);
+        requestParams.put("size", pageSize);
+        HttpUtil.get("/overtime/list", requestParams, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                for (int i = 0; i < response.length(); i++) {
+                    try {
+                        JSONObject object = response.getJSONObject(i);
+                        Overtime overtime = new Overtime();
+                        overtime.decode(object);
+                        dbManager.saveOrUpdate(overtime);
+                        overtimes.add(overtime);
+                    } catch (JSONException | IllegalAccessException e) {
+                        Log.e("overtime-list", e.getMessage(), e);
+                        Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                    } catch (DbException e) {
+                        e.printStackTrace();
+                        Log.e("overtime-list", "save to db fail: " + e.getMessage(), e);
+                    }
+                }
+                if (response.length() > 0)
+                    overtimeAdapter.notifyDataSetChanged();
+                if (response.length() < pageSize) {
+                    listView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
+                } else {
+                    listView.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
+                }
+            }
+
+            @Override
+            public void onFinish() {
+                listView.onRefreshComplete();
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                if (statusCode == 401) {
+                    User.loginRequired(MainActivity.this, false);
+                    finish();
+                    return;
+                }
+                try {
+                    HttpUtil.handleError(errorResponse);
+                } catch (AppBaseException e) {
+                    Log.e("overtime-list", e.getMessage(), e);
+                    Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     private void checkLogin() {
@@ -100,5 +253,15 @@ public class MainActivity extends BaseActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onPullDownToRefresh(PullToRefreshBase refreshView) {
+        loadOnRefresh();
+    }
+
+    @Override
+    public void onPullUpToRefresh(PullToRefreshBase refreshView) {
+        loadOnLoadMore();
     }
 }

@@ -11,6 +11,7 @@ import com.ddhigh.mylibrary.dialog.LoadingDialog;
 import com.ddhigh.overtime.R;
 import com.ddhigh.overtime.exception.AppBaseException;
 import com.ddhigh.overtime.model.Overtime;
+import com.ddhigh.overtime.model.User;
 import com.ddhigh.overtime.util.HttpUtil;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -69,6 +70,11 @@ public class OvertimeCreateActivity extends OvertimeFormBaseActivity {
 
                 @Override
                 public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                    if (statusCode == 401) {
+                        User.loginRequired(OvertimeCreateActivity.this, false);
+                        finish();
+                        return;
+                    }
                     try {
                         HttpUtil.handleError(errorResponse);
                     } catch (AppBaseException e) {

@@ -122,6 +122,11 @@ public class OvertimeFormBaseActivity extends BaseActivity implements Spinner.On
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                if (statusCode == 401) {
+                    User.loginRequired(OvertimeFormBaseActivity.this, false);
+                    finish();
+                    return;
+                }
                 Log.e("overtime-form", "load directors fail", throwable);
                 Toast.makeText(OvertimeFormBaseActivity.this, R.string.load_directors_fail, Toast.LENGTH_SHORT).show();
             }
