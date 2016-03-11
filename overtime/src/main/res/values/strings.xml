@@ -20,4 +20,15 @@
     <string name="registering">注册中</string>
     <string name="logining">登录中</string>
     <string name="login_failed">登录失败</string>
+    <string name="new_apply">新申请</string>
+    <string name="begin_time">开始时间</string>
+    <string name="end_time">结束时间</string>
+    <string name="send">提交</string>
+    <string name="submit">提交</string>
+    <string name="overtime_content">加班内容</string>
+    <string name="hint_project_name">如项目名称</string>
+    <string name="director">审批人</string>
+    <string name="overtime_form_tips">我确认以上信息真实无误</string>
+    <string name="help">帮助</string>
+    <string name="positive">确定</string>
 </resources>

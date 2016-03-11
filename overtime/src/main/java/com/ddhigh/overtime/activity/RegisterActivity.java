@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
@@ -15,7 +14,6 @@ import android.widget.Toast;
 
 import com.ddhigh.mylibrary.dialog.LoadingDialog;
 import com.ddhigh.mylibrary.util.RegexUtil;
-import com.ddhigh.overtime.MyApplication;
 import com.ddhigh.overtime.R;
 import com.ddhigh.overtime.exception.AppBaseException;
 import com.ddhigh.overtime.model.User;
@@ -26,7 +24,6 @@ import org.apache.http.Header;
 import org.apache.http.conn.HttpHostConnectException;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.xutils.DbManager;
 import org.xutils.ex.DbException;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.Event;
@@ -34,7 +31,7 @@ import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
 @ContentView(R.layout.activity_register)
-public class RegisterActivity extends AppCompatActivity {
+public class RegisterActivity extends BaseActivity {
     @ViewInject(R.id.txtUsername)
     EditText txtUsername;
     @ViewInject(R.id.txtPassword)
@@ -121,7 +118,6 @@ public class RegisterActivity extends AppCompatActivity {
                 try {
                     user.decode(response);
                     //写入数据库
-                    DbManager dbManager = x.getDb(((MyApplication) getApplication()).getDaoConfig());
                     try {
                         dbManager.save(user);
                         Log.i("user", "add to local database: " + user.getUser_id());

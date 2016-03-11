@@ -3,14 +3,12 @@ package com.ddhigh.overtime.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.ddhigh.overtime.MyApplication;
 import com.ddhigh.overtime.R;
 import com.ddhigh.overtime.model.User;
 import com.ddhigh.overtime.util.HttpUtil;
@@ -19,33 +17,29 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import org.apache.http.Header;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.xutils.DbManager;
 import org.xutils.ex.DbException;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.x;
 
 @ContentView(R.layout.activity_main)
-public class MainActivity extends AppCompatActivity {
-    MyApplication application;
-    DbManager db;
+public class MainActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         x.view().inject(this);
-        application = (MyApplication) getApplication();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TODO:弹出新增请求
+                Intent intent = new Intent(MainActivity.this, OvertimeCreateActivity.class);
+                startActivity(intent);
             }
         });
         checkLogin();
         init();
-        db = x.getDb(application.getDaoConfig());
     }
 
     private void init() {
@@ -68,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
                         //同步本地
                         try {
                             application.getUser().decode(response);
-                            db.saveOrUpdate(application.getUser());
+                            dbManager.saveOrUpdate(application.getUser());
                             Log.i("user", "save user success: " + application.getUser().toString());
                         } catch (JSONException | IllegalAccessException | DbException e) {
                             Log.e("user", "save user fail", e);

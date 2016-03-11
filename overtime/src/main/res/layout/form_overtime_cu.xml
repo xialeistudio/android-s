@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/begin_time" />
+
+    <EditText
+        android:id="@+id/timeBeginAt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/begin_time"
+        android:inputType="datetime" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/end_time" />
+
+    <EditText
+        android:id="@+id/timeEndAt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/end_time"
+        android:inputType="datetime" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/overtime_content" />
+
+    <EditText
+        android:id="@+id/txtContent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="left|top"
+        android:hint="@string/hint_project_name"
+        android:inputType="textMultiLine"
+        android:lines="4"
+        android:maxLength="40"
+        android:padding="4dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/director" />
+
+    <Spinner
+        android:padding="4dp"
+        android:id="@+id/spinnerDirector"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:entries="@array/option_holder" />
+
+    <CheckBox
+        android:id="@+id/checkRealInfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:checked="true"
+        android:text="@string/overtime_form_tips" />
+</merge>

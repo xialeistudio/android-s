@@ -33,21 +33,17 @@ import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
 @ContentView(R.layout.activity_login)
-public class LoginActivity extends AppCompatActivity {
-    DbManager dbManager;
+public class LoginActivity extends BaseActivity {
     @ViewInject(R.id.txtUsername)
     EditText txtUsername;
     @ViewInject(R.id.txtPassword)
     EditText txtPassword;
 
-    MyApplication application;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         x.view().inject(this);
-        dbManager = x.getDb(((MyApplication) getApplication()).getDaoConfig());
-        application = (MyApplication) getApplication();
     }
 
     @Override

@@ -28,6 +28,12 @@
         <activity
             android:name=".activity.RegisterActivity"
             android:label="@string/register" />
+        <activity
+            android:name=".activity.OvertimeCreateActivity"
+            android:label="@string/new_apply" />
+        <activity
+            android:name=".activity.BaseActivity"
+            android:theme="@android:style/Theme.NoDisplay" />
     </application>
 
 </manifest>
