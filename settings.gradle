@@ -1,2 +1,2 @@
-include ':earthquake', ':downloadmanager', ':mylibrary', ':joke', ':overtime'
+include ':earthquake', ':downloadmanager', ':mylibrary', ':joke', ':overtime', ':slideDateTimePicker'
 include ':PullToRefresh'

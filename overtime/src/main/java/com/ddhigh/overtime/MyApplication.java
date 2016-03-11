@@ -78,6 +78,8 @@ public class MyApplication extends Application {
                 if (expiresIn * 1000 < System.currentTimeMillis()) {
                     accessToken = new AccessToken();
                     Log.w("user", "accessToken invalidate");
+                } else {
+                    HttpUtil.setToken(accessToken.getToken());
                 }
                 user = db.findById(User.class, userId);
                 if (user == null) {

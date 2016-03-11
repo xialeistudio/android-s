@@ -1,23 +1,44 @@
 package com.ddhigh.overtime.activity;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
+import com.ddhigh.mylibrary.util.DateUtil;
 import com.ddhigh.overtime.R;
+import com.ddhigh.overtime.model.Role;
+import com.ddhigh.overtime.model.User;
+import com.ddhigh.overtime.util.HttpUtil;
+import com.github.jjobes.slidedatetimepicker.SlideDateTimeListener;
+import com.github.jjobes.slidedatetimepicker.SlideDateTimePicker;
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 
+import org.apache.http.Header;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.Event;
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * @project android-s
@@ -26,7 +47,7 @@ import org.xutils.x;
  * @date 2016/3/11 0011
  */
 @ContentView(R.layout.activity_overtime_cu)
-public class OvertimeFormBaseActivity extends BaseActivity {
+public class OvertimeFormBaseActivity extends BaseActivity implements Spinner.OnItemSelectedListener {
     @ViewInject(R.id.txtBeginAt)
     EditText txtBeginAt;
     @ViewInject(R.id.txtEndAt)
@@ -38,6 +59,15 @@ public class OvertimeFormBaseActivity extends BaseActivity {
     @ViewInject(R.id.checkRealInfo)
     CheckBox checkRealInfo;
 
+    String created_at;
+    String end_at;
+    String content;
+    int director_id;
+
+    List<String> directors = new ArrayList<>();
+    List<User> users = new ArrayList<>();
+    ArrayAdapter<String> adapter;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,6 +76,51 @@ public class OvertimeFormBaseActivity extends BaseActivity {
         showActionBar();
         txtBeginAt.setKeyListener(null);
         txtEndAt.setKeyListener(null);
+
+        init(getIntent());
+        //加载主管列表
+        loadDirectors();
+    }
+
+
+    private void loadDirectors() {
+        RequestParams params = new RequestParams();
+        params.put("id", Role.ROLE_DIRECTOR);
+        HttpUtil.get("/role/users", params, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                for (int i = 0; i < response.length(); i++) {
+                    try {
+                        JSONObject jsonObject = response.getJSONObject(i);
+                        User u = new User();
+                        u.decode(jsonObject);
+                        users.add(u);
+                        directors.add(u.getRealname());
+                    } catch (JSONException | IllegalAccessException e) {
+                        e.printStackTrace();
+                    }
+                }
+                if(users.size() == 0){
+                    Toast.makeText(OvertimeFormBaseActivity.this,"暂时没有主管，无法发起申请",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                adapter = new ArrayAdapter<>(OvertimeFormBaseActivity.this, android.R.layout.simple_spinner_item, directors);
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spinnerDirector.setAdapter(adapter);
+                spinnerDirector.setOnItemSelectedListener(OvertimeFormBaseActivity.this);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                Log.e("overtime-form", "load directors fail", throwable);
+                Toast.makeText(OvertimeFormBaseActivity.this, R.string.load_directors_fail, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    //TODO:编辑时显示数据
+    private void init(Intent intent) {
     }
 
 
@@ -84,13 +159,57 @@ public class OvertimeFormBaseActivity extends BaseActivity {
         b.create().show();
     }
 
-    @Event(value = R.id.txtBeginAt, type = View.OnFocusChangeListener.class)
-    private void onBeginAtFocusChanged(View view, boolean hasFocus) {
-        Log.d("overtime-form", "beginAt focus: " + hasFocus);
+    int txtBeginAtFlag = 0;
+    int txtEndAtFlag = 0;
+
+    @Event(value = R.id.txtBeginAt, type = View.OnTouchListener.class)
+    private boolean onBeginAtClicked(View view, MotionEvent event) {
+        txtBeginAtFlag++;
+        if (txtBeginAtFlag == 2) {
+            new SlideDateTimePicker.Builder(getSupportFragmentManager())
+                    .setListener(new SlideDateTimeListener() {
+                        @Override
+                        public void onDateTimeSet(Date date) {
+                            String d = DateUtil.format(date, "yyyy-MM-dd HH:mm");
+                            txtBeginAt.setText(d);
+                        }
+                    })
+                    .setIs24HourTime(true)
+                    .build()
+                    .show();
+            txtBeginAtFlag = 0;
+        }
+        return false;
     }
 
-    @Event(value = R.id.txtEndAt, type = View.OnFocusChangeListener.class)
-    private void onEndAtFocusChanged(View view, boolean hasFocus) {
-        Log.d("overtime-form", "endAt focus: " + hasFocus);
+    @Event(value = R.id.txtEndAt, type = View.OnTouchListener.class)
+    private boolean onEndAtClicked(View view, MotionEvent event) {
+        txtEndAtFlag++;
+        if (txtEndAtFlag == 2) {
+            new SlideDateTimePicker.Builder(getSupportFragmentManager())
+                    .setListener(new SlideDateTimeListener() {
+                        @Override
+                        public void onDateTimeSet(Date date) {
+                            String d = DateUtil.format(date, "yyyy-MM-dd HH:mm");
+                            txtEndAt.setText(d);
+                        }
+                    })
+                    .setIs24HourTime(true)
+                    .build()
+                    .show();
+            txtEndAtFlag = 0;
+        }
+        return false;
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        User u = users.get(position);
+        Log.d("overtime-form", "select director: " + u);
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
     }
 }

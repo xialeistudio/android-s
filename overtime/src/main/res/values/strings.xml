@@ -31,4 +31,5 @@
     <string name="overtime_form_tips">我确认以上信息真实无误</string>
     <string name="help">帮助</string>
     <string name="positive">确定</string>
+    <string name="load_directors_fail">加载主管数据失败</string>
 </resources>

@@ -19,7 +19,7 @@ public class Overtime extends Model {
     public static final byte STATUS_ACCEPT = 1;//已审批
     public static final byte STATUS_REJECT = 2;//已拒绝
 
-    @Column(name = "id", isId = true)
+    @Column(name = "id", isId = true, autoGen = false)
     private int id;
     @Column(name = "content")
     private String content;
