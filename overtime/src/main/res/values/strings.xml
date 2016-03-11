@@ -17,4 +17,7 @@
     <string name="confirm_password_incorrect">确认密码不一致</string>
     <string name="format_error"><xliff:g id="x">%s</xliff:g>格式错误</string>
     <string name="connection_server_failed">连接服务器失败</string>
+    <string name="registering">注册中</string>
+    <string name="logining">登录中</string>
+    <string name="login_failed">登录失败</string>
 </resources>

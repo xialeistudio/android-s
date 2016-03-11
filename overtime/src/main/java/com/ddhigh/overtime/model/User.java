@@ -21,15 +21,13 @@ import org.xutils.db.annotation.Table;
  * @user xialeistudio
  * @date 2016/3/10 0010
  */
-@Table(name = "ot_user")
+@Table(name = "ot_user", onCreated = "CREATE UNIQUE INDEX uid ON ot_user(user_id)")
 public class User extends Model {
     public static final String PREF_USER_ID = "PREF_USER_ID";
     public static final String PREF_USER = "PREF_USER";
     public static final String PREF_USERNAME = "PREF_USERNAME";
     public static final String PREF_PASSWORD = "PREF_PASSWORD";
-    @Column(name = "id", isId = true)
-    private int id;
-    @Column(name = "user_id")
+    @Column(name = "user_id", isId = true, autoGen = false)
     private int user_id;
     @Column(name = "avatar")
     private String avatar;
@@ -44,14 +42,6 @@ public class User extends Model {
 
     public User() {
         super();
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
 
@@ -158,5 +148,18 @@ public class User extends Model {
         } else {
             activity.startActivity(intent);
         }
+    }
+
+    /**
+     * 写入本地UserId
+     *
+     * @param applicationContext 应用上下文
+     */
+    public void saveUserId(Context applicationContext) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt(PREF_USER_ID, user_id);
+        editor.apply();
+        ;
     }
 }

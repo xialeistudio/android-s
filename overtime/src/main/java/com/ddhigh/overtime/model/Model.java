@@ -32,8 +32,12 @@ public class Model {
         while (iterator.hasNext()) {
             String key = (String) iterator.next();
             if (map.containsKey(key)) {
-                map.get(key).set(this, jsonObject.get(key));
+                Field field = map.get(key);
+                if (!Modifier.isFinal(field.getModifiers())) {
+                    field.set(this, jsonObject.get(key));
+                }
             }
+
         }
     }
 
@@ -65,12 +69,13 @@ public class Model {
             field.setAccessible(true);
             if (!Modifier.isFinal(field.getModifiers())) {
                 try {
-                    builder.append(field.getName()).append(": ").append(field.get(this)).append("\n");
+                    builder.append(field.getName()).append(": ").append(field.get(this)).append(",");
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();
                 }
             }
         }
+        builder.deleteCharAt(builder.length() - 1);
         return builder.toString();
     }
 

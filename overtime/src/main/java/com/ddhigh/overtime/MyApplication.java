@@ -71,7 +71,17 @@ public class MyApplication extends Application {
             DbManager db = x.getDb(daoConfig);
             try {
                 accessToken = db.selector(AccessToken.class).where("user_id", "=", userId).findFirst();
+                long expiresIn = accessToken.getCreated_at() + accessToken.getTtl();
+                if (accessToken != null && (expiresIn * 1000 > System.currentTimeMillis())) {
+                    Log.i("user", "load accessToken from local: " + accessToken);
+                } else {
+                    Log.i("user", "token invalidate");
+                    accessToken = new AccessToken();
+                }
                 user = db.findById(User.class, userId);
+                if (user == null) {
+                    user = new User();
+                }
             } catch (DbException e) {
                 e.printStackTrace();
             }
@@ -82,13 +92,8 @@ public class MyApplication extends Application {
         x.Ext.init(this);
         daoConfig = new DbManager.DaoConfig()
                 .setDbName("overtime_db")
-                .setDbVersion(1)
-                .setDbDir(applicationPath)
-                .setDbUpgradeListener(new DbManager.DbUpgradeListener() {
-                    @Override
-                    public void onUpgrade(DbManager db, int oldVersion, int newVersion) {
-                    }
-                });
+                .setDbVersion(5)
+                .setDbDir(applicationPath);
     }
 
     private void initApplicationDirectory() {

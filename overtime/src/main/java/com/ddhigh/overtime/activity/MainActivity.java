@@ -5,21 +5,29 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
 import com.ddhigh.overtime.MyApplication;
 import com.ddhigh.overtime.R;
-import com.ddhigh.overtime.constants.RequestCode;
 import com.ddhigh.overtime.model.User;
+import com.ddhigh.overtime.util.HttpUtil;
+import com.loopj.android.http.JsonHttpResponseHandler;
 
+import org.apache.http.Header;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.xutils.DbManager;
+import org.xutils.ex.DbException;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.x;
 
 @ContentView(R.layout.activity_main)
 public class MainActivity extends AppCompatActivity {
     MyApplication application;
+    DbManager db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +44,39 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         checkLogin();
+        init();
+        db = x.getDb(application.getDaoConfig());
+    }
+
+    private void init() {
+        Intent intent = getIntent();
+        if ((intent.hasExtra("isLogin") && intent.getBooleanExtra("isLogin", true)) ||
+                !application.getAccessToken().isGuest()) {
+            Log.i("main", "ready for init");
+            //如果本地没有用户数据
+            if (application.getUser().getUser_id() != 0) {
+                Log.i("user", "local user from local: " + application.getUser().toString());
+            } else {
+                HttpUtil.get("/user/view", null, new JsonHttpResponseHandler() {
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                        Log.e("user", "load user from remote fail", throwable);
+                    }
+
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                        //同步本地
+                        try {
+                            application.getUser().decode(response);
+                            db.saveOrUpdate(application.getUser());
+                            Log.i("user", "save user success: " + application.getUser().toString());
+                        } catch (JSONException | IllegalAccessException | DbException e) {
+                            Log.e("user", "save user fail", e);
+                        }
+                    }
+                });
+            }
+        }
     }
 
     private void checkLogin() {

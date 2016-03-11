@@ -109,19 +109,17 @@ public class RegisterActivity extends AppCompatActivity {
             return;
         }
 
-        //TOOD:注册
         final LoadingDialog dialog = new LoadingDialog(this);
         dialog.setCancelable(false);
+        dialog.setMessage(getString(R.string.registering));
         final User user = new User();
         user.setRealname(realname);
         user.setPhone(phone);
         user.register(username, password, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                super.onSuccess(statusCode, headers, response);
                 try {
                     user.decode(response);
-                    Log.i("user", "register: " + user.encode().toString());
                     //写入数据库
                     DbManager dbManager = x.getDb(((MyApplication) getApplication()).getDaoConfig());
                     try {
@@ -131,7 +129,6 @@ public class RegisterActivity extends AppCompatActivity {
                         Log.e("user", "add to local database error", e);
                     }
                     Intent data = new Intent();
-                    data.putExtra(User.PREF_USER_ID, user.getUser_id());
                     data.putExtra(User.PREF_USERNAME, username);
                     data.putExtra(User.PREF_PASSWORD, password);
                     setResult(RESULT_OK, data);
@@ -144,7 +141,6 @@ public class RegisterActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                super.onFailure(statusCode, headers, throwable, errorResponse);
                 if (throwable instanceof HttpHostConnectException) {
                     Toast.makeText(RegisterActivity.this, R.string.connection_server_failed, Toast.LENGTH_SHORT).show();
                     return;
