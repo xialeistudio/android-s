@@ -10,10 +10,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.baidu.android.pushservice.PushConstants;
+import com.baidu.android.pushservice.PushManager;
+import com.baidu.android.pushservice.PushSettings;
 import com.ddhigh.overtime.R;
 import com.ddhigh.overtime.exception.AppBaseException;
 import com.ddhigh.overtime.model.Overtime;
 import com.ddhigh.overtime.model.User;
+import com.ddhigh.overtime.receiver.BaiduPushReceiver;
 import com.ddhigh.overtime.util.HttpUtil;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
@@ -82,6 +86,7 @@ public class MainActivity extends BaseActivity implements PullToRefreshBase.OnRe
         Intent intent = getIntent();
         if ((intent.hasExtra("isLogin") && intent.getBooleanExtra("isLogin", true)) ||
                 !application.getAccessToken().isGuest()) {
+            initPush();
             //如果本地没有用户数据
             if (application.getUser().getRealname() == null) {
                 HttpUtil.get("/user/view", null, new JsonHttpResponseHandler() {
@@ -109,6 +114,13 @@ public class MainActivity extends BaseActivity implements PullToRefreshBase.OnRe
                 });
             }
         }
+    }
+
+    private void initPush() {
+        User.saveUserIdToLocal(getApplicationContext(),application.getAccessToken().getUser_id());
+        PushSettings.enableDebugMode(getApplicationContext(), true);
+        PushManager.startWork(getApplicationContext(), PushConstants.LOGIN_TYPE_API_KEY, "oM9rdLXOtHlzNxLUnqHwqAqS");
+        Log.d(BaiduPushReceiver.TAG, "start work");
     }
 
     int currentPage = 1;

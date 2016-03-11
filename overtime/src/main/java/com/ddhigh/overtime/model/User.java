@@ -161,4 +161,17 @@ public class User extends Model {
         editor.putInt(PREF_USER_ID, user_id);
         editor.apply();
     }
+
+    /**
+     * 保存用户ID到本地
+     *
+     * @param applicationContext 应用上下文
+     * @param userId             用户ID
+     */
+    public static void saveUserIdToLocal(Context applicationContext, int userId) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt(PREF_USER_ID, userId);
+        editor.apply();
+    }
 }

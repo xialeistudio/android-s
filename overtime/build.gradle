@@ -28,4 +28,5 @@ dependencies {
     compile 'com.android.support:design:22.2.0'
     testCompile 'junit:junit:4.12'
     compile project(':slideDateTimePicker')
+    compile files('libs/pushservice-4.6.2.38.jar')
 }
