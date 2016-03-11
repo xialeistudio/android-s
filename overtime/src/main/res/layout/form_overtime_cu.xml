@@ -7,11 +7,10 @@
         android:text="@string/begin_time" />
 
     <EditText
-        android:id="@+id/timeBeginAt"
+        android:id="@+id/txtBeginAt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/begin_time"
-        android:inputType="datetime" />
+        android:hint="@string/begin_time" />
 
     <TextView
         android:layout_width="match_parent"
@@ -19,11 +18,10 @@
         android:text="@string/end_time" />
 
     <EditText
-        android:id="@+id/timeEndAt"
+        android:id="@+id/txtEndAt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/end_time"
-        android:inputType="datetime" />
+        android:hint="@string/end_time" />
 
     <TextView
         android:layout_width="match_parent"
@@ -47,11 +45,11 @@
         android:text="@string/director" />
 
     <Spinner
-        android:padding="4dp"
         android:id="@+id/spinnerDirector"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:entries="@array/option_holder" />
+        android:entries="@array/option_holder"
+        android:padding="4dp" />
 
     <CheckBox
         android:id="@+id/checkRealInfo"
@@ -59,4 +57,13 @@
         android:layout_height="wrap_content"
         android:checked="true"
         android:text="@string/overtime_form_tips" />
+
+    <Button
+        android:id="@+id/btnSubmit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/btn_edittext_marginTop"
+        android:background="@drawable/btn_corner_green"
+        android:text="@string/submit"
+        android:textColor="@android:color/white" />
 </merge>

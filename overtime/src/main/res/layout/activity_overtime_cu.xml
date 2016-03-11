@@ -8,18 +8,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         android:padding="@dimen/page_padding">
 
         <include layout="@layout/form_overtime_cu" />
-
-        <Button
-            android:id="@+id/btnCreate"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/btn_edittext_marginTop"
-            android:background="@drawable/btn_corner_green"
-            android:text="@string/submit"
-            android:textColor="@android:color/white" />
     </LinearLayout>
 
 </ScrollView>

@@ -34,6 +34,9 @@
         <activity
             android:name=".activity.BaseActivity"
             android:theme="@android:style/Theme.NoDisplay" />
+        <activity
+            android:name=".activity.OvertimeFormBaseActivity"
+            android:theme="@android:style/Theme.NoDisplay" />
     </application>
 
 </manifest>
