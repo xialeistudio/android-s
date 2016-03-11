@@ -58,28 +58,32 @@ public class MainActivity extends BaseActivity implements PullToRefreshBase.OnRe
         requestParams = new RequestParams();
         init();
         overtimes = new ArrayList<>();
+        listView.setOnRefreshListener(this);
         overtimeAdapter = new OvertimeAdapter(this, overtimes);
         listView.setAdapter(overtimeAdapter);
-        listView.setOnRefreshListener(this);
         loadFromLocal();
-
     }
 
     //本地加载数据
     private void loadFromLocal() {
-
+        try {
+            List<Overtime> newData = dbManager.selector(Overtime.class).orderBy("id", true).limit(pageSize).findAll();
+            overtimes.addAll(newData);
+            if (overtimes.size() >= pageSize) {
+                listView.setMode(PullToRefreshBase.Mode.BOTH);
+            }
+            overtimeAdapter.notifyDataSetChanged();
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
     }
 
     private void init() {
         Intent intent = getIntent();
         if ((intent.hasExtra("isLogin") && intent.getBooleanExtra("isLogin", true)) ||
                 !application.getAccessToken().isGuest()) {
-            Log.i("main", "ready for init");
             //如果本地没有用户数据
-            if (application.getUser().getRealname() != null) {
-                loadOnRefresh();
-                Log.i("user", "local user from local: " + application.getUser().toString());
-            } else {
+            if (application.getUser().getRealname() == null) {
                 HttpUtil.get("/user/view", null, new JsonHttpResponseHandler() {
                     @Override
                     public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
@@ -101,8 +105,6 @@ public class MainActivity extends BaseActivity implements PullToRefreshBase.OnRe
                         } catch (JSONException | IllegalAccessException | DbException e) {
                             Log.e("user", "save user fail", e);
                         }
-
-                        loadOnRefresh();
                     }
                 });
             }

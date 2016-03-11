@@ -59,12 +59,15 @@ public class OvertimeCreateActivity extends OvertimeFormBaseActivity {
                     Overtime overtime = new Overtime();
                     try {
                         overtime.decode(response);
+                        dbManager.save(overtime);
                         Intent intent = new Intent(OvertimeCreateActivity.this, OvertimeViewActivity.class);
                         intent.putExtra("id", overtime.getId());
                         startActivity(intent);
                         finish();
                     } catch (JSONException | IllegalAccessException e) {
                         onFailure(statusCode, headers, e, response);
+                    } catch (DbException e) {
+                        e.printStackTrace();
                     }
                 }
 

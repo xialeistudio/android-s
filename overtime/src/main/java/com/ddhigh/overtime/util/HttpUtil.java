@@ -16,6 +16,9 @@ public class HttpUtil extends com.ddhigh.mylibrary.util.HttpUtil {
         try {
             int errcode = 0;
             String errmsg = "";
+            if (response == null) {
+                throw new AppBaseException("无网络连接", AppBaseException.COMMON_ERROR_NO_NETWORK);
+            }
             if (response.has("errcode")) {
                 errcode = response.getInt("errcode");
             }
