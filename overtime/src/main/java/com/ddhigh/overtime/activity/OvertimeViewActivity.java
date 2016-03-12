@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -197,11 +198,20 @@ public class OvertimeViewActivity extends BaseActivity implements PullToRefreshB
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                finish();
+                goHome();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void goHome() {
+        Intent intent = getIntent();
+        if (intent.hasExtra("isPush")) {
+            Intent i = new Intent(this, MainActivity.class);
+            startActivity(i);
+        }
+        finish();
     }
 
     @Event(R.id.imageCall)
@@ -256,5 +266,14 @@ public class OvertimeViewActivity extends BaseActivity implements PullToRefreshB
     @Override
     public void onPullUpToRefresh(PullToRefreshBase refreshView) {
 
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            goHome();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }

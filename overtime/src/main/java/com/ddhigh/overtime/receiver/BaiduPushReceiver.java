@@ -108,9 +108,11 @@ public class BaiduPushReceiver extends PushMessageReceiver {
                 i.setClass(context, OvertimeAuditActivity.class);
                 int id = jsonObject.getInt("overtime_id");
                 i.putExtra("id", id);
+                i.putExtra("isPush", true);
                 break;
             default:
                 i.setClass(context, MainActivity.class);
+                i.putExtra("isPush", true);
                 break;
         }
         context.startActivity(i);

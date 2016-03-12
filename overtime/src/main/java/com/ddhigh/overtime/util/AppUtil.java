@@ -1,6 +1,12 @@
 package com.ddhigh.overtime.util;
 
+import android.app.Activity;
+import android.app.ActivityManager;
+import android.content.Context;
+
 import com.ddhigh.overtime.R;
+
+import java.util.List;
 
 /**
  * @project android-s
