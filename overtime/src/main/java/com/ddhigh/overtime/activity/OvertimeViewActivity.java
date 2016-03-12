@@ -214,7 +214,6 @@ public class OvertimeViewActivity extends BaseActivity implements PullToRefreshB
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 try {
-                    scrollView.onRefreshComplete();
                     overtime.decode(response);
                     dbManager.saveOrUpdate(overtime);
                     Log.d("overtime-view", "decode overtime: " + overtime);
@@ -258,6 +257,11 @@ public class OvertimeViewActivity extends BaseActivity implements PullToRefreshB
                     Log.e("overtime-audit", e.getMessage(), throwable);
                     Toast.makeText(OvertimeViewActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
+            }
+
+            @Override
+            public void onFinish() {
+                scrollView.onRefreshComplete();
             }
         });
     }

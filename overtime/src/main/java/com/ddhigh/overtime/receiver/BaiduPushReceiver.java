@@ -42,7 +42,7 @@ public class BaiduPushReceiver extends PushMessageReceiver {
 
                 @Override
                 public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                    Log.e(TAG, errorResponse.toString(), throwable);
+                    Log.e(TAG, "set push fail", throwable);
                 }
             });
         }
