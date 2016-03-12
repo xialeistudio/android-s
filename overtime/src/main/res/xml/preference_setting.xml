@@ -24,9 +24,7 @@
             android:key="setting_check_update"
             android:summary="立即检查更新"
             android:title="检查更新">
-            <intent
-                android:targetClass="com.ddhigh.overtime.activity.CheckUpdateActivity"
-                android:targetPackage="com.ddhigh.overtime" />
+            <intent android:action="com.ddhigh.overtime.action.CHECK_UPDATE" />
         </Preference>
     </PreferenceCategory>
 </PreferenceScreen>

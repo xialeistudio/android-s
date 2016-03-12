@@ -61,7 +61,12 @@
             android:label="@string/setting" />
         <activity
             android:name=".activity.CheckUpdateActivity"
-            android:label="@string/check_update" />
+            android:label="@string/check_update">
+            <intent-filter>
+                <action android:name="com.ddhigh.overtime.action.CHECK_UPDATE" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
         <!-- 4.6.0版本增加一个可选的Activity声明 -->
         <activity
             android:name="com.baidu.android.pushservice.PushKeepAlive"
