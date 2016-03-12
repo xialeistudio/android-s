@@ -128,6 +128,7 @@ public class OvertimeViewActivity extends BaseActivity implements PullToRefreshB
                 addDepartment(department.getName());
             }
         }
+        invalidateOptionsMenu();
     }
 
     /**
@@ -275,6 +276,7 @@ public class OvertimeViewActivity extends BaseActivity implements PullToRefreshB
         Intent intent = getIntent();
         if (intent.hasExtra("isPush")) {
             Intent i = new Intent(this, MainActivity.class);
+            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(i);
         }
         finish();
