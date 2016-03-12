@@ -32,7 +32,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class MyApplication extends Application {
-    private List<Activity> activities = new LinkedList<>();
+    private final List<Activity> activities = new LinkedList<>();
     private File applicationPath;
     private DbManager.DaoConfig daoConfig;
     private AccessToken accessToken;

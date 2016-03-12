@@ -15,7 +15,7 @@ public class HttpUtil extends com.ddhigh.mylibrary.util.HttpUtil {
     public static void handleError(JSONObject response) throws AppBaseException {
         try {
             int errcode = 0;
-            String errmsg = "";
+            String errmsg;
             if (response == null) {
                 throw new AppBaseException("无网络连接", AppBaseException.COMMON_ERROR_NO_NETWORK);
             }

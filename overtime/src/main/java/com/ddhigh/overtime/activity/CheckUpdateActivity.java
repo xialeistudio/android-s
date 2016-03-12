@@ -30,18 +30,21 @@ import java.util.TimerTask;
 
 @ContentView(R.layout.activity_check_update)
 public class CheckUpdateActivity extends BaseActivity {
-    public static String ACTION = "com.ddhigh.overtime.action.CHECK_UPDATE";
+    public static final String ACTION = "com.ddhigh.overtime.action.CHECK_UPDATE";
 
     @ViewInject(R.id.progressBar)
+    private
     CircleProgressBar circleProgressBar;
     @ViewInject(R.id.txtCurrentVersion)
+    private
     TextView txtCurrentVersion;
     @ViewInject(R.id.txtUpdateLog)
+    private
     TextView txtUpdateLog;
 
-    int currentVersionCode;
+    private int currentVersionCode;
 
-    boolean isActive = false;
+    private boolean isActive = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

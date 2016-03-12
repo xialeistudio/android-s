@@ -20,7 +20,7 @@ public class AppUtil extends com.ddhigh.mylibrary.util.AppUtil {
      * @return 颜色值
      */
     public static Drawable getStatusBackground(Context context, int status) {
-        int resId = 0;
+        int resId;
         switch (status) {
             case 0:
                 resId = R.drawable.label_warning;

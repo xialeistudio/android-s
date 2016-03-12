@@ -3,10 +3,8 @@ package com.ddhigh.overtime.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.ActionBar;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -33,16 +31,22 @@ import org.xutils.x;
 @ContentView(R.layout.activity_register)
 public class RegisterActivity extends BaseActivity {
     @ViewInject(R.id.txtUsername)
+    private
     EditText txtUsername;
     @ViewInject(R.id.txtPassword)
+    private
     EditText txtPassword;
     @ViewInject(R.id.txtConfirmPassword)
+    private
     EditText txtConfirmPassword;
     @ViewInject(R.id.txtRealname)
+    private
     EditText txtRealname;
     @ViewInject(R.id.txtPhone)
+    private
     EditText txtPhone;
     @ViewInject(R.id.checkRealInfo)
+    private
     CheckBox checkRealInfo;
 
     @Override

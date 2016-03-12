@@ -16,8 +16,8 @@ import java.util.Date;
 import java.util.List;
 
 public class OvertimeAdapter extends BaseAdapter {
-    private Context mContext;
-    private List<Overtime> overtimes;
+    private final Context mContext;
+    private final List<Overtime> overtimes;
 
     public OvertimeAdapter(Context mContext, List<Overtime> overtimes) {
         this.mContext = mContext;
@@ -43,7 +43,7 @@ public class OvertimeAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder viewHolder;
         if (convertView == null) {
-            convertView = LayoutInflater.from(mContext).inflate(R.layout.list_item_overtime, null);
+            convertView = LayoutInflater.from(mContext).inflate(R.layout.list_item_overtime, parent, false);
             viewHolder = new ViewHolder();
             viewHolder.txtStatus = (TextView) convertView.findViewById(R.id.txtStatus);
             viewHolder.txtContent = (TextView) convertView.findViewById(R.id.txtContent);
@@ -57,7 +57,7 @@ public class OvertimeAdapter extends BaseAdapter {
         String d = DateUtil.format(dd, "MM-dd HH:mm");
         viewHolder.txtCreatedAt.setText(d);
         viewHolder.txtStatus.setText(AppUtil.getStatusText(overtime.getStatus()));
-        viewHolder.txtStatus.setBackground(AppUtil.getStatusBackground(mContext,overtime.getStatus()));
+        viewHolder.txtStatus.setBackgroundDrawable(AppUtil.getStatusBackground(mContext, overtime.getStatus()));
         viewHolder.txtContent.setText(overtime.getContent());
         return convertView;
     }

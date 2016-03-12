@@ -4,16 +4,11 @@ import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
-import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
-import com.baidu.android.pushservice.PushManager;
 import com.ddhigh.overtime.MyApplication;
 import com.ddhigh.overtime.R;
-import com.ddhigh.overtime.constants.Config;
 import com.ddhigh.overtime.constants.PreferenceKey;
-import com.ddhigh.overtime.receiver.BaiduPushReceiver;
 
 public class SettingActivity extends BaseActivity {
     @Override

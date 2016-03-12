@@ -31,6 +31,7 @@ public class BitmapUtil {
      * @return
      */
     public static String thumbQiniu(String url, String q) {
+
         return url == null ? null : (url + "?imageView2" + q);
     }
 }

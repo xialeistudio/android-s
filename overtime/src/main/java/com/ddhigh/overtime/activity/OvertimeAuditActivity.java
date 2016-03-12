@@ -1,7 +1,6 @@
 package com.ddhigh.overtime.activity;
 
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
@@ -13,7 +12,6 @@ import android.widget.Toast;
 
 import com.ddhigh.mylibrary.dialog.LoadingDialog;
 import com.ddhigh.overtime.R;
-import com.ddhigh.overtime.constants.RequestCode;
 import com.ddhigh.overtime.exception.AppBaseException;
 import com.ddhigh.overtime.model.User;
 import com.ddhigh.overtime.util.HttpUtil;
@@ -35,7 +33,7 @@ public class OvertimeAuditActivity extends OvertimeViewActivity {
     }
 
     @Override
-    protected void onOvertimeLoaded() {
+    void onOvertimeLoaded() {
         super.onOvertimeLoaded();
         if (overtime.getStatus() == 0) {
             btnAccept.setVisibility(View.VISIBLE);

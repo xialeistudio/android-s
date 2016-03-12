@@ -1,10 +1,7 @@
 package com.ddhigh.overtime.activity;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -15,17 +12,11 @@ import android.widget.AdapterView;
 import android.widget.Toast;
 
 import com.baidu.android.pushservice.PushConstants;
-import com.baidu.android.pushservice.PushKeepAlive;
-import com.baidu.android.pushservice.PushLightapp;
 import com.baidu.android.pushservice.PushManager;
-import com.baidu.android.pushservice.PushMessageReceiver;
 import com.baidu.android.pushservice.PushSettings;
-import com.baidu.android.pushservice.jni.PushSocket;
 import com.ddhigh.overtime.MyApplication;
 import com.ddhigh.overtime.R;
 import com.ddhigh.overtime.adapter.OvertimeAdapter;
-import com.ddhigh.overtime.constants.Config;
-import com.ddhigh.overtime.constants.PreferenceKey;
 import com.ddhigh.overtime.exception.AppBaseException;
 import com.ddhigh.overtime.model.Overtime;
 import com.ddhigh.overtime.model.User;
@@ -52,12 +43,13 @@ import java.util.List;
 @ContentView(R.layout.activity_main)
 public class MainActivity extends BaseActivity implements PullToRefreshBase.OnRefreshListener2, AdapterView.OnItemClickListener {
     @ViewInject(R.id.listOvertime)
+    private
     PullToRefreshListView listView;
-    List<Overtime> overtimes;
-    OvertimeAdapter overtimeAdapter;
-    RequestParams requestParams;
+    private List<Overtime> overtimes;
+    private OvertimeAdapter overtimeAdapter;
+    private RequestParams requestParams;
 
-    UserRole userRole;
+    private UserRole userRole;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -165,8 +157,8 @@ public class MainActivity extends BaseActivity implements PullToRefreshBase.OnRe
 
     }
 
-    int currentPage = 1;
-    int pageSize = 30;
+    private int currentPage = 1;
+    private final int pageSize = 30;
 
     /**
      * 加载最新数据

@@ -52,14 +52,19 @@ import java.util.List;
 public class OvertimeViewActivity extends BaseActivity implements PullToRefreshBase.OnRefreshListener2 {
 
     @ViewInject(R.id.scrollOvertimeView)
+    private
     PullToRefreshScrollView scrollView;
     @ViewInject(R.id.imageAvatar)
+    private
     ImageView imageAvatar;
     @ViewInject(R.id.txtRealname)
+    private
     TextView txtRealname;
     @ViewInject(R.id.txtPhone)
+    private
     TextView txtPhone;
     @ViewInject(R.id.layoutDepartments)
+    private
     LinearLayout layoutDepartments;
 
     @ViewInject(R.id.imageCall)
@@ -68,14 +73,19 @@ public class OvertimeViewActivity extends BaseActivity implements PullToRefreshB
     ImageView imageSms;
 
     @ViewInject(R.id.txtBeginAt)
+    private
     TextView txtBeginAt;
     @ViewInject(R.id.txtEndAt)
+    private
     TextView txtEndAt;
     @ViewInject(R.id.txtStatus)
+    private
     TextView txtStatus;
     @ViewInject(R.id.txtContent)
+    private
     TextView txtContent;
     @ViewInject(R.id.txtCreatedAt)
+    private
     TextView txtCreatedAt;
 
     @ViewInject(R.id.btnAccept)
@@ -84,8 +94,8 @@ public class OvertimeViewActivity extends BaseActivity implements PullToRefreshB
     Button btnReject;
 
     Overtime overtime = new Overtime();
-    User user = new User();
-    List<Department> departments = new ArrayList<>();
+    private User user = new User();
+    private final List<Department> departments = new ArrayList<>();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -107,12 +117,12 @@ public class OvertimeViewActivity extends BaseActivity implements PullToRefreshB
     /**
      * 加载结果回调
      */
-    protected void onOvertimeLoaded() {
+    void onOvertimeLoaded() {
         if (overtime != null) {
             txtBeginAt.setText(overtime.getBegin_at());
             txtEndAt.setText(overtime.getEnd_at());
             txtStatus.setText(AppUtil.getStatusText(overtime.getStatus()));
-            txtStatus.setBackground(AppUtil.getStatusBackground(this, overtime.getStatus()));
+            txtStatus.setBackgroundDrawable(AppUtil.getStatusBackground(this, overtime.getStatus()));
             txtContent.setText(overtime.getContent());
             txtCreatedAt.setText(DateUtil.format(new Date((long) overtime.getCreated_at() * 1000), "yyyy-MM-dd HH:mm"));
         }
@@ -149,14 +159,14 @@ public class OvertimeViewActivity extends BaseActivity implements PullToRefreshB
         lp.setMargins(0, 0, m, 0);
         t.setLayoutParams(lp);
         t.setTextAppearance(this, R.style.LabelSmall);
-        t.setBackground(getResources().getDrawable(R.drawable.label_success));
+        t.setBackgroundDrawable(getResources().getDrawable(R.drawable.label_success));
         layoutDepartments.addView(t);
     }
 
     /**
      * 加载详情
      */
-    protected void loadOverTime() {
+    private void loadOverTime() {
         Intent intent = getIntent();
         int id = intent.getIntExtra("id", 0);
         if (id == 0) {

@@ -24,12 +24,15 @@ import org.xutils.x;
 @ContentView(R.layout.activity_about)
 public class AboutActivity extends BaseActivity implements AdapterView.OnItemClickListener {
     @ViewInject(R.id.txtAppInfo)
+    private
     TextView txtAppInfo;
     @ViewInject(R.id.viewRedPointer)
+    private
     View redPointer;
     @ViewInject(R.id.txtVersion)
+    private
     TextView txtVersion;
-    String appInfo;
+    private String appInfo;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

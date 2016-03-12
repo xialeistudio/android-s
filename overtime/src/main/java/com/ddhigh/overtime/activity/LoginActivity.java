@@ -33,8 +33,10 @@ import org.xutils.x;
 @ContentView(R.layout.activity_login)
 public class LoginActivity extends BaseActivity {
     @ViewInject(R.id.txtUsername)
+    private
     EditText txtUsername;
     @ViewInject(R.id.txtPassword)
+    private
     EditText txtPassword;
 
 
@@ -152,7 +154,7 @@ public class LoginActivity extends BaseActivity {
         });
     }
 
-    long lastBackTime = 0;
+    private long lastBackTime = 0;
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {

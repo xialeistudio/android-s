@@ -57,8 +57,10 @@ public abstract class OvertimeFormBaseActivity extends BaseActivity implements S
     @ViewInject(R.id.txtContent)
     EditText txtContent;
     @ViewInject(R.id.spinnerDirector)
+    private
     Spinner spinnerDirector;
     @ViewInject(R.id.checkRealInfo)
+    private
     CheckBox checkRealInfo;
     @ViewInject(R.id.btnSubmit)
     Button btnSubmit;
@@ -70,11 +72,10 @@ public abstract class OvertimeFormBaseActivity extends BaseActivity implements S
     String end_at;
     String content;
     int director_id;
-    boolean isRealInfoChecked;
 
-    List<String> directors = new ArrayList<>();
-    List<User> users = new ArrayList<>();
-    ArrayAdapter<String> adapter;
+    private final List<String> directors = new ArrayList<>();
+    private final List<User> users = new ArrayList<>();
+    private ArrayAdapter<String> adapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -172,8 +173,8 @@ public abstract class OvertimeFormBaseActivity extends BaseActivity implements S
         b.create().show();
     }
 
-    int txtBeginAtFlag = 0;
-    int txtEndAtFlag = 0;
+    private int txtBeginAtFlag = 0;
+    private int txtEndAtFlag = 0;
 
     @Event(value = R.id.txtBeginAt, type = View.OnTouchListener.class)
     private boolean onBeginAtClicked(View view, MotionEvent event) {
@@ -227,11 +228,11 @@ public abstract class OvertimeFormBaseActivity extends BaseActivity implements S
     /**
      * 检测表单是否合法
      */
-    protected boolean isFormValidated() {
+    boolean isFormValidated() {
         begin_at = txtBeginAt.getText().toString().trim();
         end_at = txtEndAt.getText().toString().trim();
         content = txtContent.getText().toString().trim();
-        isRealInfoChecked = checkRealInfo.isChecked();
+        boolean isRealInfoChecked = checkRealInfo.isChecked();
         if (TextUtils.isEmpty(begin_at)) {
             Toast.makeText(this, String.format(getResources().getString(R.string.cannot_empty), "开始时间"), Toast.LENGTH_SHORT).show();
             return false;

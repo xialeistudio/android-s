@@ -10,7 +10,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -50,19 +49,26 @@ import java.util.Date;
 @ContentView(R.layout.activity_user)
 public class UserActivity extends BaseActivity implements PullToRefreshBase.OnRefreshListener2 {
     @ViewInject(R.id.scrollView)
+    private
     PullToRefreshScrollView scrollView;
     @ViewInject(R.id.imageAvatar)
+    private
     ImageView imageAvatar;
     @ViewInject(R.id.txtRealname)
+    private
     TextView txtRealname;
     @ViewInject(R.id.txtPhone)
+    private
     TextView txtPhone;
     @ViewInject(R.id.txtTotalTime)
+    private
     TextView txtTotalTime;
 
     @ViewInject(R.id.txtRole)
+    private
     TextView txtRole;
     @ViewInject(R.id.txtCreatedAt)
+    private
     TextView txtCreatedAt;
 
     @ViewInject(R.id.btnSetting)
@@ -72,9 +78,10 @@ public class UserActivity extends BaseActivity implements PullToRefreshBase.OnRe
     @ViewInject(R.id.btnLogout)
     RelativeLayout btnLogout;
     @ViewInject(R.id.viewRedPointer)
+    private
     View viewRedPointer;
 
-    String newVersion;
+    private String newVersion;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

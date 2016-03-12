@@ -70,6 +70,9 @@
         <activity
             android:name=".activity.AboutActivity"
             android:label="@string/about" />
+        <activity
+            android:name=".activity.BaseActivity"
+            android:theme="@android:style/Theme.NoDisplay" />
         <!-- 4.6.0版本增加一个可选的Activity声明 -->
         <activity
             android:name="com.baidu.android.pushservice.PushKeepAlive"

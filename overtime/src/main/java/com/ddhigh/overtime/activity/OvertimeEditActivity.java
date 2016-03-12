@@ -33,7 +33,7 @@ import java.util.Date;
  */
 public class OvertimeEditActivity extends OvertimeFormBaseActivity {
     private int id;
-    Overtime overtime;
+    private Overtime overtime;
 
     @Override
     protected void init(Intent intent) {

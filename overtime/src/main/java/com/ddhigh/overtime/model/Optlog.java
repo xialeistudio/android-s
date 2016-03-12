@@ -12,7 +12,7 @@ import org.xutils.db.annotation.Table;
  * @date 2016/3/10 0010
  */
 @Table(name = "ot_optlog",onCreated = "CREATE INDEX userId on ot_access_token(user_id)")
-public class Optlog extends Model {
+class Optlog extends Model {
     @Column(name = "log_id", isId = true,autoGen = false)
     private int log_id;
     @Column(name = "msg")

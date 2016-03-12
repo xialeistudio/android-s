@@ -23,7 +23,6 @@ public class AccessToken extends Model {
     private int created_at;
     @Column(name = "user_id")
     private int user_id;
-    private final static String PREF_ACCESS_TOKEN = "PREF_ACCESS_TOKEN";
 
     public String getToken() {
         return token;

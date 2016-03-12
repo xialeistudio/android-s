@@ -27,7 +27,7 @@ import org.xutils.x;
  */
 @Table(name = "ot_user")
 public class User extends Model {
-    public static final String PREF_USER_ID = "PREF_USER_ID";
+    private static final String PREF_USER_ID = "PREF_USER_ID";
     public static final String PREF_USER = "PREF_USER";
     public static final String PREF_USERNAME = "PREF_USERNAME";
     public static final String PREF_PASSWORD = "PREF_PASSWORD";

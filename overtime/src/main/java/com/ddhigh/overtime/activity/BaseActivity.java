@@ -32,7 +32,7 @@ public class BaseActivity extends AppCompatActivity {
     /**
      * 显示动作栏
      */
-    protected void showActionBar() {
+    void showActionBar() {
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
