@@ -26,6 +26,7 @@ public class BaseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         application = (MyApplication) getApplication();
         dbManager = x.getDb(application.getDaoConfig());
+        application.add(this);
     }
 
     /**

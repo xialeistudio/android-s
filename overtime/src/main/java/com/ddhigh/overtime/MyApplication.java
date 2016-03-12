@@ -1,5 +1,6 @@
 package com.ddhigh.overtime;
 
+import android.app.Activity;
 import android.app.Application;
 import android.os.Environment;
 import android.util.Log;
@@ -21,12 +22,16 @@ import org.xutils.ex.DbException;
 import org.xutils.x;
 
 import java.io.File;
+import java.util.LinkedList;
+import java.util.List;
 
 public class MyApplication extends Application {
+    private List<Activity> activities = new LinkedList<>();
     private File applicationPath;
     private DbManager.DaoConfig daoConfig;
     private AccessToken accessToken;
     private User user;
+    private static MyApplication instance;
 
     public AccessToken getAccessToken() {
         return accessToken;
@@ -34,6 +39,24 @@ public class MyApplication extends Application {
 
     public User getUser() {
         return user;
+    }
+
+    public static MyApplication getInstance() {
+        if (instance == null) {
+            instance = new MyApplication();
+        }
+        return instance;
+    }
+
+    public void add(Activity activity) {
+        activities.add(activity);
+    }
+
+    public void exit() {
+        for (Activity activity : activities) {
+            activity.finish();
+        }
+        System.exit(0);
     }
 
     public File getApplicationPath() {

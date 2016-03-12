@@ -161,8 +161,7 @@ public class LoginActivity extends BaseActivity {
                 Toast.makeText(this, "再按一次退出程序", Toast.LENGTH_SHORT).show();
                 lastBackTime = System.currentTimeMillis();
             } else {
-                finish();
-                System.exit(0);
+                application.exit();
             }
             //结束程序
             return true;
