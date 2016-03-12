@@ -4,6 +4,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp">
-
+    <!--TODO:显示用户信息，时间，内容-->
     <include layout="@layout/merge_overtime_detail_without_user" />
 </LinearLayout>

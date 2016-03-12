@@ -20,6 +20,7 @@ import com.ddhigh.overtime.R;
 import com.ddhigh.overtime.model.Department;
 import com.ddhigh.overtime.model.Overtime;
 import com.ddhigh.overtime.model.User;
+import com.ddhigh.overtime.model.UserDepartment;
 import com.ddhigh.overtime.util.AppUtil;
 import com.ddhigh.overtime.util.HttpUtil;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
@@ -91,14 +92,18 @@ public class OvertimeViewActivity extends BaseActivity implements PullToRefreshB
         scrollView.setOnRefreshListener(this);
     }
 
+    /**
+     * 加载结果回调
+     */
     private void onOvertimeLoaded() {
-        //overtime肯定有
-        txtId.setText(String.valueOf(overtime.getId()));
-        txtBeginAt.setText(overtime.getBegin_at());
-        txtEndAt.setText(overtime.getEnd_at());
-        txtStatus.setText(AppUtil.getStatusText(overtime.getStatus()));
-        txtStatus.setTextColor(getResources().getColor(AppUtil.getStatusColor(overtime.getStatus())));
-        txtContent.setText(overtime.getContent());
+        if (overtime != null) {
+            txtId.setText(String.valueOf(overtime.getId()));
+            txtBeginAt.setText(overtime.getBegin_at());
+            txtEndAt.setText(overtime.getEnd_at());
+            txtStatus.setText(AppUtil.getStatusText(overtime.getStatus()));
+            txtStatus.setTextColor(getResources().getColor(AppUtil.getStatusColor(overtime.getStatus())));
+            txtContent.setText(overtime.getContent());
+        }
         //检测用户数据和部门数据
         if (user.getUser_id() != 0) {
             if (!TextUtils.isEmpty(user.getAvatar())) {
@@ -115,6 +120,11 @@ public class OvertimeViewActivity extends BaseActivity implements PullToRefreshB
         }
     }
 
+    /**
+     * 添加部门
+     *
+     * @param name 部门名称
+     */
     private void addDepartment(String name) {
         TextView t = new TextView(this);
         t.setText(name);
@@ -129,6 +139,9 @@ public class OvertimeViewActivity extends BaseActivity implements PullToRefreshB
         layoutDepartments.addView(t);
     }
 
+    /**
+     * 加载详情
+     */
     private void loadOverTime() {
         Intent intent = getIntent();
         int id = intent.getIntExtra("id", 0);
@@ -140,6 +153,15 @@ public class OvertimeViewActivity extends BaseActivity implements PullToRefreshB
         try {
             overtime = dbManager.findById(Overtime.class, id);
             if (overtime == null) {
+                loadDataFromRemote(id);
+            } else {
+                //加载用户
+                user = dbManager.findById(User.class, overtime.getUser_id());
+                if (user == null) {
+                    user = new User();
+                }
+                //加载部门
+                loadUserDepartment();
                 onOvertimeLoaded();
             }
         } catch (DbException e) {
@@ -148,6 +170,27 @@ public class OvertimeViewActivity extends BaseActivity implements PullToRefreshB
 
         //加载远程数据
         loadDataFromRemote(id);
+    }
+
+    /**
+     * 加载用户部门
+     */
+    private void loadUserDepartment() {
+        try {
+            List<UserDepartment> list = dbManager.selector(UserDepartment.class).where("user_id", "=", application.getAccessToken().getUser_id()).findAll();
+            if (list != null && list.size() > 0) {
+                departments.clear();
+                for (UserDepartment ud : list) {
+                    Log.d("overtime-view", "ud: " + ud);
+                    Department d = dbManager.findById(Department.class, ud.getDepartment_id());
+                    if (d != null) {
+                        departments.add(d);
+                    }
+                }
+            }
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
     }
 
     private void loadDataFromRemote(int id) {
@@ -164,17 +207,22 @@ public class OvertimeViewActivity extends BaseActivity implements PullToRefreshB
                     if (response.has("user")) {
                         JSONObject jsonUser = response.getJSONObject("user");
                         user.decode(jsonUser);
+                        dbManager.saveOrUpdate(user);
                         Log.d("overtime-view", "decode user: " + user);
                         if (jsonUser.has("userDepartments")) {
                             departments.clear();
                             JSONArray jaUserDepartments = jsonUser.getJSONArray("userDepartments");
                             for (int i = 0; i < jaUserDepartments.length(); i++) {
                                 JSONObject jUserDepartment = jaUserDepartments.getJSONObject(i);
+                                UserDepartment ud = new UserDepartment();
+                                ud.decode(jUserDepartment);
+                                dbManager.saveOrUpdate(ud);
                                 JSONObject department = jUserDepartment.getJSONObject("department");
                                 Department d = new Department();
                                 d.decode(department);
                                 Log.d("overtime-view", "decode department: " + d);
                                 departments.add(d);
+                                dbManager.saveOrUpdate(d);
                             }
                         }
                     }

@@ -13,7 +13,7 @@ import org.xutils.db.annotation.Table;
  */
 @Table(name = "ot_department")
 public class Department extends Model {
-    @Column(name = "department_id", isId = true)
+    @Column(name = "department_id", isId = true, autoGen = false)
     private int department_id;
     @Column(name = "name")
     private String name;

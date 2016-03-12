@@ -13,7 +13,7 @@ import org.xutils.db.annotation.Table;
  */
 @Table(name = "ot_optlog")
 public class Optlog extends Model {
-    @Column(name = "log_id", isId = true)
+    @Column(name = "log_id", isId = true,autoGen = false)
     private int log_id;
     @Column(name = "msg")
     private String msg;
