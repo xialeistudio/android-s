@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ImageView
+        android:id="@+id/imageAvatar"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_centerVertical="true"
+        android:contentDescription="头像"
+        android:src="@drawable/img_default_avatar" />
+
+    <TextView
+        android:id="@+id/txtRealname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="4dp"
+        android:layout_toRightOf="@+id/imageAvatar"
+        android:text="@string/loading"
+        android:textColor="@android:color/black"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/txtPhone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/txtRealname"
+        android:layout_below="@+id/txtRealname"
+        android:layout_marginTop="4dp"
+        android:text="@string/loading" />
+</merge>

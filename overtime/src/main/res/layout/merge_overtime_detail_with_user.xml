@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--用户基本信息-->
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <include layout="@layout/merge_user_info" />
+        <!--部门 -->
+        <LinearLayout
+            android:id="@+id/layoutDepartments"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" />
+    </RelativeLayout>
+
+    <include layout="@layout/line_divider" />
+    <!--打卡基本信息-->
+    <include layout="@layout/merge_overtime_detail_without_user" />
+</merge>
