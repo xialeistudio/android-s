@@ -2,6 +2,7 @@ package com.ddhigh.overtime.util;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 
 import com.ddhigh.overtime.R;
 
@@ -49,5 +50,13 @@ public class AppUtil extends com.ddhigh.mylibrary.util.AppUtil {
                 "已通过",
                 "被拒绝"
         }[status];
+    }
+
+    /**
+     * 获取系统信息
+     * @return 简要信息
+     */
+    public static String getSystemInfo() {
+        return Build.MODEL + "|" + Build.VERSION.SDK_INT + "|" + Build.VERSION.RELEASE;
     }
 }

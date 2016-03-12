@@ -74,6 +74,8 @@ public class UserActivity extends BaseActivity implements PullToRefreshBase.OnRe
     @ViewInject(R.id.viewRedPointer)
     View viewRedPointer;
 
+    String newVersion;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -108,6 +110,7 @@ public class UserActivity extends BaseActivity implements PullToRefreshBase.OnRe
                     int versionCode = response.getInt("versionCode");
                     if (currentVersionCode < versionCode) {
                         viewRedPointer.setVisibility(View.VISIBLE);
+                        newVersion = "新版本：" + response.getString("versionName");
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -210,5 +213,14 @@ public class UserActivity extends BaseActivity implements PullToRefreshBase.OnRe
     @Event(R.id.btnSetting)
     private void onSetting(View view) {
         startActivity(new Intent(this, SettingActivity.class));
+    }
+
+    @Event(R.id.btnAbout)
+    private void onAbout(View v) {
+        Intent i = new Intent(this, AboutActivity.class);
+        if (!TextUtils.isEmpty(newVersion)) {
+            i.putExtra("newVersion", newVersion);
+        }
+        startActivity(i);
     }
 }

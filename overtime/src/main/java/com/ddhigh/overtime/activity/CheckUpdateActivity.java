@@ -41,6 +41,8 @@ public class CheckUpdateActivity extends BaseActivity {
 
     int currentVersionCode;
 
+    boolean isActive = false;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +57,18 @@ public class CheckUpdateActivity extends BaseActivity {
         circleProgressBar.setText("检查更新中");
 
         launchChecker(packageInfo);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        isActive = true;
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        isActive = false;
     }
 
     private void launchChecker(PackageInfo packageInfo) {
@@ -150,7 +164,7 @@ public class CheckUpdateActivity extends BaseActivity {
             @Override
             public void onProgress(long bytesWritten, long totalSize) {
                 int p = (int) (bytesWritten * 100 / totalSize);
-                circleProgressBar.setText("下载中("+p+"%)");
+                circleProgressBar.setText("下载中(" + p + "%)");
                 circleProgressBar.setProgress(p);
             }
         });
@@ -159,6 +173,9 @@ public class CheckUpdateActivity extends BaseActivity {
 
     private void installApp(File file) {
         Log.d("checkUpdate", "install " + file.getAbsolutePath());
+        if (!isActive) {
+            return;
+        }
         Intent i = new Intent(Intent.ACTION_VIEW);
         i.setDataAndType(Uri.fromFile(file), "application/vnd.android.package-archive");
         startActivity(i);

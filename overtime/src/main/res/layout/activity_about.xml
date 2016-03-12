@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="12dp"
+            android:contentDescription="@string/app_name"
+            android:scaleType="centerCrop"
+            android:src="@mipmap/ic_launcher" />
+
+        <TextView
+            android:id="@+id/txtAppInfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="center"
+            android:text="@string/loading"
+            android:textSize="16sp" />
+
+        <RelativeLayout
+            android:id="@+id/btnCheckUpdate"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/table_row_height"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:background="@drawable/line_seperator_bottom_border"
+            android:clickable="true"
+            android:paddingLeft="@dimen/table_row_horizontal_margin"
+            android:paddingRight="@dimen/table_row_horizontal_margin">
+
+            <TextView
+                android:id="@+id/txtCheckUpdate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="@string/check_update" />
+
+            <View
+                android:id="@+id/viewRedPointer"
+                android:layout_width="8dp"
+                android:layout_height="8dp"
+                android:layout_alignTop="@+id/txtCheckUpdate"
+                android:layout_marginBottom="4dp"
+                android:layout_marginLeft="4dp"
+                android:layout_toRightOf="@+id/txtCheckUpdate"
+                android:background="@drawable/red_pointer"
+                android:visibility="gone" />
+
+
+            <TextView
+                android:id="@+id/txtVersion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@+id/imageArrowRight"
+                android:text="@string/loading"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/imageArrowRight"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:contentDescription="@string/about"
+                android:src="@drawable/ic_keyboard_arrow_right_black_24dp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/btnFeedback"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/table_row_height"
+            android:background="@drawable/line_seperator_white"
+            android:clickable="true"
+            android:paddingLeft="@dimen/table_row_horizontal_margin"
+            android:paddingRight="@dimen/table_row_horizontal_margin">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="@string/feed_back" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:contentDescription="@string/about"
+                android:src="@drawable/ic_keyboard_arrow_right_black_24dp" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="16dp"
+        android:text="DDHIGH.COM 版权所有"
+        android:textSize="12sp" />
+
+</RelativeLayout>
