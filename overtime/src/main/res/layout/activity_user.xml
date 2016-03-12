@@ -1,152 +1,158 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.handmark.pulltorefresh.library.PullToRefreshScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/scrollView"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/colorPageGray"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:background="@drawable/line_seperator_white"
-        android:paddingBottom="12dp"
-        android:paddingLeft="@dimen/table_row_horizontal_margin"
-        android:paddingRight="@dimen/table_row_horizontal_margin"
-        android:paddingTop="12dp">
+        android:layout_height="wrap_content"
+        android:background="@color/colorPageGray"
+        android:orientation="vertical">
 
-        <include layout="@layout/merge_user_info" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:background="@drawable/line_seperator_white"
+            android:paddingBottom="12dp"
+            android:paddingLeft="@dimen/table_row_horizontal_margin"
+            android:paddingRight="@dimen/table_row_horizontal_margin"
+            android:paddingTop="12dp">
 
-        <TextView
-            android:id="@+id/txtTotalTime"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/txtPhone"
-            android:layout_alignParentBottom="true"
-            android:text="@string/loading" />
+            <include layout="@layout/merge_user_info" />
 
-        <TextView
-            android:background="@drawable/label_success"
-            android:id="@+id/txtRole"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
-            android:padding="@dimen/label_padding"
-            android:text="@string/loading"
-            android:textAppearance="@style/Label" />
+            <TextView
+                android:id="@+id/txtTotalTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/txtPhone"
+                android:layout_alignParentBottom="true"
+                android:text="@string/loading" />
 
-        <TextView
-            android:id="@+id/txtCreatedAt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:text="@string/loading"
-            android:layout_alignParentRight="true"
-            android:textAppearance="@style/textAside" />
-    </RelativeLayout>
+            <TextView
+                android:id="@+id/txtRole"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:background="@drawable/label_success"
+                android:padding="@dimen/label_padding"
+                android:text="@string/loading"
+                android:textAppearance="@style/Label" />
 
-    <RelativeLayout
-        android:id="@+id/btnSetting"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/table_row_height"
-        android:layout_marginTop="@dimen/activity_vertical_margin"
-        android:background="@drawable/line_seperator_white"
-        android:clickable="true"
-        android:paddingLeft="@dimen/table_row_horizontal_margin"
-        android:paddingRight="@dimen/table_row_horizontal_margin">
+            <TextView
+                android:id="@+id/txtCreatedAt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:text="@string/loading"
+                android:textAppearance="@style/textAside" />
+        </RelativeLayout>
 
-        <ImageView
-            android:id="@+id/iconSetting"
-            android:layout_width="@dimen/table_icon_size"
-            android:layout_height="@dimen/table_icon_size"
-            android:layout_centerVertical="true"
-            android:contentDescription="@string/logout"
-            android:src="@drawable/ic_settings_blue_24dp" />
+        <RelativeLayout
+            android:id="@+id/btnSetting"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/table_row_height"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:background="@drawable/line_seperator_white"
+            android:clickable="true"
+            android:paddingLeft="@dimen/table_row_horizontal_margin"
+            android:paddingRight="@dimen/table_row_horizontal_margin">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/table_row_icon_text_margin"
-            android:layout_toRightOf="@+id/iconSetting"
-            android:text="@string/setting"
-            android:textColor="@android:color/black"
-            android:textSize="16sp" />
+            <ImageView
+                android:id="@+id/iconSetting"
+                android:layout_width="@dimen/table_icon_size"
+                android:layout_height="@dimen/table_icon_size"
+                android:layout_centerVertical="true"
+                android:contentDescription="@string/logout"
+                android:src="@drawable/ic_settings_blue_24dp" />
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:contentDescription="@string/setting"
-            android:src="@drawable/ic_keyboard_arrow_right_black_24dp" />
-    </RelativeLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/table_row_icon_text_margin"
+                android:layout_toRightOf="@+id/iconSetting"
+                android:text="@string/setting"
+                android:textColor="@android:color/black"
+                android:textSize="16sp" />
 
-    <include layout="@layout/line_divider" />
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:contentDescription="@string/setting"
+                android:src="@drawable/ic_keyboard_arrow_right_black_24dp" />
+        </RelativeLayout>
 
-    <RelativeLayout
-        android:id="@+id/btnAbout"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/table_row_height"
-        android:background="@drawable/line_seperator_white"
-        android:clickable="true"
-        android:paddingLeft="@dimen/table_row_horizontal_margin"
-        android:paddingRight="@dimen/table_row_horizontal_margin">
+        <include layout="@layout/line_divider" />
 
-        <ImageView
-            android:id="@+id/iconAbout"
-            android:layout_width="@dimen/table_icon_size"
-            android:layout_height="@dimen/table_icon_size"
-            android:layout_centerVertical="true"
-            android:contentDescription="@string/logout"
-            android:src="@drawable/ic_extension_black_24dp" />
+        <RelativeLayout
+            android:id="@+id/btnAbout"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/table_row_height"
+            android:background="@drawable/line_seperator_white"
+            android:clickable="true"
+            android:paddingLeft="@dimen/table_row_horizontal_margin"
+            android:paddingRight="@dimen/table_row_horizontal_margin">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/table_row_icon_text_margin"
-            android:layout_toRightOf="@+id/iconAbout"
-            android:text="@string/about"
-            android:textColor="@android:color/black"
-            android:textSize="16sp" />
+            <ImageView
+                android:id="@+id/iconAbout"
+                android:layout_width="@dimen/table_icon_size"
+                android:layout_height="@dimen/table_icon_size"
+                android:layout_centerVertical="true"
+                android:contentDescription="@string/logout"
+                android:src="@drawable/ic_extension_black_24dp" />
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:contentDescription="@string/about"
-            android:src="@drawable/ic_keyboard_arrow_right_black_24dp" />
-    </RelativeLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/table_row_icon_text_margin"
+                android:layout_toRightOf="@+id/iconAbout"
+                android:text="@string/about"
+                android:textColor="@android:color/black"
+                android:textSize="16sp" />
 
-    <include layout="@layout/line_divider" />
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:contentDescription="@string/about"
+                android:src="@drawable/ic_keyboard_arrow_right_black_24dp" />
+        </RelativeLayout>
 
-    <RelativeLayout
-        android:id="@+id/btnLogout"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/table_row_height"
-        android:background="@drawable/line_seperator_white"
-        android:clickable="true"
-        android:paddingLeft="@dimen/table_row_horizontal_margin"
-        android:paddingRight="@dimen/table_row_horizontal_margin">
+        <include layout="@layout/line_divider" />
 
-        <ImageView
-            android:id="@+id/iconLogout"
-            android:layout_width="@dimen/table_icon_size"
-            android:layout_height="@dimen/table_icon_size"
-            android:layout_centerVertical="true"
-            android:contentDescription="@string/logout"
-            android:src="@drawable/ic_exit_to_app_black_24dp" />
+        <RelativeLayout
+            android:id="@+id/btnLogout"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/table_row_height"
+            android:background="@drawable/line_seperator_white"
+            android:clickable="true"
+            android:paddingLeft="@dimen/table_row_horizontal_margin"
+            android:paddingRight="@dimen/table_row_horizontal_margin">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/table_row_icon_text_margin"
-            android:layout_toRightOf="@+id/iconLogout"
-            android:text="@string/logout"
-            android:textColor="@android:color/black"
-            android:textSize="16sp" />
-    </RelativeLayout>
-</LinearLayout>
+            <ImageView
+                android:id="@+id/iconLogout"
+                android:layout_width="@dimen/table_icon_size"
+                android:layout_height="@dimen/table_icon_size"
+                android:layout_centerVertical="true"
+                android:contentDescription="@string/logout"
+                android:src="@drawable/ic_exit_to_app_black_24dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/table_row_icon_text_margin"
+                android:layout_toRightOf="@+id/iconLogout"
+                android:text="@string/logout"
+                android:textColor="@android:color/black"
+                android:textSize="16sp" />
+        </RelativeLayout>
+    </LinearLayout>
+</com.handmark.pulltorefresh.library.PullToRefreshScrollView>

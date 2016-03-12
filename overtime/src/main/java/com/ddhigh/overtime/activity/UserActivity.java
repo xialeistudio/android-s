@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -16,8 +17,15 @@ import com.ddhigh.overtime.R;
 import com.ddhigh.overtime.model.Role;
 import com.ddhigh.overtime.model.User;
 import com.ddhigh.overtime.model.UserRole;
+import com.ddhigh.overtime.util.HttpUtil;
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
+import com.loopj.android.http.JsonHttpResponseHandler;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
+import org.apache.http.Header;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.xutils.ex.DbException;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.Event;
@@ -33,7 +41,9 @@ import java.util.Date;
  * @date 2016/3/12 0012
  */
 @ContentView(R.layout.activity_user)
-public class UserActivity extends BaseActivity {
+public class UserActivity extends BaseActivity implements PullToRefreshBase.OnRefreshListener2{
+    @ViewInject(R.id.scrollView)
+    PullToRefreshScrollView scrollView;
     @ViewInject(R.id.imageAvatar)
     ImageView imageAvatar;
     @ViewInject(R.id.txtRealname)
@@ -61,16 +71,19 @@ public class UserActivity extends BaseActivity {
         x.view().inject(this);
         showActionBar();
 
-        init();
+        onLoaded();
+
+        scrollView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
+        scrollView.setOnRefreshListener(this);
     }
 
-    private void init() {
+    private void onLoaded() {
         if (!TextUtils.isEmpty(application.getUser().getAvatar())) {
             ImageLoader.getInstance().displayImage(application.getUser().getAvatar() + "?imageView2/1/w/128", imageAvatar);
         }
         txtRealname.setText(application.getUser().getRealname());
         txtPhone.setText(application.getUser().getPhone());
-        txtTotalTime.setText(((float) application.getUser().getTotal_time() / 60) + "小时");
+        txtTotalTime.setText(String.format("%.2f小时",((float) application.getUser().getTotal_time() / 60)));
         txtCreatedAt.setText(DateUtil.format(new Date((long) application.getUser().getCreated_at() * 1000), "yyyy-MM-dd") + "加入");
         try {
             UserRole userRole = dbManager.selector(UserRole.class).where("user_id", "=", application.getUser().getUser_id()).findFirst();
@@ -113,5 +126,53 @@ public class UserActivity extends BaseActivity {
             }
         });
         b.create().show();
+    }
+
+    @Override
+    public void onPullDownToRefresh(PullToRefreshBase refreshView) {
+        loadDataFromRemote();
+    }
+
+    private void loadDataFromRemote() {
+        HttpUtil.get("/user/view", null, new JsonHttpResponseHandler() {
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                if (statusCode == 401) {
+                    User.loginRequired(UserActivity.this, false);
+                    finish();
+                    return;
+                }
+                Log.e("user", "load user from remote fail", throwable);
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                //同步本地
+                try {
+                    application.getUser().decode(response);
+                    if (response.has("userRole")) {
+                        JSONObject j = response.getJSONObject("userRole");
+                        UserRole userRole = new UserRole();
+                        userRole.decode(j);
+                        dbManager.saveOrUpdate(userRole);
+                    }
+                    dbManager.saveOrUpdate(application.getUser());
+                    onLoaded();
+                    Log.i("user", "save user success: " + application.getUser().toString());
+                } catch (JSONException | IllegalAccessException | DbException e) {
+                    Log.e("user", "save user fail", e);
+                }
+            }
+
+            @Override
+            public void onFinish() {
+                scrollView.onRefreshComplete();
+            }
+        });
+    }
+
+    @Override
+    public void onPullUpToRefresh(PullToRefreshBase refreshView) {
+
     }
 }
