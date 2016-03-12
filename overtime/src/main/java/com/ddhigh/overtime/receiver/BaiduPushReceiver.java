@@ -34,7 +34,7 @@ public class BaiduPushReceiver extends PushMessageReceiver {
             RequestParams params = new RequestParams();
             params.put("channel_id", s2);
             params.put("type", 3);
-            HttpUtil.post("/push/setchannel", params, new JsonHttpResponseHandler() {
+            HttpUtil.post("/app/push", params, new JsonHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                     Log.d(TAG, "set push success: " + response.toString());

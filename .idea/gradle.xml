@@ -10,6 +10,7 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/ProgressWheel" />
             <option value="$PROJECT_DIR$/PullToRefresh" />
             <option value="$PROJECT_DIR$/downloadmanager" />
             <option value="$PROJECT_DIR$/earthquake" />
@@ -22,6 +23,7 @@
         <option name="myModules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/ProgressWheel" />
             <option value="$PROJECT_DIR$/PullToRefresh" />
             <option value="$PROJECT_DIR$/downloadmanager" />
             <option value="$PROJECT_DIR$/earthquake" />
