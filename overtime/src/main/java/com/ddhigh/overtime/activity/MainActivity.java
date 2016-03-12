@@ -71,7 +71,7 @@ public class MainActivity extends BaseActivity implements PullToRefreshBase.OnRe
     //本地加载数据
     private void loadFromLocal() {
         try {
-            List<Overtime> newData = dbManager.selector(Overtime.class).orderBy("id", true).limit(pageSize).findAll();
+            List<Overtime> newData = dbManager.selector(Overtime.class).where("user_id", "=", application.getAccessToken().getUser_id()).orderBy("id", true).limit(pageSize).findAll();
             overtimes.addAll(newData);
             if (overtimes.size() >= pageSize) {
                 listView.setMode(PullToRefreshBase.Mode.BOTH);
@@ -117,7 +117,7 @@ public class MainActivity extends BaseActivity implements PullToRefreshBase.OnRe
     }
 
     private void initPush() {
-        User.saveUserIdToLocal(getApplicationContext(),application.getAccessToken().getUser_id());
+        User.saveUserIdToLocal(getApplicationContext(), application.getAccessToken().getUser_id());
         PushSettings.enableDebugMode(getApplicationContext(), true);
         PushManager.startWork(getApplicationContext(), PushConstants.LOGIN_TYPE_API_KEY, "oM9rdLXOtHlzNxLUnqHwqAqS");
         Log.d(BaiduPushReceiver.TAG, "start work");

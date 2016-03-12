@@ -20,6 +20,7 @@ import org.apache.http.Header;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.xutils.ex.DbException;
 import org.xutils.x;
 
 import java.util.ArrayList;
@@ -52,7 +53,19 @@ public class OvertimeViewActivity extends BaseActivity {
             finish();
             return;
         }
+        //基础数据从本地加载
+        try {
+            overtime = dbManager.findById(Overtime.class, id);
+            onOvertimeLoaded();
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
+
         //加载远程数据
+        loadDataFromRemote(id);
+    }
+
+    private void loadDataFromRemote(int id) {
         RequestParams params = new RequestParams();
         params.put("id", id);
         HttpUtil.get("/overtime/view", params, new JsonHttpResponseHandler() {
@@ -60,6 +73,7 @@ public class OvertimeViewActivity extends BaseActivity {
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 try {
                     overtime.decode(response);
+                    dbManager.saveOrUpdate(overtime);
                     Log.d("overtime-view", "decode overtime: " + overtime);
                     if (response.has("user")) {
                         JSONObject jsonUser = response.getJSONObject("user");
@@ -78,7 +92,7 @@ public class OvertimeViewActivity extends BaseActivity {
                         }
                     }
                     onOvertimeLoaded();
-                } catch (JSONException | IllegalAccessException e) {
+                } catch (JSONException | IllegalAccessException | DbException e) {
                     e.printStackTrace();
                 }
             }
