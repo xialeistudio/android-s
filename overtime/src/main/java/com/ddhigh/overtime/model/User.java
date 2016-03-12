@@ -161,9 +161,10 @@ public class User extends Model {
         application.setUser(new User());
         Intent intent = new Intent(activity, LoginActivity.class);
         if (hasCallback) {
-            intent.putExtra("isCallback",true);
+            intent.putExtra("isCallback", true);
             activity.startActivityForResult(intent, RequestCode.LOGIN);
         } else {
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             activity.startActivity(intent);
         }
     }

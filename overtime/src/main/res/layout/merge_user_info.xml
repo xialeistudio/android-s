@@ -5,6 +5,7 @@
         android:id="@+id/imageAvatar"
         android:layout_width="64dp"
         android:layout_height="64dp"
+        android:clickable="true"
         android:contentDescription="头像"
         android:src="@drawable/img_default_avatar" />
 

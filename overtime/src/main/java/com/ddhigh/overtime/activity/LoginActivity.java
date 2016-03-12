@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -149,5 +150,23 @@ public class LoginActivity extends BaseActivity {
                 dialog.dismiss();
             }
         });
+    }
+
+    long lastBackTime = 0;
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
+            if (System.currentTimeMillis() - lastBackTime > 2000) {
+                Toast.makeText(this, "再按一次退出程序", Toast.LENGTH_SHORT).show();
+                lastBackTime = System.currentTimeMillis();
+            } else {
+                finish();
+                System.exit(0);
+            }
+            //结束程序
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }

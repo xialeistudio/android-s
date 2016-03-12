@@ -9,7 +9,7 @@ import org.xutils.db.annotation.Table;
  * @user xialeistudio
  * @date 2016/3/10 0010
  */
-@Table(name = "ot_user_role")
+@Table(name = "ot_user_role",onCreated = "CREATE INDEX userId on ot_access_token(user_id)")
 public class UserRole extends Model {
     @Column(name = "hash", isId = true)
     private String hash;

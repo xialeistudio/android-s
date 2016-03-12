@@ -9,7 +9,7 @@ import org.xutils.db.annotation.Table;
  * @user xialeistudio
  * @date 2016/3/10 0010
  */
-@Table(name = "ot_overtime")
+@Table(name = "ot_overtime",onCreated = "CREATE INDEX userId on ot_access_token(user_id)")
 public class Overtime extends Model {
 
     /**

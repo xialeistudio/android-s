@@ -6,11 +6,9 @@
     android:orientation="vertical">
 
     <RelativeLayout
-        android:id="@+id/btnUser"
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:background="@drawable/line_seperator_white"
-        android:clickable="true"
         android:paddingBottom="12dp"
         android:paddingLeft="@dimen/table_row_horizontal_margin"
         android:paddingRight="@dimen/table_row_horizontal_margin"
@@ -25,6 +23,26 @@
             android:layout_alignLeft="@+id/txtPhone"
             android:layout_alignParentBottom="true"
             android:text="@string/loading" />
+
+        <TextView
+            android:background="@drawable/label_success"
+            android:id="@+id/txtRole"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:padding="@dimen/label_padding"
+            android:text="@string/loading"
+            android:textAppearance="@style/Label" />
+
+        <TextView
+            android:id="@+id/txtCreatedAt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:text="@string/loading"
+            android:layout_alignParentRight="true"
+            android:textAppearance="@style/textAside" />
     </RelativeLayout>
 
     <RelativeLayout
