@@ -56,7 +56,12 @@
         <activity
             android:name=".activity.UserActivity"
             android:label="@string/my" />
-
+        <activity
+            android:name=".activity.SettingActivity"
+            android:label="@string/setting" />
+        <activity
+            android:name=".activity.CheckUpdateActivity"
+            android:label="@string/check_update" />
         <!-- 4.6.0版本增加一个可选的Activity声明 -->
         <activity
             android:name="com.baidu.android.pushservice.PushKeepAlive"

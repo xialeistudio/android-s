@@ -15,6 +15,7 @@ import com.baidu.android.pushservice.PushConstants;
 import com.baidu.android.pushservice.PushManager;
 import com.baidu.android.pushservice.PushSettings;
 import com.ddhigh.overtime.R;
+import com.ddhigh.overtime.adapter.OvertimeAdapter;
 import com.ddhigh.overtime.exception.AppBaseException;
 import com.ddhigh.overtime.model.Overtime;
 import com.ddhigh.overtime.model.User;

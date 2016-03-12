@@ -150,9 +150,6 @@ public abstract class OvertimeFormBaseActivity extends BaseActivity implements S
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                return true;
             case R.id.menuHelp:
                 showHelpDialog();
                 return true;

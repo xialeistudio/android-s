@@ -43,4 +43,10 @@
     <string name="logout">注销</string>
     <string name="setting">设置</string>
     <string name="about">关于</string>
+    <string name="push_setting">推送设置</string>
+    <string name="enable_push">开启推送</string>
+    <string name="silent">免打扰</string>
+    <string name="update_setting">更新设置</string>
+    <string name="enable_autoupdate">自动更新</string>
+    <string name="check_update">检查更新</string>
 </resources>

@@ -1,6 +1,7 @@
 package com.ddhigh.overtime.activity;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
@@ -41,7 +42,7 @@ import java.util.Date;
  * @date 2016/3/12 0012
  */
 @ContentView(R.layout.activity_user)
-public class UserActivity extends BaseActivity implements PullToRefreshBase.OnRefreshListener2{
+public class UserActivity extends BaseActivity implements PullToRefreshBase.OnRefreshListener2 {
     @ViewInject(R.id.scrollView)
     PullToRefreshScrollView scrollView;
     @ViewInject(R.id.imageAvatar)
@@ -83,7 +84,7 @@ public class UserActivity extends BaseActivity implements PullToRefreshBase.OnRe
         }
         txtRealname.setText(application.getUser().getRealname());
         txtPhone.setText(application.getUser().getPhone());
-        txtTotalTime.setText(String.format("%.2f小时",((float) application.getUser().getTotal_time() / 60)));
+        txtTotalTime.setText(String.format("%.2f小时", ((float) application.getUser().getTotal_time() / 60)));
         txtCreatedAt.setText(DateUtil.format(new Date((long) application.getUser().getCreated_at() * 1000), "yyyy-MM-dd") + "加入");
         try {
             UserRole userRole = dbManager.selector(UserRole.class).where("user_id", "=", application.getUser().getUser_id()).findFirst();
@@ -97,14 +98,6 @@ public class UserActivity extends BaseActivity implements PullToRefreshBase.OnRe
             e.printStackTrace();
             txtRole.setVisibility(View.GONE);
         }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            finish();
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     @Event(R.id.btnLogout)
@@ -174,5 +167,10 @@ public class UserActivity extends BaseActivity implements PullToRefreshBase.OnRe
     @Override
     public void onPullUpToRefresh(PullToRefreshBase refreshView) {
 
+    }
+
+    @Event(R.id.btnSetting)
+    private void onSetting(View view) {
+        startActivity(new Intent(this, SettingActivity.class));
     }
 }
