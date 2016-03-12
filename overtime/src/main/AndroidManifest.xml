@@ -46,13 +46,16 @@
             android:label="@string/new_apply" />
         <activity
             android:name=".activity.OvertimeEditActivity"
-            android:label="@string/edit_apply"/>
+            android:label="@string/edit_apply" />
         <activity
             android:name=".activity.OvertimeViewActivity"
             android:label="@string/overtime_detail" />
         <activity
             android:name=".activity.OvertimeAuditActivity"
             android:label="@string/audit_overtime" />
+        <activity
+            android:name=".activity.UserActivity"
+            android:label="@string/my" />
 
         <!-- 4.6.0版本增加一个可选的Activity声明 -->
         <activity

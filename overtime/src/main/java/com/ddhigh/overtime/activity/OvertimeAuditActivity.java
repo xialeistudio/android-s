@@ -127,17 +127,4 @@ public class OvertimeAuditActivity extends OvertimeViewActivity {
         });
         builder.create().show();
     }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode) {
-            case RequestCode.LOGIN:
-                if (resultCode == RESULT_OK) {
-                    loadOverTime();
-                }
-                break;
-            default:
-                super.onActivityResult(requestCode, resultCode, data);
-        }
-    }
 }

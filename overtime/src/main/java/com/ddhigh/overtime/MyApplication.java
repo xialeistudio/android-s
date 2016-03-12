@@ -44,6 +44,14 @@ public class MyApplication extends Application {
         return daoConfig;
     }
 
+    public void setAccessToken(AccessToken accessToken) {
+        this.accessToken = accessToken;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();

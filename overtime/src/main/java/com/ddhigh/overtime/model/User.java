@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import com.ddhigh.overtime.MyApplication;
 import com.ddhigh.overtime.activity.LoginActivity;
 import com.ddhigh.overtime.constants.RequestCode;
 import com.ddhigh.overtime.util.HttpUtil;
@@ -14,6 +15,9 @@ import com.loopj.android.http.RequestParams;
 
 import org.xutils.db.annotation.Column;
 import org.xutils.db.annotation.Table;
+import org.xutils.db.sqlite.WhereBuilder;
+import org.xutils.ex.DbException;
+import org.xutils.x;
 
 /**
  * @project android-s
@@ -142,8 +146,22 @@ public class User extends Model {
      * @param hasCallback 是否有回调
      */
     public static void loginRequired(Activity activity, boolean hasCallback) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.remove(PREF_USER_ID);
+        editor.apply();
+        MyApplication application = (MyApplication) activity.getApplication();
+        try {
+            if (!application.getAccessToken().isGuest())
+                x.getDb(application.getDaoConfig()).delete(AccessToken.class, WhereBuilder.b().and("user_id", "=", application.getAccessToken().getUser_id()));
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
+        application.setAccessToken(new AccessToken());
+        application.setUser(new User());
         Intent intent = new Intent(activity, LoginActivity.class);
         if (hasCallback) {
+            intent.putExtra("isCallback",true);
             activity.startActivityForResult(intent, RequestCode.LOGIN);
         } else {
             activity.startActivity(intent);

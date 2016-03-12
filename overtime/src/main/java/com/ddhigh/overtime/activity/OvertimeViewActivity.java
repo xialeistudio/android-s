@@ -16,10 +16,12 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ddhigh.mylibrary.util.DateUtil;
 import com.ddhigh.overtime.R;
 import com.ddhigh.overtime.constants.RequestCode;
+import com.ddhigh.overtime.exception.AppBaseException;
 import com.ddhigh.overtime.model.Department;
 import com.ddhigh.overtime.model.Overtime;
 import com.ddhigh.overtime.model.User;
@@ -243,6 +245,20 @@ public class OvertimeViewActivity extends BaseActivity implements PullToRefreshB
                     e.printStackTrace();
                 }
             }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                if (statusCode == 401) {
+                    User.loginRequired(OvertimeViewActivity.this, true);
+                    return;
+                }
+                try {
+                    HttpUtil.handleError(errorResponse);
+                } catch (AppBaseException e) {
+                    Log.e("overtime-audit", e.getMessage(), throwable);
+                    Toast.makeText(OvertimeViewActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
         });
     }
 
@@ -349,6 +365,7 @@ public class OvertimeViewActivity extends BaseActivity implements PullToRefreshB
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case RequestCode.EDIT_OVERTIME:
+            case RequestCode.LOGIN:
                 if (resultCode == RESULT_OK) {
                     loadOverTime();
                 }

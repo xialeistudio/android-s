@@ -8,6 +8,7 @@ import android.widget.Toast;
 import com.ddhigh.mylibrary.dialog.LoadingDialog;
 import com.ddhigh.mylibrary.util.DateUtil;
 import com.ddhigh.overtime.R;
+import com.ddhigh.overtime.constants.RequestCode;
 import com.ddhigh.overtime.exception.AppBaseException;
 import com.ddhigh.overtime.model.Overtime;
 import com.ddhigh.overtime.model.User;
@@ -140,8 +141,7 @@ public class OvertimeEditActivity extends OvertimeFormBaseActivity {
                 @Override
                 public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                     if (statusCode == 401) {
-                        User.loginRequired(OvertimeEditActivity.this, false);
-                        finish();
+                        User.loginRequired(OvertimeEditActivity.this, true);
                         return;
                     }
                     try {
@@ -162,6 +162,19 @@ public class OvertimeEditActivity extends OvertimeFormBaseActivity {
                     dialog.dismiss();
                 }
             });
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case RequestCode.LOGIN:
+                if (resultCode == RESULT_OK) {
+                    init(getIntent());
+                }
+                break;
+            default:
+                super.onActivityResult(requestCode, resultCode, data);
         }
     }
 }

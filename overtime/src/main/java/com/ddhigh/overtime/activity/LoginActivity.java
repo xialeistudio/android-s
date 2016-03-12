@@ -3,7 +3,6 @@ package com.ddhigh.overtime.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
@@ -13,7 +12,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.ddhigh.mylibrary.dialog.LoadingDialog;
-import com.ddhigh.overtime.MyApplication;
 import com.ddhigh.overtime.R;
 import com.ddhigh.overtime.constants.RequestCode;
 import com.ddhigh.overtime.exception.AppBaseException;
@@ -25,7 +23,6 @@ import org.apache.http.Header;
 import org.apache.http.conn.HttpHostConnectException;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.xutils.DbManager;
 import org.xutils.ex.DbException;
 import org.xutils.view.annotation.ContentView;
 import org.xutils.view.annotation.Event;
@@ -111,11 +108,15 @@ public class LoginActivity extends BaseActivity {
                     dbManager.save(application.getAccessToken());
                     Log.i("user", "save accessToken success");
                     HttpUtil.setToken(application.getAccessToken().getToken());
-                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                    intent.putExtra("isLogin", true);
-                    startActivity(intent);
+                    Intent launchIntent = getIntent();
+                    if (launchIntent.hasExtra("isCallback")) {
+                        setResult(RESULT_OK);
+                    } else {
+                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                        intent.putExtra("isLogin", true);
+                        startActivity(intent);
+                    }
                     finish();
-
                 } catch (JSONException | IllegalAccessException e) {
                     onFailure(statusCode, headers, e, response);
                 } catch (DbException e) {
