@@ -136,6 +136,7 @@ public class OvertimeViewActivity extends BaseActivity implements PullToRefreshB
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         lp.setMargins(0, 0, m, 0);
         t.setLayoutParams(lp);
+        t.setTextAppearance(this, R.style.LabelSmall);
         t.setBackground(getResources().getDrawable(R.drawable.label_success));
         layoutDepartments.addView(t);
     }

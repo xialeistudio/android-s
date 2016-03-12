@@ -15,6 +15,7 @@
             android:textAppearance="@style/textTitle" />
 
         <TextView
+            android:layout_marginTop="4dp"
             android:id="@+id/txtCreatedAt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -22,12 +23,14 @@
             android:textAppearance="@style/textBody" />
 
         <TextView
+            android:layout_marginTop="8dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="开始时间"
             android:textAppearance="@style/textTitle" />
 
         <TextView
+            android:layout_marginTop="4dp"
             android:id="@+id/txtBeginAt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -35,12 +38,14 @@
             android:textAppearance="@style/textBody" />
 
         <TextView
+            android:layout_marginTop="8dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="结束时间"
             android:textAppearance="@style/textTitle" />
 
         <TextView
+            android:layout_marginTop="4dp"
             android:id="@+id/txtEndAt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -48,12 +53,14 @@
             android:textAppearance="@style/textBody" />
 
         <TextView
+            android:layout_marginTop="8dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="加班内容"
             android:textAppearance="@style/textTitle" />
 
         <TextView
+            android:layout_marginTop="4dp"
             android:id="@+id/txtContent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

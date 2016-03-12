@@ -24,11 +24,12 @@
     </style>
 
     <style name="textTitle" parent="TextAppearance.AppCompat">
-        <item name="android:textSize">16sp</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@android:color/black</item>
     </style>
 
-    <style name="textBody" parent="TextAppearance.AppCompat">
-        <item name="android:textSize">14sp</item>
+    <style name="textBody" parent="textTitle">
+        <item name="android:textColor">#999999</item>
     </style>
 
     <style name="textAside" parent="textBody">
