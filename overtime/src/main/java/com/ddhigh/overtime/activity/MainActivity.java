@@ -64,14 +64,15 @@ public class MainActivity extends BaseActivity implements PullToRefreshBase.OnRe
             }
         });
         checkLogin();
+    }
+
+    private void initView() {
         requestParams = new RequestParams();
-        init();
         overtimes = new ArrayList<>();
         listView.setOnRefreshListener(this);
         overtimeAdapter = new OvertimeAdapter(this, overtimes);
         listView.setAdapter(overtimeAdapter);
         listView.setOnItemClickListener(this);
-        loadFromLocal();
     }
 
     //本地加载数据
@@ -99,10 +100,10 @@ public class MainActivity extends BaseActivity implements PullToRefreshBase.OnRe
         }
     }
 
-    private void init() {
+    private void loadUser() {
         Intent intent = getIntent();
-        if ((intent.hasExtra("isLogin") && intent.getBooleanExtra("isLogin", true)) ||
-                !application.getAccessToken().isGuest()) {
+        boolean isLoadFromRemote = intent.hasExtra("isLogin") && intent.getBooleanExtra("isLogin", true) || !application.getAccessToken().isGuest();
+        if (isLoadFromRemote) {
             initPush();
             //加载用户数据
             HttpUtil.get("/user/view", null, new JsonHttpResponseHandler() {
@@ -271,7 +272,11 @@ public class MainActivity extends BaseActivity implements PullToRefreshBase.OnRe
         if (application.getAccessToken().isGuest()) {
             User.loginRequired(this, false);
             finish();
+            return;
         }
+        loadUser();
+        initView();
+        loadFromLocal();
     }
 
     @Override
