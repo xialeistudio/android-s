@@ -3,7 +3,8 @@
     <!--用户基本信息-->
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp">
 
         <include layout="@layout/merge_user_info" />
         <!--部门 -->
@@ -18,24 +19,26 @@
             android:orientation="horizontal" />
         <!--操作区-->
         <ImageView
-            android:layout_alignParentRight="true"
-            android:src="@drawable/ic_call_black_24dp"
-            android:contentDescription="电话"
             android:id="@+id/imageCall"
-            android:clickable="true"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <ImageView
+            android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:src="@drawable/ic_sms_black_24dp"
-            android:contentDescription="发送短信"
-            android:id="@+id/imageSms"
             android:clickable="true"
-            android:layout_alignParentBottom="true"
+            android:contentDescription="电话"
+            android:src="@drawable/ic_call_black_24dp" />
+
+        <ImageView
+            android:id="@+id/imageSms"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:clickable="true"
+            android:contentDescription="发送短信"
+            android:src="@drawable/ic_sms_black_24dp" />
     </RelativeLayout>
 
     <include layout="@layout/line_divider" />
+
     <include layout="@layout/merge_overtime_detail_without_user" />
 </merge>

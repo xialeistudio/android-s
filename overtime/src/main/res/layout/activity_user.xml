@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPageGray"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/btnUser"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:background="@drawable/line_seperator_white"
+        android:clickable="true"
+        android:paddingBottom="12dp"
+        android:paddingLeft="@dimen/table_row_horizontal_margin"
+        android:paddingRight="@dimen/table_row_horizontal_margin"
+        android:paddingTop="12dp">
+
+        <include layout="@layout/merge_user_info" />
+
+        <TextView
+            android:id="@+id/txtTotalTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/txtPhone"
+            android:layout_alignParentBottom="true"
+            android:text="@string/loading" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/btnSetting"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/table_row_height"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:background="@drawable/line_seperator_white"
+        android:clickable="true"
+        android:paddingLeft="@dimen/table_row_horizontal_margin"
+        android:paddingRight="@dimen/table_row_horizontal_margin">
+
+        <ImageView
+            android:id="@+id/iconSetting"
+            android:layout_width="@dimen/table_icon_size"
+            android:layout_height="@dimen/table_icon_size"
+            android:layout_centerVertical="true"
+            android:contentDescription="@string/logout"
+            android:src="@drawable/ic_settings_blue_24dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/table_row_icon_text_margin"
+            android:layout_toRightOf="@+id/iconSetting"
+            android:text="@string/setting"
+            android:textColor="@android:color/black"
+            android:textSize="16sp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:contentDescription="@string/setting"
+            android:src="@drawable/ic_keyboard_arrow_right_black_24dp" />
+    </RelativeLayout>
+
+    <include layout="@layout/line_divider" />
+
+    <RelativeLayout
+        android:id="@+id/btnAbout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/table_row_height"
+        android:background="@drawable/line_seperator_white"
+        android:clickable="true"
+        android:paddingLeft="@dimen/table_row_horizontal_margin"
+        android:paddingRight="@dimen/table_row_horizontal_margin">
+
+        <ImageView
+            android:id="@+id/iconAbout"
+            android:layout_width="@dimen/table_icon_size"
+            android:layout_height="@dimen/table_icon_size"
+            android:layout_centerVertical="true"
+            android:contentDescription="@string/logout"
+            android:src="@drawable/ic_extension_black_24dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/table_row_icon_text_margin"
+            android:layout_toRightOf="@+id/iconAbout"
+            android:text="@string/about"
+            android:textColor="@android:color/black"
+            android:textSize="16sp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:contentDescription="@string/about"
+            android:src="@drawable/ic_keyboard_arrow_right_black_24dp" />
+    </RelativeLayout>
+
+    <include layout="@layout/line_divider" />
+
+    <RelativeLayout
+        android:id="@+id/btnLogout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/table_row_height"
+        android:background="@drawable/line_seperator_white"
+        android:clickable="true"
+        android:paddingLeft="@dimen/table_row_horizontal_margin"
+        android:paddingRight="@dimen/table_row_horizontal_margin">
+
+        <ImageView
+            android:id="@+id/iconLogout"
+            android:layout_width="@dimen/table_icon_size"
+            android:layout_height="@dimen/table_icon_size"
+            android:layout_centerVertical="true"
+            android:contentDescription="@string/logout"
+            android:src="@drawable/ic_exit_to_app_black_24dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/table_row_icon_text_margin"
+            android:layout_toRightOf="@+id/iconLogout"
+            android:text="@string/logout"
+            android:textColor="@android:color/black"
+            android:textSize="16sp" />
+    </RelativeLayout>
+</LinearLayout>

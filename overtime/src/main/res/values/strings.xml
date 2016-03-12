@@ -40,4 +40,7 @@
     <string name="accept">通过</string>
     <string name="reject">拒绝</string>
     <string name="operation_success">操作成功</string>
+    <string name="logout">注销</string>
+    <string name="setting">设置</string>
+    <string name="about">关于</string>
 </resources>

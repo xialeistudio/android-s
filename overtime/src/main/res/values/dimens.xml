@@ -7,4 +7,10 @@
     <dimen name="btn_edittext_marginTop">12dp</dimen>
     <dimen name="label_padding">4dp</dimen>
     <dimen name="label_margin">8dp</dimen>
+
+    <dimen name="table_row_height">48dp</dimen>
+    <dimen name="table_icon_size">24dp</dimen>
+    <dimen name="table_row_horizontal_margin">10dp</dimen>
+    <dimen name="table_row_icon_text_margin">18dp</dimen>
+    <dimen name="table_row_margin_vertical">20dp</dimen>
 </resources>
