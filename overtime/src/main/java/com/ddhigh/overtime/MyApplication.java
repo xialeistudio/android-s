@@ -2,11 +2,17 @@ package com.ddhigh.overtime;
 
 import android.app.Activity;
 import android.app.Application;
+import android.content.SharedPreferences;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
+import com.baidu.android.pushservice.PushManager;
+import com.ddhigh.overtime.constants.Config;
+import com.ddhigh.overtime.constants.PreferenceKey;
 import com.ddhigh.overtime.model.AccessToken;
 import com.ddhigh.overtime.model.User;
+import com.ddhigh.overtime.receiver.BaiduPushReceiver;
 import com.ddhigh.overtime.util.HttpUtil;
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiskCache;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
@@ -163,5 +169,34 @@ public class MyApplication extends Application {
                 .build();
 
         ImageLoader.getInstance().init(configuration);
+    }
+
+    /**
+     * 设置推送
+     * @param activity activity
+     */
+    public void setPushWork(Activity activity) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
+        boolean isPushEnabled = sharedPreferences.getBoolean(PreferenceKey.SETTING_ENABLE_PUSH, false);
+        if (!isPushEnabled) {
+            PushManager.stopWork(activity.getApplicationContext());
+            Log.d(BaiduPushReceiver.TAG, "stop work");
+        } else {
+            PushManager.resumeWork(activity.getApplicationContext());
+            Log.d(BaiduPushReceiver.TAG, "resume work");
+        }
+
+        //勿扰模式设置
+        String silentMode = sharedPreferences.getString(PreferenceKey.SETTING_SILENT_MODE, Config.SILENT_MODE.MODE_CLOSED);
+        switch (silentMode) {
+            case Config.SILENT_MODE.MODE_ALL_DAY:
+                PushManager.setNoDisturbMode(activity.getApplicationContext(), 0, 0, 23, 59);
+                Log.d(BaiduPushReceiver.TAG, "setNoDisturbMode 0,0,23,59");
+                break;
+            case Config.SILENT_MODE.MODE_NIGHT:
+                PushManager.setNoDisturbMode(activity.getApplicationContext(), 22, 0, 8, 0);
+                Log.d(BaiduPushReceiver.TAG, "setNoDisturbMode 22,0,8,0");
+                break;
+        }
     }
 }

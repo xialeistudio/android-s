@@ -1,7 +1,10 @@
 package com.ddhigh.overtime.activity;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -12,10 +15,17 @@ import android.widget.AdapterView;
 import android.widget.Toast;
 
 import com.baidu.android.pushservice.PushConstants;
+import com.baidu.android.pushservice.PushKeepAlive;
+import com.baidu.android.pushservice.PushLightapp;
 import com.baidu.android.pushservice.PushManager;
+import com.baidu.android.pushservice.PushMessageReceiver;
 import com.baidu.android.pushservice.PushSettings;
+import com.baidu.android.pushservice.jni.PushSocket;
+import com.ddhigh.overtime.MyApplication;
 import com.ddhigh.overtime.R;
 import com.ddhigh.overtime.adapter.OvertimeAdapter;
+import com.ddhigh.overtime.constants.Config;
+import com.ddhigh.overtime.constants.PreferenceKey;
 import com.ddhigh.overtime.exception.AppBaseException;
 import com.ddhigh.overtime.model.Overtime;
 import com.ddhigh.overtime.model.User;
@@ -149,6 +159,10 @@ public class MainActivity extends BaseActivity implements PullToRefreshBase.OnRe
         PushSettings.enableDebugMode(getApplicationContext(), true);
         PushManager.startWork(getApplicationContext(), PushConstants.LOGIN_TYPE_API_KEY, "oM9rdLXOtHlzNxLUnqHwqAqS");
         Log.d(BaiduPushReceiver.TAG, "start work");
+
+        MyApplication application = (MyApplication) getApplication();
+        application.setPushWork(this);
+
     }
 
     int currentPage = 1;

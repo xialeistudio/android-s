@@ -64,7 +64,7 @@ public class AboutActivity extends BaseActivity implements AdapterView.OnItemCli
     @Event(R.id.btnFeedback)
     private void onFeedback(View v) {
         Intent i = new Intent(Intent.ACTION_SENDTO);
-        i.setData(Uri.parse("mailto:" + Config.FEEEDBACK_EMAIL));
+        i.setData(Uri.parse("mailto:" + Config.FEEDBACK_EMAIL));
         i.putExtra(Intent.EXTRA_SUBJECT, appInfo + "反馈");
         String body = "###请勿删除 " + AppUtil.getSystemInfo() + " 请勿删除###";
         i.putExtra(Intent.EXTRA_TEXT, body);

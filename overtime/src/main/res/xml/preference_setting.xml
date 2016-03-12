@@ -10,7 +10,7 @@
             android:defaultValue="3"
             android:entries="@array/silent_titles"
             android:entryValues="@array/silent_values"
-            android:key="setting_silent"
+            android:key="setting_silent_mode"
             android:summary="夜间免打扰时段22:00~08:00"
             android:title="免打扰设置" />
     </PreferenceCategory>
