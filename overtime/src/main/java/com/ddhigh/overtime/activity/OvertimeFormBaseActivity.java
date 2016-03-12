@@ -49,7 +49,7 @@ import java.util.List;
  * @date 2016/3/11 0011
  */
 @ContentView(R.layout.activity_overtime_cu)
-public class OvertimeFormBaseActivity extends BaseActivity implements Spinner.OnItemSelectedListener {
+public abstract class OvertimeFormBaseActivity extends BaseActivity implements Spinner.OnItemSelectedListener {
     @ViewInject(R.id.txtBeginAt)
     EditText txtBeginAt;
     @ViewInject(R.id.txtEndAt)
@@ -133,9 +133,11 @@ public class OvertimeFormBaseActivity extends BaseActivity implements Spinner.On
         });
     }
 
-    //TODO:编辑时显示数据
-    private void init(Intent intent) {
-    }
+    /**
+     * 有数据时初始化
+     * @param intent 数据
+     */
+   abstract protected void init(Intent intent);
 
 
     @Override

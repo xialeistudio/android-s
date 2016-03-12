@@ -45,11 +45,8 @@
             android:name=".activity.OvertimeCreateActivity"
             android:label="@string/new_apply" />
         <activity
-            android:name=".activity.BaseActivity"
-            android:theme="@android:style/Theme.NoDisplay" />
-        <activity
-            android:name=".activity.OvertimeFormBaseActivity"
-            android:theme="@android:style/Theme.NoDisplay" />
+            android:name=".activity.OvertimeEditActivity"
+            android:label="@string/edit_apply"/>
         <activity
             android:name=".activity.OvertimeViewActivity"
             android:label="@string/overtime_detail" />

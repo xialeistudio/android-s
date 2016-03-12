@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.ddhigh.mylibrary.util.DateUtil;
 import com.ddhigh.overtime.R;
+import com.ddhigh.overtime.constants.RequestCode;
 import com.ddhigh.overtime.model.Department;
 import com.ddhigh.overtime.model.Overtime;
 import com.ddhigh.overtime.model.User;
@@ -240,7 +241,9 @@ public class OvertimeViewActivity extends BaseActivity implements PullToRefreshB
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        getMenuInflater().inflate(R.menu.menu_help, menu);
+        if (user != null && overtime != null && user.getUser_id() == overtime.getUser_id()) {
+            getMenuInflater().inflate(R.menu.menu_edit, menu);
+        }
         return true;
     }
 
@@ -249,6 +252,11 @@ public class OvertimeViewActivity extends BaseActivity implements PullToRefreshB
         switch (item.getItemId()) {
             case android.R.id.home:
                 goHome();
+                return true;
+            case R.id.menuEdit:
+                Intent intent = new Intent(this, OvertimeEditActivity.class);
+                intent.putExtra("id", overtime.getId());
+                startActivityForResult(intent, RequestCode.EDIT_OVERTIME);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -325,5 +333,19 @@ public class OvertimeViewActivity extends BaseActivity implements PullToRefreshB
             return true;
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case RequestCode.EDIT_OVERTIME:
+                if (resultCode == RESULT_OK) {
+                    setIntent(data);
+                    loadOverTime();
+                }
+                break;
+            default:
+                super.onActivityResult(requestCode, resultCode, data);
+        }
     }
 }

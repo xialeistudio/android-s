@@ -35,4 +35,6 @@
     <string name="applying">申请中</string>
     <string name="overtime_detail">加班详情</string>
     <string name="audit_overtime">审核加班</string>
+    <string name="edit">编辑</string>
+    <string name="edit_apply">编辑申请</string>
 </resources>

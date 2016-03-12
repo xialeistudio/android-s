@@ -33,9 +33,8 @@ import org.xutils.view.annotation.Event;
 public class OvertimeCreateActivity extends OvertimeFormBaseActivity {
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setTitle(getString(R.string.new_apply));
+    protected void init(Intent intent) {
+        Log.d("overtime-form","create init");
     }
 
     @Event(R.id.btnSubmit)

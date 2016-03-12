@@ -150,7 +150,7 @@ public class MainActivity extends BaseActivity implements PullToRefreshBase.OnRe
     }
 
     int currentPage = 1;
-    int pageSize = 10;
+    int pageSize = 30;
 
     /**
      * 加载最新数据

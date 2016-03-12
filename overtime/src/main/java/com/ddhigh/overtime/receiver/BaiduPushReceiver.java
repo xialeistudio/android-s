@@ -105,6 +105,7 @@ public class BaiduPushReceiver extends PushMessageReceiver {
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         switch (action) {
             case ACTION_NEW_OVERTIME:
+            case ACTION_EDIT_OVERTIME:
                 i.setClass(context, OvertimeAuditActivity.class);
                 int id = jsonObject.getInt("overtime_id");
                 i.putExtra("id", id);
