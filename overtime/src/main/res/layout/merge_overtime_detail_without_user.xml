@@ -1,86 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge xmlns:android="http://schemas.android.com/apk/res/android">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
         <TextView
-            android:textSize="16sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="ID: " />
+            android:text="申请时间"
+            android:textAppearance="@style/textTitle" />
 
         <TextView
-            android:textSize="16sp"
-            android:id="@+id/txtId"
+            android:id="@+id/txtCreatedAt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/loading" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+            android:text="@string/loading"
+            android:textAppearance="@style/textBody" />
 
         <TextView
-            android:textSize="16sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="开始时间: " />
+            android:text="开始时间"
+            android:textAppearance="@style/textTitle" />
 
         <TextView
-            android:textSize="16sp"
             android:id="@+id/txtBeginAt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/loading" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+            android:text="@string/loading"
+            android:textAppearance="@style/textBody" />
 
         <TextView
-            android:textSize="16sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="结束时间: " />
+            android:text="结束时间"
+            android:textAppearance="@style/textTitle" />
 
         <TextView
-            android:textSize="16sp"
             android:id="@+id/txtEndAt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/loading" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+            android:text="@string/loading"
+            android:textAppearance="@style/textBody" />
 
         <TextView
-            android:textSize="16sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="状态: " />
+            android:text="加班内容"
+            android:textAppearance="@style/textTitle" />
 
         <TextView
-            android:textSize="16sp"
-            android:id="@+id/txtStatus"
-            android:layout_width="wrap_content"
+            android:id="@+id/txtContent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/loading" />
+            android:text="@string/loading"
+            android:textAppearance="@style/textBody" />
     </LinearLayout>
 
     <TextView
-        android:textSize="16sp"
-        android:id="@+id/txtContent"
-        android:layout_width="match_parent"
+        android:id="@+id/txtStatus"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/loading" />
-</merge>
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:padding="@dimen/label_padding"
+        android:text="@string/loading"
+        android:textAppearance="@style/Label" />
+</RelativeLayout>

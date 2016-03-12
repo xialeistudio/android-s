@@ -1,17 +1,18 @@
 package com.ddhigh.overtime.activity;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.ddhigh.mylibrary.util.DateUtil;
 import com.ddhigh.overtime.R;
 import com.ddhigh.overtime.model.Overtime;
 import com.ddhigh.overtime.util.AppUtil;
 
+import java.util.Date;
 import java.util.List;
 
 public class OvertimeAdapter extends BaseAdapter {
@@ -44,30 +45,26 @@ public class OvertimeAdapter extends BaseAdapter {
         if (convertView == null) {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.list_item_overtime, null);
             viewHolder = new ViewHolder();
-            viewHolder.txtId = (TextView) convertView.findViewById(R.id.txtId);
-            viewHolder.txtBeginAt = (TextView) convertView.findViewById(R.id.txtBeginAt);
-            viewHolder.txtEndAt = (TextView) convertView.findViewById(R.id.txtEndAt);
             viewHolder.txtStatus = (TextView) convertView.findViewById(R.id.txtStatus);
             viewHolder.txtContent = (TextView) convertView.findViewById(R.id.txtContent);
+            viewHolder.txtCreatedAt = (TextView) convertView.findViewById(R.id.txtCreatedAt);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
         Overtime overtime = overtimes.get(position);
-        viewHolder.txtId.setText(String.valueOf(overtime.getId()));
-        viewHolder.txtBeginAt.setText(overtime.getBegin_at());
-        viewHolder.txtEndAt.setText(overtime.getEnd_at());
+        Date dd = new Date((long) overtime.getCreated_at() * 1000);
+        String d = DateUtil.format(dd, "MM-dd HH:mm");
+        viewHolder.txtCreatedAt.setText(d);
         viewHolder.txtStatus.setText(AppUtil.getStatusText(overtime.getStatus()));
-        viewHolder.txtStatus.setTextColor(mContext.getResources().getColor(AppUtil.getStatusColor(overtime.getStatus())));
+        viewHolder.txtStatus.setBackground(AppUtil.getStatusBackground(mContext,overtime.getStatus()));
         viewHolder.txtContent.setText(overtime.getContent());
         return convertView;
     }
 
 
     private static class ViewHolder {
-        TextView txtId;
-        TextView txtBeginAt;
-        TextView txtEndAt;
+        TextView txtCreatedAt;
         TextView txtStatus;
         TextView txtContent;
 

@@ -80,6 +80,8 @@ public class MainActivity extends BaseActivity implements PullToRefreshBase.OnRe
             overtimes.addAll(newData);
             if (overtimes.size() >= pageSize) {
                 listView.setMode(PullToRefreshBase.Mode.BOTH);
+            } else {
+                listView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
             }
             overtimeAdapter.notifyDataSetChanged();
         } catch (DbException e) {
@@ -238,7 +240,7 @@ public class MainActivity extends BaseActivity implements PullToRefreshBase.OnRe
                 if (response.length() < pageSize) {
                     listView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
                 } else {
-                    listView.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
+                    listView.setMode(PullToRefreshBase.Mode.BOTH);
                 }
             }
 

@@ -37,6 +37,5 @@
     </RelativeLayout>
 
     <include layout="@layout/line_divider" />
-    <!--TODO:标题和详情隔行-->
     <include layout="@layout/merge_overtime_detail_without_user" />
 </merge>

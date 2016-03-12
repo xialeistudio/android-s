@@ -1,12 +1,9 @@
 package com.ddhigh.overtime.util;
 
-import android.app.Activity;
-import android.app.ActivityManager;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 
 import com.ddhigh.overtime.R;
-
-import java.util.List;
 
 /**
  * @project android-s
@@ -14,27 +11,35 @@ import java.util.List;
  * @user xialeistudio
  * @date 2016/3/12 0012
  */
-public class AppUtil extends com.ddhigh.mylibrary.util.AppUtil{
+public class AppUtil extends com.ddhigh.mylibrary.util.AppUtil {
     /**
      * 根据状态获取颜色
+     *
      * @param status 状态值
      * @return 颜色值
      */
-    public static int getStatusColor(int status) {
+    public static Drawable getStatusBackground(Context context, int status) {
+        int resId = 0;
         switch (status) {
             case 0:
-                return R.color.colorWarning;
+                resId = R.drawable.label_warning;
+                break;
             case 1:
-                return R.color.colorSuccess;
+                resId = R.drawable.label_success;
+                break;
             case 2:
-                return R.color.colorDanger;
+                resId = R.drawable.label_danger;
+                break;
             default:
-                return android.R.color.black;
+                resId = R.drawable.label_warning;
+                break;
         }
+        return context.getResources().getDrawable(resId);
     }
 
     /**
      * 获取状态
+     *
      * @param status 状态值
      * @return 状态文本
      */

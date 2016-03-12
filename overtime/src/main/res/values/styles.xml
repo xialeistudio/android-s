@@ -22,4 +22,20 @@
         <item name="android:textColor">@android:color/white</item>
         <item name="android:layout_marginRight">4dp</item>
     </style>
+
+    <style name="textTitle" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="textBody" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="textAside" parent="textBody">
+        <item name="android:textColor">@android:color/darker_gray</item>
+    </style>
+
+    <style name="LabelSmall" parent="Label">
+        <item name="android:textSize">12sp</item>
+    </style>
 </resources>

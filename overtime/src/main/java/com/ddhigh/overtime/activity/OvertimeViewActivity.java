@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.ddhigh.mylibrary.util.DateUtil;
 import com.ddhigh.overtime.R;
 import com.ddhigh.overtime.model.Department;
 import com.ddhigh.overtime.model.Overtime;
@@ -40,6 +41,7 @@ import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @ContentView(R.layout.activity_overtime_view)
@@ -61,9 +63,6 @@ public class OvertimeViewActivity extends BaseActivity implements PullToRefreshB
     @ViewInject(R.id.imageSms)
     ImageView imageSms;
 
-
-    @ViewInject(R.id.txtId)
-    TextView txtId;
     @ViewInject(R.id.txtBeginAt)
     TextView txtBeginAt;
     @ViewInject(R.id.txtEndAt)
@@ -72,6 +71,8 @@ public class OvertimeViewActivity extends BaseActivity implements PullToRefreshB
     TextView txtStatus;
     @ViewInject(R.id.txtContent)
     TextView txtContent;
+    @ViewInject(R.id.txtCreatedAt)
+    TextView txtCreatedAt;
 
 
     Overtime overtime = new Overtime();
@@ -97,12 +98,12 @@ public class OvertimeViewActivity extends BaseActivity implements PullToRefreshB
      */
     private void onOvertimeLoaded() {
         if (overtime != null) {
-            txtId.setText(String.valueOf(overtime.getId()));
             txtBeginAt.setText(overtime.getBegin_at());
             txtEndAt.setText(overtime.getEnd_at());
             txtStatus.setText(AppUtil.getStatusText(overtime.getStatus()));
-            txtStatus.setTextColor(getResources().getColor(AppUtil.getStatusColor(overtime.getStatus())));
+            txtStatus.setBackground(AppUtil.getStatusBackground(this, overtime.getStatus()));
             txtContent.setText(overtime.getContent());
+            txtCreatedAt.setText(DateUtil.format(new Date((long) overtime.getCreated_at() * 1000), "yyyy-MM-dd HH:mm"));
         }
         //检测用户数据和部门数据
         if (user.getUser_id() != 0) {
