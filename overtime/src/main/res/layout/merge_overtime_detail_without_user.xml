@@ -7,11 +7,13 @@
         android:orientation="horizontal">
 
         <TextView
+            android:textSize="16sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="ID: " />
 
         <TextView
+            android:textSize="16sp"
             android:id="@+id/txtId"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -24,11 +26,13 @@
         android:orientation="horizontal">
 
         <TextView
+            android:textSize="16sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="开始时间: " />
 
         <TextView
+            android:textSize="16sp"
             android:id="@+id/txtBeginAt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -41,11 +45,13 @@
         android:orientation="horizontal">
 
         <TextView
+            android:textSize="16sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="结束时间: " />
 
         <TextView
+            android:textSize="16sp"
             android:id="@+id/txtEndAt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -58,11 +64,13 @@
         android:orientation="horizontal">
 
         <TextView
+            android:textSize="16sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="状态: " />
 
         <TextView
+            android:textSize="16sp"
             android:id="@+id/txtStatus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -70,6 +78,7 @@
     </LinearLayout>
 
     <TextView
+        android:textSize="16sp"
         android:id="@+id/txtContent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

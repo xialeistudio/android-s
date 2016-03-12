@@ -19,10 +19,7 @@
 
     <style name="Label">
         <item name="android:textSize">14sp</item>
-        <item name="android:color">@android:color/white</item>
-    </style>
-
-    <style name="LabelSuccess" parent="Label">
-        <item name="android:background">@drawable/label_success</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:layout_marginRight">4dp</item>
     </style>
 </resources>

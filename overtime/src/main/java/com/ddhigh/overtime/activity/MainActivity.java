@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Toast;
 
 import com.baidu.android.pushservice.PushConstants;
@@ -37,7 +38,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @ContentView(R.layout.activity_main)
-public class MainActivity extends BaseActivity implements PullToRefreshBase.OnRefreshListener2 {
+public class MainActivity extends BaseActivity implements PullToRefreshBase.OnRefreshListener2, AdapterView.OnItemClickListener {
     @ViewInject(R.id.listOvertime)
     PullToRefreshListView listView;
     List<Overtime> overtimes;
@@ -65,6 +66,7 @@ public class MainActivity extends BaseActivity implements PullToRefreshBase.OnRe
         listView.setOnRefreshListener(this);
         overtimeAdapter = new OvertimeAdapter(this, overtimes);
         listView.setAdapter(overtimeAdapter);
+        listView.setOnItemClickListener(this);
         loadFromLocal();
     }
 
@@ -277,5 +279,12 @@ public class MainActivity extends BaseActivity implements PullToRefreshBase.OnRe
     @Override
     public void onPullUpToRefresh(PullToRefreshBase refreshView) {
         loadOnLoadMore();
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Intent intent = new Intent(this, OvertimeViewActivity.class);
+        intent.putExtra("id", (int) id);
+        startActivity(intent);
     }
 }

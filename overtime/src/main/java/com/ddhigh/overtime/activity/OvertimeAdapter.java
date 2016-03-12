@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.ddhigh.overtime.R;
 import com.ddhigh.overtime.model.Overtime;
+import com.ddhigh.overtime.util.AppUtil;
 
 import java.util.List;
 
@@ -56,33 +57,13 @@ public class OvertimeAdapter extends BaseAdapter {
         viewHolder.txtId.setText(String.valueOf(overtime.getId()));
         viewHolder.txtBeginAt.setText(overtime.getBegin_at());
         viewHolder.txtEndAt.setText(overtime.getEnd_at());
-        viewHolder.txtStatus.setText(getStatusText(overtime.getStatus()));
-        viewHolder.txtStatus.setTextColor(mContext.getResources().getColor(getStatusColor(overtime.getStatus())));
+        viewHolder.txtStatus.setText(AppUtil.getStatusText(overtime.getStatus()));
+        viewHolder.txtStatus.setTextColor(mContext.getResources().getColor(AppUtil.getStatusColor(overtime.getStatus())));
         viewHolder.txtContent.setText(overtime.getContent());
         Log.d("overtime-adapter", overtime.toString());
         return convertView;
     }
 
-    private int getStatusColor(int status) {
-        switch (status) {
-            case 0:
-                return R.color.colorWarning;
-            case 1:
-                return R.color.colorSuccess;
-            case 2:
-                return R.color.colorDanger;
-            default:
-                return android.R.color.black;
-        }
-    }
-
-    private String getStatusText(int status) {
-        return new String[]{
-                "审批中",
-                "已审批",
-                "己拒绝"
-        }[status];
-    }
 
     private static class ViewHolder {
         TextView txtId;

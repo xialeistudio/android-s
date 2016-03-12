@@ -2,7 +2,7 @@
 <merge xmlns:android="http://schemas.android.com/apk/res/android">
     <!--用户基本信息-->
     <RelativeLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <include layout="@layout/merge_user_info" />
@@ -11,7 +11,29 @@
             android:id="@+id/layoutDepartments"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/txtPhone"
+            android:layout_alignParentBottom="true"
+            android:layout_below="@+id/txtPhone"
+            android:layout_marginTop="4dp"
             android:orientation="horizontal" />
+        <!--操作区-->
+        <ImageView
+            android:layout_alignParentRight="true"
+            android:src="@drawable/ic_call_black_24dp"
+            android:contentDescription="电话"
+            android:id="@+id/imageCall"
+            android:clickable="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <ImageView
+            android:layout_alignParentRight="true"
+            android:src="@drawable/ic_sms_black_24dp"
+            android:contentDescription="发送短信"
+            android:id="@+id/imageSms"
+            android:clickable="true"
+            android:layout_alignParentBottom="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
     </RelativeLayout>
 
     <include layout="@layout/line_divider" />
