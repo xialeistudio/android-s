@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.handmark.pulltorefresh.library.PullToRefreshScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/scrollOvertimeView"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:id="@+id/scrollOvertimeView">
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -12,5 +12,32 @@
         android:padding="@dimen/page_padding">
 
         <include layout="@layout/merge_overtime_detail_with_user" />
+
+        <LinearLayout
+            android:id="@+id/layoutOperator"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/btn_edittext_marginTop"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btnAccept"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/btn_corner_green"
+                android:text="@string/accept"
+                android:textColor="@android:color/white" />
+
+            <Button
+                android:id="@+id/btnReject"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="12dp"
+                android:layout_weight="1"
+                android:background="@drawable/btn_corner_danger"
+                android:text="@string/reject"
+                android:textColor="@android:color/white" />
+        </LinearLayout>
     </LinearLayout>
 </com.handmark.pulltorefresh.library.PullToRefreshScrollView>

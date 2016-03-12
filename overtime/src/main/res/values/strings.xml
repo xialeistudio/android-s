@@ -37,4 +37,7 @@
     <string name="audit_overtime">审核加班</string>
     <string name="edit">编辑</string>
     <string name="edit_apply">编辑申请</string>
+    <string name="accept">通过</string>
+    <string name="reject">拒绝</string>
+    <string name="operation_success">操作成功</string>
 </resources>

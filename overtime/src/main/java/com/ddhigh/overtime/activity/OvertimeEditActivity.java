@@ -127,9 +127,7 @@ public class OvertimeEditActivity extends OvertimeFormBaseActivity {
                     try {
                         overtime.decode(response);
                         dbManager.saveOrUpdate(overtime);
-                        Intent i = new Intent();
-                        i.putExtra("id", overtime.getId());
-                        setResult(RESULT_OK, i);
+                        setResult(RESULT_OK);
                         Toast.makeText(OvertimeEditActivity.this, "编辑成功", Toast.LENGTH_SHORT).show();
                         finish();
                     } catch (JSONException | IllegalAccessException e) {

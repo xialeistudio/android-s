@@ -46,8 +46,8 @@ public class AppUtil extends com.ddhigh.mylibrary.util.AppUtil {
     public static String getStatusText(int status) {
         return new String[]{
                 "审批中",
-                "已审批",
-                "己拒绝"
+                "已通过",
+                "被拒绝"
         }[status];
     }
 }

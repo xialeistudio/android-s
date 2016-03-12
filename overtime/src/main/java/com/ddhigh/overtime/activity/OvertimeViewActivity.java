@@ -12,6 +12,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -75,6 +76,10 @@ public class OvertimeViewActivity extends BaseActivity implements PullToRefreshB
     @ViewInject(R.id.txtCreatedAt)
     TextView txtCreatedAt;
 
+    @ViewInject(R.id.btnAccept)
+    Button btnAccept;
+    @ViewInject(R.id.btnReject)
+    Button btnReject;
 
     Overtime overtime = new Overtime();
     User user = new User();
@@ -92,12 +97,15 @@ public class OvertimeViewActivity extends BaseActivity implements PullToRefreshB
         imageCall.setVisibility(View.GONE);
         imageSms.setVisibility(View.GONE);
         scrollView.setOnRefreshListener(this);
+
+        btnAccept.setVisibility(View.GONE);
+        btnReject.setVisibility(View.GONE);
     }
 
     /**
      * 加载结果回调
      */
-    private void onOvertimeLoaded() {
+    protected void onOvertimeLoaded() {
         if (overtime != null) {
             txtBeginAt.setText(overtime.getBegin_at());
             txtEndAt.setText(overtime.getEnd_at());
@@ -145,7 +153,7 @@ public class OvertimeViewActivity extends BaseActivity implements PullToRefreshB
     /**
      * 加载详情
      */
-    private void loadOverTime() {
+    protected void loadOverTime() {
         Intent intent = getIntent();
         int id = intent.getIntExtra("id", 0);
         if (id == 0) {
@@ -241,7 +249,7 @@ public class OvertimeViewActivity extends BaseActivity implements PullToRefreshB
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        if (user != null && overtime != null && user.getUser_id() == overtime.getUser_id()) {
+        if (user != null && overtime != null && user.getUser_id() == overtime.getUser_id() && overtime.getStatus() == 0) {
             getMenuInflater().inflate(R.menu.menu_edit, menu);
         }
         return true;
@@ -340,7 +348,6 @@ public class OvertimeViewActivity extends BaseActivity implements PullToRefreshB
         switch (requestCode) {
             case RequestCode.EDIT_OVERTIME:
                 if (resultCode == RESULT_OK) {
-                    setIntent(data);
                     loadOverTime();
                 }
                 break;
