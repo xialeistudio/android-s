@@ -2,7 +2,10 @@ package com.ddhigh.overtime.activity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
@@ -15,13 +18,16 @@ import android.widget.TextView;
 
 import com.ddhigh.mylibrary.util.DateUtil;
 import com.ddhigh.overtime.R;
+import com.ddhigh.overtime.constants.PreferenceKey;
 import com.ddhigh.overtime.model.Role;
 import com.ddhigh.overtime.model.User;
 import com.ddhigh.overtime.model.UserRole;
+import com.ddhigh.overtime.util.AppUtil;
 import com.ddhigh.overtime.util.HttpUtil;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
 import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.apache.http.Header;
@@ -65,6 +71,8 @@ public class UserActivity extends BaseActivity implements PullToRefreshBase.OnRe
     RelativeLayout btnAbout;
     @ViewInject(R.id.btnLogout)
     RelativeLayout btnLogout;
+    @ViewInject(R.id.viewRedPointer)
+    View viewRedPointer;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -73,9 +81,39 @@ public class UserActivity extends BaseActivity implements PullToRefreshBase.OnRe
         showActionBar();
 
         onLoaded();
-
         scrollView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
         scrollView.setOnRefreshListener(this);
+
+        checkUpdate();
+    }
+
+    private void checkUpdate() {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        boolean isAutoCheck = sp.getBoolean(PreferenceKey.SETTING_ENABLE_AUTOUPDATE, false);
+        if (!isAutoCheck) {
+            return;
+        }
+
+
+        PackageInfo packageInfo = AppUtil.getAppInfo(this);
+        RequestParams params = new RequestParams();
+        params.put("platform", "android");
+        params.put("version", packageInfo.versionName);
+        final int currentVersionCode = packageInfo.versionCode;
+
+        HttpUtil.get("/app/update", params, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                try {
+                    int versionCode = response.getInt("versionCode");
+                    if (currentVersionCode < versionCode) {
+                        viewRedPointer.setVisibility(View.VISIBLE);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     private void onLoaded() {

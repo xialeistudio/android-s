@@ -13,4 +13,5 @@
     <color name="colorDanger">#d9534f</color>
     <color name="colorDangerLight">#ea6451</color>
     <color name="colorLightRead">#e22d29</color>
+    <color name="red">#FF0000</color>
 </resources>

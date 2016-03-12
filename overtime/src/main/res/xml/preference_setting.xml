@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <PreferenceCategory android:title="@string/push_setting">
+    <PreferenceCategory android:title="新消息通知">
         <SwitchPreference
             android:defaultValue="true"
             android:key="setting_enable_push"
             android:summary="开启才能接收审核申请"
-            android:title="@string/enable_push" />
+            android:title="接受新消息通知" />
         <ListPreference
             android:defaultValue="3"
             android:entries="@array/silent_titles"
             android:entryValues="@array/silent_values"
             android:key="setting_silent"
-            android:summary="免打扰时段22:00~08:00"
-            android:title="@string/silent" />
+            android:summary="夜间免打扰时段22:00~08:00"
+            android:title="免打扰设置" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/update_setting">
         <SwitchPreference
             android:defaultValue="true"
             android:key="setting_enable_autoupdate"
             android:summary="开启可以及时体验新功能"
-            android:title="@string/enable_autoupdate" />
+            android:title="自动检查更新" />
         <Preference
             android:key="setting_check_update"
             android:summary="立即检查更新"
