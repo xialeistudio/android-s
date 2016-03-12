@@ -18,6 +18,7 @@ import com.ddhigh.overtime.R;
 import com.ddhigh.overtime.exception.AppBaseException;
 import com.ddhigh.overtime.model.Overtime;
 import com.ddhigh.overtime.model.User;
+import com.ddhigh.overtime.model.UserRole;
 import com.ddhigh.overtime.receiver.BaiduPushReceiver;
 import com.ddhigh.overtime.util.HttpUtil;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
@@ -44,6 +45,8 @@ public class MainActivity extends BaseActivity implements PullToRefreshBase.OnRe
     List<Overtime> overtimes;
     OvertimeAdapter overtimeAdapter;
     RequestParams requestParams;
+
+    UserRole userRole;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +85,15 @@ public class MainActivity extends BaseActivity implements PullToRefreshBase.OnRe
         } catch (DbException e) {
             e.printStackTrace();
         }
+        //加载角色
+        try {
+            userRole = dbManager.selector(UserRole.class).where("user_id", "=", application.getAccessToken().getUser_id()).findFirst();
+            if (userRole != null) {
+                onRoleLoaded();
+            }
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
     }
 
     private void init() {
@@ -89,33 +101,43 @@ public class MainActivity extends BaseActivity implements PullToRefreshBase.OnRe
         if ((intent.hasExtra("isLogin") && intent.getBooleanExtra("isLogin", true)) ||
                 !application.getAccessToken().isGuest()) {
             initPush();
-            //如果本地没有用户数据
-            if (application.getUser().getRealname() == null) {
-                HttpUtil.get("/user/view", null, new JsonHttpResponseHandler() {
-                    @Override
-                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                        if (statusCode == 401) {
-                            User.loginRequired(MainActivity.this, false);
-                            finish();
-                            return;
-                        }
-                        Log.e("user", "load user from remote fail", throwable);
+            //加载用户数据
+            HttpUtil.get("/user/view", null, new JsonHttpResponseHandler() {
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                    if (statusCode == 401) {
+                        User.loginRequired(MainActivity.this, false);
+                        finish();
+                        return;
                     }
+                    Log.e("user", "load user from remote fail", throwable);
+                }
 
-                    @Override
-                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                        //同步本地
-                        try {
-                            application.getUser().decode(response);
-                            dbManager.saveOrUpdate(application.getUser());
-                            Log.i("user", "save user success: " + application.getUser().toString());
-                        } catch (JSONException | IllegalAccessException | DbException e) {
-                            Log.e("user", "save user fail", e);
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    //同步本地
+                    try {
+                        application.getUser().decode(response);
+                        if (response.has("userRole")) {
+                            JSONObject j = response.getJSONObject("userRole");
+                            userRole = new UserRole();
+                            userRole.decode(j);
+                            dbManager.saveOrUpdate(userRole);
+                            onRoleLoaded();
                         }
+                        dbManager.saveOrUpdate(application.getUser());
+                        Log.i("user", "save user success: " + application.getUser().toString());
+                    } catch (JSONException | IllegalAccessException | DbException e) {
+                        Log.e("user", "save user fail", e);
                     }
-                });
-            }
+                }
+            });
         }
+    }
+
+    private void onRoleLoaded() {
+        Log.d("user", "load role: " + userRole.toString());
+        //菜单处理
     }
 
     private void initPush() {

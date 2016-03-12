@@ -17,7 +17,7 @@ public class Role extends Model {
     public final static int ROLE_DIRECTOR = 1;//主管
     public final static int ROLE_EMPLOTER = 2;//员工
 
-    @Column(name = "role_id", isId = true)
+    @Column(name = "role_id", isId = true,autoGen = false)
     private int role_id;
     @Column(name = "name")
     private String name;

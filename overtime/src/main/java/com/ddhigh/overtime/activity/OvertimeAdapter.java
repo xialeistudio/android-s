@@ -60,7 +60,6 @@ public class OvertimeAdapter extends BaseAdapter {
         viewHolder.txtStatus.setText(AppUtil.getStatusText(overtime.getStatus()));
         viewHolder.txtStatus.setTextColor(mContext.getResources().getColor(AppUtil.getStatusColor(overtime.getStatus())));
         viewHolder.txtContent.setText(overtime.getContent());
-        Log.d("overtime-adapter", overtime.toString());
         return convertView;
     }
 

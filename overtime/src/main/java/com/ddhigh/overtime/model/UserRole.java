@@ -11,7 +11,7 @@ import org.xutils.db.annotation.Table;
  */
 @Table(name = "ot_user_role")
 public class UserRole extends Model {
-    @Column(name = "hash", isId = true)
+    @Column(name = "hash", isId = true, autoGen = false)
     private String hash;
     @Column(name = "created_at")
     private int created_at;
