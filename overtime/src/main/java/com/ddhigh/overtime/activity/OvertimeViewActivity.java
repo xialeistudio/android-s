@@ -21,6 +21,8 @@ import com.ddhigh.overtime.model.Overtime;
 import com.ddhigh.overtime.model.User;
 import com.ddhigh.overtime.util.AppUtil;
 import com.ddhigh.overtime.util.HttpUtil;
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -39,8 +41,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @ContentView(R.layout.activity_overtime_view)
-public class OvertimeViewActivity extends BaseActivity {
+public class OvertimeViewActivity extends BaseActivity implements PullToRefreshBase.OnRefreshListener2 {
 
+    @ViewInject(R.id.scrollOvertimeView)
+    PullToRefreshScrollView scrollView;
     @ViewInject(R.id.imageAvatar)
     ImageView imageAvatar;
     @ViewInject(R.id.txtRealname)
@@ -79,6 +83,11 @@ public class OvertimeViewActivity extends BaseActivity {
 
         loadOverTime();
         showActionBar();
+
+
+        imageCall.setVisibility(View.GONE);
+        imageSms.setVisibility(View.GONE);
+        scrollView.setOnRefreshListener(this);
     }
 
     private void onOvertimeLoaded() {
@@ -98,20 +107,25 @@ public class OvertimeViewActivity extends BaseActivity {
             txtPhone.setText(user.getPhone());
         }
         if (departments.size() > 0) {
+            layoutDepartments.removeAllViews();
             for (Department department : departments) {
-                TextView t = new TextView(this);
-                t.setText(department.getName());
-                t.setTextAppearance(this, R.style.Label);
-                int p = getResources().getDimensionPixelSize(R.dimen.label_padding);
-                int m = getResources().getDimensionPixelSize(R.dimen.label_margin);
-                t.setPadding(p, p, p, p);
-                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                lp.setMargins(0, 0, m, 0);
-                t.setLayoutParams(lp);
-                t.setBackground(getResources().getDrawable(R.drawable.label_success));
-                layoutDepartments.addView(t);
+                addDepartment(department.getName());
             }
         }
+    }
+
+    private void addDepartment(String name) {
+        TextView t = new TextView(this);
+        t.setText(name);
+        t.setTextAppearance(this, R.style.Label);
+        int p = getResources().getDimensionPixelSize(R.dimen.label_padding);
+        int m = getResources().getDimensionPixelSize(R.dimen.label_margin);
+        t.setPadding(p, p, p, p);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        lp.setMargins(0, 0, m, 0);
+        t.setLayoutParams(lp);
+        t.setBackground(getResources().getDrawable(R.drawable.label_success));
+        layoutDepartments.addView(t);
     }
 
     private void loadOverTime() {
@@ -124,7 +138,7 @@ public class OvertimeViewActivity extends BaseActivity {
         //基础数据从本地加载
         try {
             overtime = dbManager.findById(Overtime.class, id);
-            if (overtime != null) {
+            if (overtime == null) {
                 onOvertimeLoaded();
             }
         } catch (DbException e) {
@@ -142,6 +156,7 @@ public class OvertimeViewActivity extends BaseActivity {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 try {
+                    scrollView.onRefreshComplete();
                     overtime.decode(response);
                     dbManager.saveOrUpdate(overtime);
                     Log.d("overtime-view", "decode overtime: " + overtime);
@@ -150,6 +165,7 @@ public class OvertimeViewActivity extends BaseActivity {
                         user.decode(jsonUser);
                         Log.d("overtime-view", "decode user: " + user);
                         if (jsonUser.has("userDepartments")) {
+                            departments.clear();
                             JSONArray jaUserDepartments = jsonUser.getJSONArray("userDepartments");
                             for (int i = 0; i < jaUserDepartments.length(); i++) {
                                 JSONObject jUserDepartment = jaUserDepartments.getJSONObject(i);
@@ -230,5 +246,15 @@ public class OvertimeViewActivity extends BaseActivity {
             }
         });
         b.create().show();
+    }
+
+    @Override
+    public void onPullDownToRefresh(PullToRefreshBase refreshView) {
+        loadOverTime();
+    }
+
+    @Override
+    public void onPullUpToRefresh(PullToRefreshBase refreshView) {
+
     }
 }

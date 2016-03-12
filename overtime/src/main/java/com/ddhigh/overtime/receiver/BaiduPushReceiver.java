@@ -7,7 +7,7 @@ import android.util.Log;
 
 import com.baidu.android.pushservice.PushMessageReceiver;
 import com.ddhigh.overtime.activity.MainActivity;
-import com.ddhigh.overtime.activity.OvertimeViewActivity;
+import com.ddhigh.overtime.activity.OvertimeAuditActivity;
 import com.ddhigh.overtime.model.User;
 import com.ddhigh.overtime.util.HttpUtil;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -105,8 +105,7 @@ public class BaiduPushReceiver extends PushMessageReceiver {
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         switch (action) {
             case ACTION_NEW_OVERTIME:
-                //TODO://打开审核页
-                i.setClass(context, OvertimeViewActivity.class);
+                i.setClass(context, OvertimeAuditActivity.class);
                 int id = jsonObject.getInt("overtime_id");
                 i.putExtra("id", id);
                 break;

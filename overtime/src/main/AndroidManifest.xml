@@ -53,6 +53,9 @@
         <activity
             android:name=".activity.OvertimeViewActivity"
             android:label="@string/overtime_detail" />
+        <activity
+            android:name=".activity.OvertimeAuditActivity"
+            android:label="@string/audit_overtime" />
 
         <!-- 4.6.0版本增加一个可选的Activity声明 -->
         <activity
