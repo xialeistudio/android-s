@@ -17,6 +17,7 @@
     <uses-permission android:name="android.permission.EXPAND_STATUS_BAR" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:name=".MyApplication"
@@ -73,6 +74,9 @@
         <activity
             android:name=".activity.BaseActivity"
             android:theme="@android:style/Theme.NoDisplay" />
+        <activity
+            android:name="com.ddhigh.mylibrary.activity.ImagePickerActivity"
+            android:label="选择图片" />
         <!-- 4.6.0版本增加一个可选的Activity声明 -->
         <activity
             android:name="com.baidu.android.pushservice.PushKeepAlive"

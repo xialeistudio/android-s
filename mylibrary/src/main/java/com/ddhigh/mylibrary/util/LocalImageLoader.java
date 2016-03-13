@@ -149,10 +149,14 @@ public class LocalImageLoader {
      * @return
      */
     public static LocalImageLoader getInstance() {
+        return getInstance(DEFAULT_THREAD_COUNT, Type.LIFO);
+    }
+
+    public static LocalImageLoader getInstance(int threadCount, Type type) {
         if (mInstance == null) {
             synchronized (LocalImageLoader.class) {
                 if (mInstance == null) {
-                    mInstance = new LocalImageLoader(DEFAULT_THREAD_COUNT, Type.LIFO);
+                    mInstance = new LocalImageLoader(threadCount, type);
                 }
             }
         }
@@ -274,7 +278,7 @@ public class LocalImageLoader {
         if (width > reqWidth || height > reqHeight) {
             int widthRadio = Math.round(width * 1.0f / reqWidth);
             int heightRadio = Math.round(height * 1.0f / reqHeight);
-            inSampleSize = Math.max(widthRadio, heightRadio); //max 为最大压缩比例，内存占用低，图片质量低，min为最小压缩
+            inSampleSize = Math.min(widthRadio, heightRadio); //max 为最大压缩比例，内存占用低，图片质量低，min为最小压缩
         }
         return inSampleSize;
     }
@@ -298,7 +302,7 @@ public class LocalImageLoader {
             width = lp.width;//获取imageView在layout中声明的宽度
         }
         if (width <= 0) {//wrap_content || match_parent
-            width = getImageViewFieldValue(imageView,"mMaxWidth");
+            width = getImageViewFieldValue(imageView, "mMaxWidth");
         }
         if (width <= 0) {//屏幕宽度
             width = displayMetrics.widthPixels;
@@ -309,7 +313,7 @@ public class LocalImageLoader {
             height = lp.height;//获取imageView在layout中声明的宽度
         }
         if (height <= 0) {//wrap_content || match_parent
-            height = getImageViewFieldValue(imageView,"mMaxHeight");//检查最大高度
+            height = getImageViewFieldValue(imageView, "mMaxHeight");//检查最大高度
         }
         if (height <= 0) {
             height = displayMetrics.heightPixels;

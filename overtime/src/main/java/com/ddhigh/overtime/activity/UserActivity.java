@@ -15,9 +15,11 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.ddhigh.mylibrary.activity.ImagePickerActivity;
 import com.ddhigh.mylibrary.util.DateUtil;
 import com.ddhigh.overtime.R;
 import com.ddhigh.overtime.constants.PreferenceKey;
+import com.ddhigh.overtime.constants.RequestCode;
 import com.ddhigh.overtime.model.Role;
 import com.ddhigh.overtime.model.User;
 import com.ddhigh.overtime.model.UserRole;
@@ -229,5 +231,11 @@ public class UserActivity extends BaseActivity implements PullToRefreshBase.OnRe
             i.putExtra("newVersion", newVersion);
         }
         startActivity(i);
+    }
+
+    @Event(R.id.imageAvatar)
+    private void onAvatarClicked(View v) {
+        Intent i = new Intent(this, ImagePickerActivity.class);
+        startActivityForResult(i, RequestCode.PICKER_IMAGE);
     }
 }
