@@ -73,7 +73,12 @@ public class ImagePickerActivity extends AppCompatActivity {
             Toast.makeText(this, "未扫描到图片", Toast.LENGTH_SHORT).show();
             return;
         }
-        mImgs = Arrays.asList(mCurrentDir.list());
+        mImgs = Arrays.asList(mCurrentDir.list(new FilenameFilter() {
+            @Override
+            public boolean accept(File dir, String filename) {
+                return filename.endsWith(".jpg") || filename.endsWith(".png") || filename.endsWith(".jpeg");
+            }
+        }));
         mImgAdapter = new ImageAdapter(this, mImgs, mCurrentDir.getAbsolutePath());
         mGridView.setAdapter(mImgAdapter);
 
@@ -203,6 +208,7 @@ public class ImagePickerActivity extends AppCompatActivity {
                         continue;
                     }
                     String dirPath = parentFile.getAbsolutePath();
+                    Log.d(TAG, "dir path: " + dirPath);
                     FolderBean folderBean = null;
                     if (mDirPaths.contains(dirPath)) {
                         continue;
