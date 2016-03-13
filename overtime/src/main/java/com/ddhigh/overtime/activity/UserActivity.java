@@ -236,6 +236,29 @@ public class UserActivity extends BaseActivity implements PullToRefreshBase.OnRe
     @Event(R.id.imageAvatar)
     private void onAvatarClicked(View v) {
         Intent i = new Intent(this, ImagePickerActivity.class);
+        i.putExtra("maxSelectCount", 1);
         startActivityForResult(i, RequestCode.PICKER_IMAGE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case RequestCode.PICKER_IMAGE:
+                if (resultCode == RESULT_OK) {
+                    int selectType = data.getIntExtra("type", 0);
+                    if (selectType == ImagePickerActivity.SINGLE_SELECT) {
+                        String image = data.getStringExtra("image");
+                        Log.d("picker", image);
+                    } else {
+                        String[] images = data.getStringArrayExtra("image");
+                        for (int i = 0; i < images.length; i++) {
+                            Log.d("picker", images[i]);
+                        }
+                    }
+                }
+                break;
+            default:
+                super.onActivityResult(requestCode, resultCode, data);
+        }
     }
 }

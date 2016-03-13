@@ -22,12 +22,17 @@ public class ImageAdapter extends BaseAdapter {
         void onCameraClicked();
     }
 
+    private int maxSelectedImage = 9;
     private Set<String> mSelectedImg = new HashSet<>();
     private List<String> mImgPaths;
     private String mDirPath;
     private LayoutInflater mInflater;
     private onCameraClickedListener onCameraClickedListener;
 
+
+    public void setMaxSelectedImage(int maxSelectedImage) {
+        this.maxSelectedImage = maxSelectedImage;
+    }
 
     public ImageAdapter(Context context, List<String> mDatas, String dirPath, onCameraClickedListener onCameraClickedListener) {
         this.mImgPaths = mDatas;
@@ -97,10 +102,12 @@ public class ImageAdapter extends BaseAdapter {
                         viewHolder.mImg.setColorFilter(null);
                         viewHolder.mSelect.setImageResource(R.drawable.picture_unselected);
                     } else {
-                        //未选择
-                        mSelectedImg.add(filepath);
-                        viewHolder.mImg.setColorFilter(Color.parseColor("#77000000"));
-                        viewHolder.mSelect.setImageResource(R.drawable.pictures_selected);
+                        if (mSelectedImg.size() < maxSelectedImage) {
+                            //未选择
+                            mSelectedImg.add(filepath);
+                            viewHolder.mImg.setColorFilter(Color.parseColor("#77000000"));
+                            viewHolder.mSelect.setImageResource(R.drawable.pictures_selected);
+                        }
                     }
                 }
             });

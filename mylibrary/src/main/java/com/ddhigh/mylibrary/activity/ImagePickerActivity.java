@@ -2,7 +2,9 @@ package com.ddhigh.mylibrary.activity;
 
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
+import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -27,24 +29,34 @@ import com.ddhigh.mylibrary.R;
 import com.ddhigh.mylibrary.adapter.ImageAdapter;
 import com.ddhigh.mylibrary.bean.FolderBean;
 import com.ddhigh.mylibrary.dialog.ListImageDirPopupWindow;
+import com.ddhigh.mylibrary.util.DateUtil;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FilenameFilter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 public class ImagePickerActivity extends AppCompatActivity implements ImageAdapter.onCameraClickedListener {
-
+    public static final int MULTI_SELECT = 440;
+    public static final int SINGLE_SELECT = 54;
+    private File appPath;
     private static final String TAG = "IMP_IMAGEPICKER";
+    private static final int CAMERA = 735;
 
 
     private ListImageDirPopupWindow mDirPopupWindow;
     private GridView mGridView;
     private List<String> mImgs;
     private ImageAdapter mImgAdapter;
+    private int maxSelectCount = 9;
 
     private RelativeLayout mBottomLayout;
     private TextView mDirName;
@@ -93,6 +105,7 @@ public class ImagePickerActivity extends AppCompatActivity implements ImageAdapt
                 })));
 
                 mImgAdapter = new ImageAdapter(ImagePickerActivity.this, mImgs, mCurrentDir.getAbsolutePath(), ImagePickerActivity.this);
+                mImgAdapter.setMaxSelectedImage(maxSelectCount);
                 mGridView.setAdapter(mImgAdapter);
 
                 mDirName.setText(bean.getName());
@@ -136,6 +149,7 @@ public class ImagePickerActivity extends AppCompatActivity implements ImageAdapt
         })));
 
         mImgAdapter = new ImageAdapter(this, mImgs, mCurrentDir.getAbsolutePath(), this);
+        mImgAdapter.setMaxSelectedImage(maxSelectCount);
         mGridView.setAdapter(mImgAdapter);
 
         mDirCount.setText(mMaxCount + "");
@@ -146,13 +160,23 @@ public class ImagePickerActivity extends AppCompatActivity implements ImageAdapt
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.imp_activity_imagepicker);
-
+        initAppPath();
         initActionBar();
         initView();
         initDatas();
         initEvent();
 
+        Intent intent = getIntent();
+        if (intent.hasExtra("maxSelectCount")) {
+            maxSelectCount = intent.getIntExtra("maxSelectCount", 9);
+        }
+    }
 
+    private void initAppPath() {
+        appPath = new File(Environment.getExternalStorageDirectory(), getPackageName());
+        if (!appPath.exists() && !appPath.isDirectory()) {
+            appPath.mkdir();
+        }
     }
 
     private void initEvent() {
@@ -181,10 +205,24 @@ public class ImagePickerActivity extends AppCompatActivity implements ImageAdapt
             return true;
         }
         if (item.getItemId() == R.id.menuDone) {
-
-            for (String s : mImgAdapter.getSelectedImg()) {
-                Log.d("imagePicker", "selected " + s);
+            //将图片路径回传
+            if (mImgAdapter.getSelectedImg().size() > 0) {
+                Intent i = new Intent();
+                if (mImgAdapter.getSelectedImg().size() == 1) {
+                    String image = (String) mImgAdapter.getSelectedImg().toArray()[0];
+                    i.putExtra("image", image);
+                    i.putExtra("type", SINGLE_SELECT);
+                } else {
+                    i.putExtra("type", MULTI_SELECT);
+                    String[] images = (String[]) mImgAdapter.getSelectedImg().toArray();
+                    i.putExtra("image", images);
+                    i.putExtra("type", MULTI_SELECT);
+                }
+                setResult(RESULT_OK, i);
+            } else {
+                setResult(RESULT_CANCELED);
             }
+            finish();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -230,7 +268,6 @@ public class ImagePickerActivity extends AppCompatActivity implements ImageAdapt
                         continue;
                     }
                     String dirPath = parentFile.getAbsolutePath();
-                    Log.d(TAG, "dir path: " + dirPath);
                     FolderBean folderBean = null;
                     if (mDirPaths.contains(dirPath)) {
                         continue;
@@ -274,7 +311,7 @@ public class ImagePickerActivity extends AppCompatActivity implements ImageAdapt
 
     @Override
     public void onCameraClicked() {
-        Log.d("imagePicker", "onCameraClicked");
+        startActivityForResult(new Intent(MediaStore.ACTION_IMAGE_CAPTURE), CAMERA);
     }
 
     @Override
@@ -282,5 +319,35 @@ public class ImagePickerActivity extends AppCompatActivity implements ImageAdapt
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.menu_done, menu);
         return true;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case CAMERA:
+                if (data != null) {
+                    Bitmap bm = (Bitmap) data.getExtras().get("data");
+                    File t = new File(appPath, DateUtil.format(new Date(), "yyyyMMddHHmmss") + ".jpg");
+                    try {
+                        BufferedOutputStream bfo = new BufferedOutputStream(new FileOutputStream(t));
+                        bm.compress(Bitmap.CompressFormat.JPEG, 80, bfo);
+                        bfo.flush();
+                        bfo.close();
+
+                        Intent i = new Intent();
+                        i.putExtra("image", t.getAbsolutePath());
+                        i.putExtra("type", SINGLE_SELECT);
+                        setResult(RESULT_OK, i);
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                finish();
+                break;
+            default:
+                super.onActivityResult(requestCode, resultCode, data);
+        }
     }
 }
