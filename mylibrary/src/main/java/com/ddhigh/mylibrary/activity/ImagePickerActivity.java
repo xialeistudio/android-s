@@ -14,7 +14,10 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.WindowManager;
 import android.widget.GridView;
+import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,6 +25,7 @@ import android.widget.Toast;
 import com.ddhigh.mylibrary.R;
 import com.ddhigh.mylibrary.adapter.ImageAdapter;
 import com.ddhigh.mylibrary.bean.FolderBean;
+import com.ddhigh.mylibrary.dialog.ListImageDirPopupWindow;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -36,6 +40,7 @@ public class ImagePickerActivity extends AppCompatActivity {
     private static final String TAG = "IMP_IMAGEPICKER";
 
 
+    private ListImageDirPopupWindow mDirPopupWindow;
     private GridView mGridView;
     private List<String> mImgs;
     private ImageAdapter mImgAdapter;
@@ -59,9 +64,59 @@ public class ImagePickerActivity extends AppCompatActivity {
 
                 //绑定数据到view中
                 data2View();
+                //初始化dirPopupWindow
+                initDirPopupWindow();
             }
         }
     };
+
+    private void initDirPopupWindow() {
+        mDirPopupWindow = new ListImageDirPopupWindow(this, mFolderBeans);
+        mDirPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                lightOn();
+            }
+        });
+        mDirPopupWindow.setOnDirSelectedListener(new ListImageDirPopupWindow.OnDirSelectListener() {
+            @Override
+            public void onSelected(FolderBean bean) {
+                mCurrentDir = new File(bean.getDir());
+                mImgs = Arrays.asList(mCurrentDir.list(new FilenameFilter() {
+                    @Override
+                    public boolean accept(File dir, String filename) {
+                        return isImgFile(filename);
+                    }
+                }));
+
+                mImgAdapter = new ImageAdapter(ImagePickerActivity.this, mImgs, mCurrentDir.getAbsolutePath());
+                mGridView.setAdapter(mImgAdapter);
+
+                mDirName.setText(bean.getName());
+                mDirCount.setText(bean.getCount() + "");
+                mDirPopupWindow.dismiss();
+            }
+        });
+    }
+
+    /**
+     * 内容区域变亮
+     */
+    private void lightOn() {
+        WindowManager.LayoutParams lp = getWindow().getAttributes();
+        lp.alpha = 1.0f;
+        getWindow().setAttributes(lp);
+    }
+
+
+    /**
+     * 内容区域变暗
+     */
+    private void lightOff() {
+        WindowManager.LayoutParams lp = getWindow().getAttributes();
+        lp.alpha = 0.3f;
+        getWindow().setAttributes(lp);
+    }
 
     private void data2View() {
         if (mCurrentDir == null) {
@@ -71,7 +126,7 @@ public class ImagePickerActivity extends AppCompatActivity {
         mImgs = Arrays.asList(mCurrentDir.list(new FilenameFilter() {
             @Override
             public boolean accept(File dir, String filename) {
-                return filename.endsWith(".jpg") || filename.endsWith(".png") || filename.endsWith(".jpeg");
+                return isImgFile(filename);
             }
         }));
         mImgAdapter = new ImageAdapter(this, mImgs, mCurrentDir.getAbsolutePath());
@@ -89,10 +144,22 @@ public class ImagePickerActivity extends AppCompatActivity {
         initActionBar();
         initView();
         initDatas();
-        initEvents();
+        initEvent();
 
 
     }
+
+    private void initEvent() {
+        mBottomLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDirPopupWindow.setAnimationStyle(R.style.dir_popupwindow_anim);
+                mDirPopupWindow.showAsDropDown(mBottomLayout, 0, 0);
+                lightOff();
+            }
+        });
+    }
+
 
     private void initActionBar() {
         ActionBar actionBar = getSupportActionBar();
@@ -116,7 +183,6 @@ public class ImagePickerActivity extends AppCompatActivity {
         mDirName = (TextView) findViewById(R.id.id_dir_name);
         mDirCount = (TextView) findViewById(R.id.id_dir_count);
     }
-
 
 
     /**
@@ -170,7 +236,7 @@ public class ImagePickerActivity extends AppCompatActivity {
                     int picCount = parentFile.list(new FilenameFilter() {
                         @Override
                         public boolean accept(File dir, String filename) {
-                            return filename.endsWith(".jpg") || filename.endsWith(".png") || filename.endsWith(".jpeg");
+                            return isImgFile(filename);
                         }
                     }).length;
                     folderBean.setCount(picCount);
@@ -189,6 +255,7 @@ public class ImagePickerActivity extends AppCompatActivity {
 
     }
 
-    private void initEvents() {
+    private boolean isImgFile(String filename) {
+        return filename.endsWith(".jpg") || filename.endsWith(".png") || filename.endsWith(".jpeg");
     }
 }
