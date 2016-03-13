@@ -17,15 +17,23 @@ import java.util.List;
 import java.util.Set;
 
 public class ImageAdapter extends BaseAdapter {
-    private static Set<String> mSelectedImg = new HashSet<>();
+
+    public interface onCameraClickedListener {
+        void onCameraClicked();
+    }
+
+    private Set<String> mSelectedImg = new HashSet<>();
     private List<String> mImgPaths;
     private String mDirPath;
     private LayoutInflater mInflater;
+    private onCameraClickedListener onCameraClickedListener;
 
-    public ImageAdapter(Context context, List<String> mDatas, String dirPath) {
+
+    public ImageAdapter(Context context, List<String> mDatas, String dirPath, onCameraClickedListener onCameraClickedListener) {
         this.mImgPaths = mDatas;
         this.mDirPath = dirPath;
         mInflater = LayoutInflater.from(context);
+        this.onCameraClickedListener = onCameraClickedListener;
     }
 
     @Override
@@ -43,8 +51,14 @@ public class ImageAdapter extends BaseAdapter {
         return position;
     }
 
+    public Set<String> getSelectedImg() {
+        return mSelectedImg;
+    }
+
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
+        //检查当前是否为camera
+        final String currentImg = mImgPaths.get(position);
         final ViewHolder viewHolder;
         if (convertView == null) {
             convertView = mInflater.inflate(R.layout.imp_gridview_item, parent, false);
@@ -55,27 +69,42 @@ public class ImageAdapter extends BaseAdapter {
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
-        //重置状态
-        viewHolder.mImg.setImageResource(R.drawable.pictures_no);
-        viewHolder.mSelect.setImageResource(R.drawable.picture_unselected);
+
         final String filepath = mDirPath + "/" + mImgPaths.get(position);
-        LocalImageLoader.getInstance(3, LocalImageLoader.Type.LIFO).loadImage(mDirPath + "/" + mImgPaths.get(position), viewHolder.mImg);
-        viewHolder.mImg.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //已被选择
-                if (mSelectedImg.contains(filepath)) {
-                    mSelectedImg.remove(filepath);
-                    viewHolder.mImg.setColorFilter(null);
-                    viewHolder.mSelect.setImageResource(R.drawable.picture_unselected);
-                } else {
-                    //未选择
-                    mSelectedImg.add(filepath);
-                    viewHolder.mImg.setColorFilter(Color.parseColor("#77000000"));
-                    viewHolder.mSelect.setImageResource(R.drawable.pictures_selected);
+        if (currentImg.equals("camera")) {
+            viewHolder.mImg.setImageResource(R.drawable.ic_photo_camera_white_48dp);
+            convertView.setBackgroundColor(Color.parseColor("#333333"));
+            viewHolder.mImg.setScaleType(ImageView.ScaleType.CENTER);
+            viewHolder.mSelect.setVisibility(View.INVISIBLE);
+            viewHolder.mImg.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onCameraClickedListener.onCameraClicked();
                 }
-            }
-        });
+            });
+        } else {
+            //重置状态
+            viewHolder.mSelect.setVisibility(View.VISIBLE);
+            viewHolder.mImg.setImageResource(R.drawable.pictures_no);
+            viewHolder.mSelect.setImageResource(R.drawable.picture_unselected);
+            LocalImageLoader.getInstance(3, LocalImageLoader.Type.LIFO).loadImage(mDirPath + "/" + mImgPaths.get(position), viewHolder.mImg);
+            viewHolder.mImg.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //已被选择
+                    if (mSelectedImg.contains(filepath)) {
+                        mSelectedImg.remove(filepath);
+                        viewHolder.mImg.setColorFilter(null);
+                        viewHolder.mSelect.setImageResource(R.drawable.picture_unselected);
+                    } else {
+                        //未选择
+                        mSelectedImg.add(filepath);
+                        viewHolder.mImg.setColorFilter(Color.parseColor("#77000000"));
+                        viewHolder.mSelect.setImageResource(R.drawable.pictures_selected);
+                    }
+                }
+            });
+        }
         if (mSelectedImg.contains(filepath)) {
             viewHolder.mImg.setColorFilter(Color.parseColor("#77000000"));
             viewHolder.mSelect.setImageResource(R.drawable.pictures_selected);

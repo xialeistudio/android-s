@@ -13,6 +13,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
@@ -35,7 +36,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class ImagePickerActivity extends AppCompatActivity {
+public class ImagePickerActivity extends AppCompatActivity implements ImageAdapter.onCameraClickedListener {
 
     private static final String TAG = "IMP_IMAGEPICKER";
 
@@ -82,14 +83,16 @@ public class ImagePickerActivity extends AppCompatActivity {
             @Override
             public void onSelected(FolderBean bean) {
                 mCurrentDir = new File(bean.getDir());
-                mImgs = Arrays.asList(mCurrentDir.list(new FilenameFilter() {
+                mImgs = new ArrayList<String>();
+                mImgs.add(0, "camera");
+                mImgs.addAll(Arrays.asList(mCurrentDir.list(new FilenameFilter() {
                     @Override
                     public boolean accept(File dir, String filename) {
                         return isImgFile(filename);
                     }
-                }));
+                })));
 
-                mImgAdapter = new ImageAdapter(ImagePickerActivity.this, mImgs, mCurrentDir.getAbsolutePath());
+                mImgAdapter = new ImageAdapter(ImagePickerActivity.this, mImgs, mCurrentDir.getAbsolutePath(), ImagePickerActivity.this);
                 mGridView.setAdapter(mImgAdapter);
 
                 mDirName.setText(bean.getName());
@@ -123,13 +126,16 @@ public class ImagePickerActivity extends AppCompatActivity {
             Toast.makeText(this, "未扫描到图片", Toast.LENGTH_SHORT).show();
             return;
         }
-        mImgs = Arrays.asList(mCurrentDir.list(new FilenameFilter() {
+        mImgs = new ArrayList<>();
+        mImgs.add(0, "camera");
+        mImgs.addAll(Arrays.asList(mCurrentDir.list(new FilenameFilter() {
             @Override
             public boolean accept(File dir, String filename) {
                 return isImgFile(filename);
             }
-        }));
-        mImgAdapter = new ImageAdapter(this, mImgs, mCurrentDir.getAbsolutePath());
+        })));
+
+        mImgAdapter = new ImageAdapter(this, mImgs, mCurrentDir.getAbsolutePath(), this);
         mGridView.setAdapter(mImgAdapter);
 
         mDirCount.setText(mMaxCount + "");
@@ -172,6 +178,13 @@ public class ImagePickerActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             finish();
+            return true;
+        }
+        if (item.getItemId() == R.id.menuDone) {
+
+            for (String s : mImgAdapter.getSelectedImg()) {
+                Log.d("imagePicker", "selected " + s);
+            }
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -257,5 +270,17 @@ public class ImagePickerActivity extends AppCompatActivity {
 
     private boolean isImgFile(String filename) {
         return filename.endsWith(".jpg") || filename.endsWith(".png") || filename.endsWith(".jpeg");
+    }
+
+    @Override
+    public void onCameraClicked() {
+        Log.d("imagePicker", "onCameraClicked");
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.menu_done, menu);
+        return true;
     }
 }
