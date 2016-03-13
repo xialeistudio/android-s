@@ -4,6 +4,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
@@ -40,6 +42,7 @@ import org.xutils.view.annotation.Event;
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
+import java.io.File;
 import java.util.Date;
 
 /**
@@ -245,16 +248,9 @@ public class UserActivity extends BaseActivity implements PullToRefreshBase.OnRe
         switch (requestCode) {
             case RequestCode.PICKER_IMAGE:
                 if (resultCode == RESULT_OK) {
-                    int selectType = data.getIntExtra("type", 0);
-                    if (selectType == ImagePickerActivity.SINGLE_SELECT) {
-                        String image = data.getStringExtra("image");
-                        Log.d("picker", image);
-                    } else {
-                        String[] images = data.getStringArrayExtra("image");
-                        for (int i = 0; i < images.length; i++) {
-                            Log.d("picker", images[i]);
-                        }
-                    }
+                    String image = data.getStringExtra("image");
+                    Bitmap bitmap = BitmapFactory.decodeFile(image);
+                    imageAvatar.setImageBitmap(bitmap);
                 }
                 break;
             default:
