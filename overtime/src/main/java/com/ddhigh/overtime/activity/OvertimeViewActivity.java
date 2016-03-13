@@ -177,6 +177,7 @@ public class OvertimeViewActivity extends BaseActivity implements PullToRefreshB
         try {
             overtime = dbManager.findById(Overtime.class, id);
             if (overtime == null) {
+                overtime = new Overtime();
                 loadDataFromRemote(id);
             } else {
                 //加载用户
