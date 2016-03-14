@@ -29,4 +29,5 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile project(':slideDateTimePicker')
     compile files('libs/pushservice-4.6.2.38.jar')
+    compile 'com.google.android.gms:play-services-appindexing:8.1.0'
 }

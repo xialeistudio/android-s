@@ -4,8 +4,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
@@ -16,9 +14,12 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ddhigh.mylibrary.activity.ImagePickerActivity;
+import com.ddhigh.mylibrary.dialog.LoadingDialog;
 import com.ddhigh.mylibrary.util.DateUtil;
+import com.ddhigh.mylibrary.util.LocalImageLoader;
 import com.ddhigh.overtime.R;
 import com.ddhigh.overtime.constants.PreferenceKey;
 import com.ddhigh.overtime.constants.RequestCode;
@@ -43,6 +44,7 @@ import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Date;
 
 /**
@@ -99,6 +101,8 @@ public class UserActivity extends BaseActivity implements PullToRefreshBase.OnRe
         scrollView.setOnRefreshListener(this);
 
         checkUpdate();
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
     }
 
     private void checkUpdate() {
@@ -249,12 +253,88 @@ public class UserActivity extends BaseActivity implements PullToRefreshBase.OnRe
             case RequestCode.PICKER_IMAGE:
                 if (resultCode == RESULT_OK) {
                     String image = data.getStringExtra("image");
-                    Bitmap bitmap = BitmapFactory.decodeFile(image);
-                    imageAvatar.setImageBitmap(bitmap);
+                    initUpload(image);
                 }
                 break;
             default:
                 super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+    private void initUpload(final String image) {
+        final LoadingDialog dialog = new LoadingDialog(this);
+        dialog.setMessage("上传中");
+        dialog.show();
+        try {
+            uploadAvatar(image, dialog);
+        } catch (FileNotFoundException e) {
+            Toast.makeText(UserActivity.this, "上传失败", Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        }
+    }
+
+    private void uploadAvatar(final String image, final LoadingDialog dialog) throws FileNotFoundException {
+        RequestParams params = new RequestParams();
+        params.put("file", new File(image));
+        HttpUtil.post("/file/upload", params, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                try {
+                    String url = response.getString("url");
+                    LocalImageLoader.getInstance().loadImage(image, imageAvatar);
+                    updateAvatar(url, dialog);
+                } catch (JSONException e) {
+                    onFailure(statusCode, headers, e, response);
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+                Toast.makeText(UserActivity.this, "上传失败", Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
+            }
+        });
+    }
+
+    private void updateAvatar(String url, final LoadingDialog dialog) {
+        dialog.setMessage("更新中");
+        RequestParams params = new RequestParams();
+        params.put("avatar", url);
+        HttpUtil.post("/user/edit", params, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                dialog.dismiss();
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                if (statusCode == 401) {
+                    User.loginRequired(UserActivity.this, true);
+                    finish();
+                    return;
+                }
+                Log.d("uploadAvatar", errorResponse.toString(), throwable);
+                Toast.makeText(UserActivity.this, throwable.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFinish() {
+                dialog.dismiss();
+            }
+        });
+    }
+
+    @Override
+    public void onActivityReenter(int resultCode, Intent data) {
+        switch (resultCode) {
+            case RequestCode.LOGIN:
+                if (resultCode == RESULT_OK) {
+                    onLoaded();
+                }
+                break;
+            default:
+                super.onActivityReenter(resultCode, data);
         }
     }
 }
